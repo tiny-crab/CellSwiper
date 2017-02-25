@@ -14,7 +14,7 @@ $(document).ready( ()=> {
 			alert("Structure field not filled");
 		}
 		else {
-			alert("Form Filled");
+			console.log("Form Filled");
             name = $("#name").val();
             structure = $("#structure").val();
             window.location.href = `annotation?index=0&name=${name}&structure=${structure}`;
