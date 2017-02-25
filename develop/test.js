@@ -19,6 +19,14 @@ app.get('/', function(req, res) {
 	res.sendFile(dir + 'sample.html');
 });
 
+app.get('/start', function(req, res) {
+    res.sendFile(dir + 'source/start_page.html');
+});
+
+app.get('/scripts/start_annotation.js', function(req, res) {
+    res.sendFile(dir + 'scripts/start_annotation.js');
+});
+
 app.get('/sample_script.js', function(req, res) {
 	res.sendFile(dir + 'sample_script.js');
 });
@@ -31,7 +39,7 @@ app.get('/deny', function(req, res) {
 	res.send("Denied request");
 });
 
-app.get('/annotation.html', function(req, res) {
+app.get('/annotation', function(req, res) {
 	imgID = req.query.index;
 	res.sendFile(dir + 'source/annotation.html');
 });

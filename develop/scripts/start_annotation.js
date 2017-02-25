@@ -5,7 +5,8 @@ var name;
 var structure;
 
 $(document).ready( ()=> {
-	$("#start").click( ()=> {
+	$("form").submit( (e)=> {
+        e.preventDefault();
 		if (!$("#name").val()) {
 			alert("Name field not filled");
 		}
@@ -16,7 +17,7 @@ $(document).ready( ()=> {
 			alert("Form Filled");
             name = $("#name").val();
             structure = $("#structure").val();
-            window.open("annotation.html?index=0");
+            window.location.href = `annotation?index=0&name=${name}&structure=${structure}`;
 		}
 	});
 });
