@@ -1,0 +1,9 @@
+{
+	"db_host" : "138.68.15.82",
+	"db_port" : [DB PORT NUMBER],
+	"db_name" : [DB NAME],
+	"db_user" : [DB USER],
+	"db_pass" : [DB PASSWORD],
+	"server_port" : [SERVER PORT (currently 3000)],
+	"parent_dir" : [/path/to/location/of/files/]
+}
