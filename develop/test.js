@@ -1,8 +1,9 @@
 var express = require('express');
 var pg = require('pg-promise')();
 var app = express();
-var db = pg({host: 'localhost', port: 5432, database: 'develop', user:'evan', password:'pizza'});
-var port = 3000;
+var info = require('./serverinfo.json');
+var db = pg({host: info.db_host, port: info.db_port, database: info.db_name, user: info.db_user, password: info.db_pass});
+var port = info.server_port
 
 //app.get('//:id', function(req,res) {
 app.get('/dbtest', function(req,res) {
@@ -14,11 +15,11 @@ app.get('/dbtest', function(req,res) {
 });
 
 app.get('/', function(req, res) {
-	res.sendFile('/home/cellswiper/develop/sample.html');
+	res.sendFile(info.parent_dir + 'sample.html');
 });
 
 app.get('/sample_script.js', function(req, res) {
-	res.sendFile('/home/cellswiper/develop/sample_script.js');
+	res.sendFile(info.parent_dir + 'sample_script.js');
 });
 
 app.get('/confirm', function(req, res) {
