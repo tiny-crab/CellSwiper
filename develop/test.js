@@ -4,6 +4,7 @@ var app = express();
 var info = require('./serverinfo.json');
 var db = pg({host: info.db_host, port: info.db_port, database: info.db_name, user: info.db_user, password: info.db_pass});
 var port = info.server_port
+var dir = info.parent_dir
 
 //app.get('//:id', function(req,res) {
 app.get('/dbtest', function(req,res) {
@@ -15,11 +16,11 @@ app.get('/dbtest', function(req,res) {
 });
 
 app.get('/', function(req, res) {
-	res.sendFile(info.parent_dir + 'sample.html');
+	res.sendFile(dir + 'sample.html');
 });
 
 app.get('/sample_script.js', function(req, res) {
-	res.sendFile(info.parent_dir + 'sample_script.js');
+	res.sendFile(dir + 'sample_script.js');
 });
 
 app.get('/confirm', function(req, res) {
@@ -28,6 +29,11 @@ app.get('/confirm', function(req, res) {
 
 app.get('/deny', function(req, res) {
 	res.send("Denied request");
+});
+
+app.get('/annotation.html', function(req, res) {
+	imgID = req.query.index;
+	res.sendFile(dir + 'source/annotation.html');
 });
 
 var server = app.listen(port, () => {

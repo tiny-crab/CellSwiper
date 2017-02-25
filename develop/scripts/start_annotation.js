@@ -16,7 +16,7 @@ $(document).ready( ()=> {
 			alert("Form Filled");
             name = $("#name").val();
             structure = $("#structure").val();
-            window.open("annotation.html");
+            window.open("annotation.html?index=0");
 		}
 	});
 });
