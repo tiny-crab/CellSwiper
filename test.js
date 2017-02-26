@@ -63,11 +63,17 @@ app.get('/export', function(req, res) {
 	db.none(`copy annotation to '/tmp/export.csv' DELIMITER ',' CSV HEADER`).then(() => {
 		res.download(`/tmp/export.csv`, 'export.csv', (err) => {
 			if (!err) {
-				fs.unlink('/tmp/export.csv');
+				/* TODO: figure out how to make delete work
+				fs.unlink(`/tmp/export.csv`, (e) => {
+					if (e) console.log(e);
+				});*/
+			}
+			else {
+				console.log(err);
 			}
 		});
 	}).catch((err) => {
-		res.send("Error while downloading csv");
+		res.send(`Error while downloading csv from /tmp/export.csv`);
 		console.log(err);
 	});
 });
