@@ -1,40 +1,36 @@
 <!DOCTYPE html>
 <html>
+<head>
 	<!-- Jquery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<!-- Bootstrap -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
 	<!-- Fonts -->
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans|Sansita" rel="stylesheet">
 
 	<link rel="stylesheet" href="styles/start_page.css">
+	<link rel="stylesheet" href="styles/theme.css">
     <script src="scripts/start_annotation.js"></script>
-
-
+</head>
 <body>
+	<div class="container container-table">
+		<div class="row vertical-center-row">
+			<div id="submit-form">
+				<h1>CellSwiper</h1>
+				<form>
+				  <p>Enter Name:</p>
+				  <input type="text" id="name" name="name">
+				  <br>
+				  <p>Enter Structure:</p>
+				  <input type="text" id="structure" name="structure">
+				  <br><br>
+				  <!--create button-->
+				  <input type="submit" id="start" value="Start">
+				</form>
+			</div>
 
-<div class="container container-table">
-	<div class="row vertical-center-row">
-		<div id="submit-form">
-			<h1>CellSwiper</h2>
-			<form>
-			  Enter Name:<br>
-			  <input type="text" id="name" name="name">
-			  <br>
-			  Enter Structure:<br>
-			  <input type="text" id="structure" name="structure">
-			  <br><br>
-			  <!--create button-->
-			  <input type="submit" id="start" value="Start">
-			</form>
 		</div>
-
 	</div>
-</div>
-
-
-
 </body>
 </html>
