@@ -60,15 +60,18 @@ app.get('/deny', function(req, res) {
 
 // Evan stuff
 app.get('/export', function(req, res) {
-	db.none(`copy annotation to '/tmp/export.csv' DELIMITER ',' CSV HEADER`).then(() => {
-		res.download(`/tmp/export.csv`, 'export.csv', (err) => {
-			if (!err) {
-				fs.unlink('/tmp/export.csv');
-			}
+	// ensure that the tmp directory exists
+	fs.mkdir('/tmp/csv', () => {
+		db.none(`copy annotation to '/tmp/csv/export.csv' DELIMITER ',' CSV HEADER`).then(() => {
+			res.download(`/tmp/csv/export.csv`, 'export.csv', (err) => {
+				if (err) {
+					res.send("Error: Please try again");
+				}
+			});
+		}).catch((err) => {
+			// should only happen when tmp gets wiped immediately after creating the csv folder
+			res.send("Error: Please try again");
 		});
-	}).catch((err) => {
-		res.send("Error while downloading csv");
-		console.log(err);
 	});
 });
 
