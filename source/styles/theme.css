@@ -1,0 +1,11 @@
+/*
+    The theme will contain styles that exist across all screens.
+    This includes colors, font-families, and non-layout styles.
+*/
+
+h1, h2, h3, h4 {
+    font-family: "Sansita", sans-serif;
+}
+p, a {
+    font-family: "Open Sans", sans-serif;
+}

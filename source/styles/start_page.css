@@ -1,10 +1,10 @@
-@import url('http://getbootstrap.com/dist/css/bootstrap.css');
+/*
+    This stylesheet is for start_page.html
+*/
+
 html, body, .container-table {
     height: 100%;
     width: 100%;
-}
-p, a {
-    font-family: "Open Sans", sans-serif;
 }
 .container-table {
     display: table;
@@ -15,7 +15,4 @@ p, a {
 }
 #submit-form {
     text-align: center;
-}
-h1, h2, h3, h4 {
-    font-family: "Sansita", sans-serif;
 }
