@@ -1,4 +1,4 @@
-develop/serverinfo.json
+serverinfo.json
 *.swp
 .DS_Store
 node_modules/

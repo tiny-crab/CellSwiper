@@ -1,0 +1,21 @@
+@import url('http://getbootstrap.com/dist/css/bootstrap.css');
+html, body, .container-table {
+    height: 100%;
+    width: 100%;
+}
+p, a {
+    font-family: "Open Sans", sans-serif;
+}
+.container-table {
+    display: table;
+}
+.vertical-center-row {
+    display: table-cell;
+    vertical-align: middle;
+}
+#submit-form {
+    text-align: center;
+}
+h1, h2, h3, h4 {
+    font-family: "Sansita", sans-serif;
+}

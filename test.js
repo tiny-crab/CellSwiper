@@ -5,9 +5,11 @@ var app = express();
 var info = require('./serverinfo.json');
 var images = require('./server/image_response.js');
 var db = pg({host: info.db_host, port: info.db_port, database: info.db_name, user: info.db_user, password: info.db_pass});
-var port = info.server_port
-var dir = info.parent_dir
-global.dir = dir
+var port = info.server_port;
+var dir = info.parent_dir;
+global.dir = dir;
+
+app.use(express.static('source'))
 
 //app.get('//:id', function(req,res) {
 app.get('/dbtest', function(req,res) {
