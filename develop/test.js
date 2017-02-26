@@ -56,6 +56,16 @@ app.get('/deny', function(req, res) {
 	res.send("Denied request");
 });
 
+// Evan stuff
+app.get('/export', function(req, res) {
+	db.none(`copy annotation to '/tmp/export.csv' DELIMITER ',' CSV HEADER`).then(() => {
+		res.download(`${dir}/tmp/export.csv`, 'export.csv');
+	}).catch((err) => {
+		res.send("Error while downloading csv");
+		console.log(err);
+	});
+});
+
 var server = app.listen(port, () => {
 	console.log(`listening on port ${port}`);
 }).on('error', (err) => {
