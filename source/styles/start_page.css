@@ -42,10 +42,13 @@ html, body, .container-table {
     padding-top: 2em;
 }
 
+/*The input classes determine the styling of the textboxes*/
+
 input {
-    font-size: 1rem;
     display: block;
     width: auto;
+    color: white;
+    line-height: 2rem;
     border: none;
     border-bottom: 1px solid white;
     background-color: #17243A;
@@ -53,6 +56,9 @@ input {
 
 input:focus {
     outline: none;
+    /*next line will hide the border when the text input is clicked*/
+    /*might want to animate this so it doesn't look so sudden*/
+    /*border-bottom: 0px;*/
 }
 
 label {
@@ -66,14 +72,14 @@ label {
     transition: 0.2s ease all;
 }
 
-
-/* active state */
-
 input:focus~label, input:valid~label {
     top: -20px;
+    right: 100%;
     font-size: 14px;
     color: #B7760E;
 }
+
+/*The bar classes determine the styling of the animated bar when input is clicked*/
 
 .bar {
     position: relative;
@@ -99,9 +105,6 @@ input:focus~label, input:valid~label {
     right: 50%;
 }
 
-
-/* active state */
-
 input:focus~.bar:before, input:focus~.bar:after {
-    width: 10em;
+    width: 50%;
 }
