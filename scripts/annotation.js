@@ -11,7 +11,7 @@ $(document).ready( ()=> {
     $("#structure").text($.urlParam('structure'));
     index = $.urlParam('index');
     $("#image").attr('src', '/images?index=' + index);
-
+  
     document.onkeyup = function(event) {
         var e = (!event) ? window.event : event;
         switch (e.keyCode) {
