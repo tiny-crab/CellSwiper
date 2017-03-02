@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<!-- Jquery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -11,26 +12,36 @@
 
 	<link rel="stylesheet" href="styles/start_page.css">
 	<link rel="stylesheet" href="styles/theme.css">
-    <script src="scripts/start_annotation.js"></script>
+	<script src="scripts/start_annotation.js"></script>
+	<script src="scripts/start_page.js"></script>
 </head>
+
 <body>
-	<div class="container container-table">
-		<div class="row vertical-center-row">
-			<div id="submit-form">
-				<h1>CellSwiper</h1>
-				<form>
-				  <p>Enter Name:</p>
-				  <input type="text" id="name" name="name">
-				  <br>
-				  <p>Enter Structure:</p>
-				  <input type="text" id="structure" name="structure">
-				  <br><br>
-				  <!--create button-->
-				  <input type="submit" id="start" value="Start">
+	<div class="row">
+		<div class="col-md-3 vcenter">
+			<div class="line"></div>
+		</div>
+		<div class="col-md-9 menu-container vcenter">
+			<div class="form-container">
+				<h1 id="title">CellSwiper</h1>
+				<form class="submit-form">
+					<div class="input-container">
+						<input type="text" id="name" name="name" required>
+						<span class="bar"></span>
+						<label>Name:</label>
+					</div>
+					<div class="input-container">
+						<input type="text" id="structure" name="structure" required>
+						<span class="bar"></span>
+						<label>Structure:</label>
+					</div>
+					<div class="input-container">
+						<input type="submit" id="start" value="START">
+					</div>
 				</form>
 			</div>
-
 		</div>
 	</div>
 </body>
+
 </html>

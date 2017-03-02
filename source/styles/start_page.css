@@ -5,14 +5,39 @@
 html, body, .container-table {
     height: 100%;
     width: 100%;
+    background-color: #17243A;
 }
-.container-table {
-    display: table;
-}
-.vertical-center-row {
-    display: table-cell;
+
+.row {
+    height: 100%;
     vertical-align: middle;
 }
-#submit-form {
-    text-align: center;
+
+.line {
+    border-right: 2px solid white;
+    height: 60%;
+    width: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.vcenter{
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.form-container {
+    padding-top: 2em;
+    padding-bottom: 2em;
+}
+
+.input-container {
+    padding: 1em 0em 1em 0em;
+    position: relative;
+    margin-bottom: 45px;
+}
+
+.submit-form {
+    padding-top: 2em;
 }

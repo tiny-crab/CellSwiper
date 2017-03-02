@@ -1,6 +1,9 @@
 html, body, .container-table {
     height: 100%;
     width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    background-color: #17243A;
 }
 .container-table {
     display: table;
@@ -15,6 +18,7 @@ html, body, .container-table {
     margin-left: auto;
     margin-right: auto;
     border: black 1px solid;
+    background-color: whitesmoke;
 }
 .polaroid-image {
     width: 80%;
@@ -22,11 +26,10 @@ html, body, .container-table {
     margin-left: auto;
     margin-right: auto;
     margin-top: 2em;
-    border: black 1px solid;
 }
 #image {
     width: 100%;
-    height: auto;
+    height: 100%;
 }
 .polaroid-text {
     text-align: center;
