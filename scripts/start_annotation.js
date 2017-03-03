@@ -5,6 +5,10 @@ var name;
 var structure;
 
 $(document).ready( ()=> {
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    $("#sidebar").hide();
+    }
+
 	$("form").submit( (e)=> {
         e.preventDefault();
 		if (!$("#name").val()) {
