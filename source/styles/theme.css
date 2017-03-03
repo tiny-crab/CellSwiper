@@ -90,4 +90,12 @@ input[type=submit] {
     color: white;
     width: 6em;
     height: 3em;
+    transition: all .25s ease-in-out;
+    -moz-transition: all .25s ease-in-out;
+    -webkit-transition: all .25s ease-in-out;
+}
+
+input[type=submit]:hover {
+    background-color: #B7760E;
+    border: 1px solid #B7760E;
 }
