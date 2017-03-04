@@ -5,9 +5,6 @@ var name;
 var structure;
 
 $(document).ready(() => {
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        $("#sidebar").hide();
-    }
 
     $("form").submit((e) => {
         e.preventDefault();
@@ -23,5 +20,18 @@ $(document).ready(() => {
             structure = $("#structure").val();
             window.location.href = `annotation?index=0&name=${name}&structure=${structure}`;
         }
+    });
+
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        $("#sidebar").hide();
+    }
+
+    $('input').blur(function () {
+
+        // check if the input has any value (if we've typed into it)
+        if ($(this).val())
+            $(this).addClass('used');
+        else
+            $(this).removeClass('used');
     });
 });
