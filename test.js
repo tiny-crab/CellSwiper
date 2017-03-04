@@ -4,12 +4,16 @@ var fs = require('fs');
 var app = express();
 var info = require('./serverinfo.json');
 var images = require('./server/image_response.js');
+var bodyparser = require('bodyparser');
 var db = pg({host: info.db_host, port: info.db_port, database: info.db_name, user: info.db_user, password: info.db_pass});
 var port = info.server_port;
 var dir = info.parent_dir;
 global.dir = dir;
 
 app.use(express.static('source'))
+// for getting post parameters in req.body
+app.use(bodyparser.urlencoded({extended: false}));
+app.use(bodyparser.json());
 
 //app.get('//:id', function(req,res) {
 app.get('/dbtest', function(req,res) {
@@ -81,6 +85,16 @@ app.get('/export', function(req, res) {
 	});
 });
 
+app.post('/annotate', function(req, res) {
+	var data = ['imageid', 'user', 'annotaton', 'feature'].map(attr => req.body[attr]);
+	// if any are not included
+	if (data.includes(undefined)) {
+		res.send("Error: Invalid data format");
+		return;
+	}
+	db.none("insert into annotation(imageid, username, annotation, feature) values($1, $2, $3, $4)", data)
+	.catch(err => console.log(err));
+});
 
 var server = app.listen(port, () => {
 	console.log(`listening on port ${port}`);
