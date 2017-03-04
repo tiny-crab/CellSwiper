@@ -93,7 +93,11 @@ app.post('/annotate', function(req, res) {
 		return;
 	}
 	db.none("insert into annotation(imageid, username, annotation, feature) values($1, $2, $3, $4)", data)
-	.catch(err => console.log(err));
+	.then(() => res.send("Annotation added"))
+	.catch(err => {
+		res.send("Annotation failed");
+		console.log(err);
+	});
 });
 
 var server = app.listen(port, () => {
