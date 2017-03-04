@@ -4,7 +4,7 @@ var fs = require('fs');
 var app = express();
 var info = require('./serverinfo.json');
 var images = require('./server/image_response.js');
-var bodyparser = require('bodyparser');
+var bodyparser = require('body-parser');
 var db = pg({host: info.db_host, port: info.db_port, database: info.db_name, user: info.db_user, password: info.db_pass});
 var port = info.server_port;
 var dir = info.parent_dir;
@@ -86,9 +86,9 @@ app.get('/export', function(req, res) {
 });
 
 app.post('/annotate', function(req, res) {
-	var data = ['imageid', 'user', 'annotaton', 'feature'].map(attr => req.body[attr]);
+	var data = ['imageid', 'user', 'annotation', 'feature'].map(attr => req.body[attr]);
 	// if any are not included
-	if (data.includes(undefined)) {
+	if (data.some(a => a === undefined)) {
 		res.send("Error: Invalid data format");
 		return;
 	}
