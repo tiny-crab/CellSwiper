@@ -24,6 +24,11 @@ $(document).ready(() => {
 
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         $("#sidebar").hide();
+        let input_form = $(".submit-form");
+        let form_container = $(".form-container");
+        form_container.addClass("center-block");
+        $("h1").css("font-size", "12vw");
+
     }
 
     $('input').blur(function () {
