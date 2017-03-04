@@ -44,7 +44,7 @@ label {
     transition: 0.2s ease all;
 }
 
-input[type=text]:focus~label, input[type=text]:valid~label {
+input[type=text]:focus ~ label, input[type=text]:valid ~ label {
     top: -20px;
     right: 100%;
     font-size: 14px;
@@ -77,7 +77,7 @@ input[type=text]:focus~label, input[type=text]:valid~label {
     right: 50%;
 }
 
-input[type=text]:focus~.bar:before, input[type=text]:focus~.bar:after {
+input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
     width: 50%;
 }
 
