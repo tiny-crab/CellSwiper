@@ -1,2 +1,7 @@
-develop/serverinfo.json
+serverinfo.json
 *.swp
+node_modules/
+.DS_Store
+launch.json
+.idea/
+.vscode/
