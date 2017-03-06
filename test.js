@@ -3,12 +3,13 @@ var pg = require('pg-promise')();
 var fs = require('fs');
 var app = express();
 var info = require('./serverinfo.json');
-var images = require('./server/image_response.js');
 var bodyparser = require('body-parser');
 var db = pg({host: info.db_host, port: info.db_port, database: info.db_name, user: info.db_user, password: info.db_pass});
 var port = info.server_port;
 var dir = info.parent_dir;
 global.dir = dir;
+var images = require('./server/image_response.js')(fs);
+var exports = require('./server/export.js')(fs, db);
 
 app.use(express.static('source'))
 // for getting post parameters in req.body
@@ -46,6 +47,8 @@ app.get('/scripts/annotation.js', function(req, res) {
 });
 
 app.get('/images', images.get_img);
+
+app.get('/export', exports.export_csv);
 
 app.get('/sample_script.js', function(req, res) {
 	res.sendFile(dir + 'sample_script.js');
