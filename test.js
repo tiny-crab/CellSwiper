@@ -3,12 +3,13 @@ var pg = require('pg-promise')();
 var fs = require('fs');
 var app = express();
 var info = require('./serverinfo.json');
-var images = require('./server/image_response.js');
 var bodyparser = require('body-parser');
 var db = pg({host: info.db_host, port: info.db_port, database: info.db_name, user: info.db_user, password: info.db_pass});
 var port = info.server_port;
 var dir = info.parent_dir;
 global.dir = dir;
+var images = require('./server/image_response.js')(fs);
+var exports = require('./server/export.js')(fs, db);
 
 app.use(express.static('source'))
 // for getting post parameters in req.body
@@ -47,6 +48,8 @@ app.get('/scripts/annotation.js', function(req, res) {
 
 app.get('/images', images.get_img);
 
+app.get('/export', exports.export_csv);
+
 app.get('/sample_script.js', function(req, res) {
 	res.sendFile(dir + 'sample_script.js');
 });
@@ -60,29 +63,6 @@ app.get('/confirm', function(req, res) {
 
 app.get('/deny', function(req, res) {
 	res.send("Denied request");
-});
-
-// Evan stuff
-app.get('/export', function(req, res) {
-	// ensure that the tmp directory exists
-	fs.mkdir('/tmp/csv', (err) => {
-		if (!err) {
-			// directory just created, set permissions
-			fs.chmodSync('/tmp/csv', '777', (err) => {
-				res.send("Error: please try again");
-			});
-		}
-		db.none(`copy annotation to '/tmp/csv/export.csv' DELIMITER ',' CSV HEADER`).then(() => {
-			res.download(`/tmp/csv/export.csv`, 'export.csv', (err) => {
-				if (err) {
-					res.send("Error downloading: Please try again");
-				}
-			});
-		}).catch((err) => {
-			// should only happen when tmp gets wiped immediately after creating the csv folder
-			res.send("Error writing: Please try again");
-		});
-	});
 });
 
 app.post('/annotate', function(req, res) {
