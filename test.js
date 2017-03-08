@@ -11,7 +11,11 @@ global.dir = dir;
 var images = require('./server/image_response.js')(fs);
 var exports = require('./server/export.js')(fs, db);
 
-app.use(express.static('source'))
+// serv static pages
+app.use('/pages', express.static('pages'))
+app.use('/styles', express.static('styles'))
+app.use('/scripts', express.static('scripts'))
+
 // for getting post parameters in req.body
 app.use(bodyparser.urlencoded({extended: false}));
 app.use(bodyparser.json());
@@ -30,20 +34,12 @@ app.get('/', function(req, res) {
 });
 
 app.get('/start', function(req, res) {
-    res.sendFile(dir + 'source/start_page.html');
-});
-
-app.get('/scripts/start_annotation.js', function(req, res) {
-    res.sendFile(dir + 'scripts/start_annotation.js');
+    res.sendFile(dir + 'pages/start_page.html');
 });
 
 app.get('/annotation', function(req, res) {
 	var imgID = req.query.index;
-	res.sendFile(dir + 'source/annotation.html');
-});
-
-app.get('/scripts/annotation.js', function(req, res) {
-    res.sendFile(dir + 'scripts/annotation.js');
+	res.sendFile(dir + 'pages/annotation.html');
 });
 
 app.get('/images', images.get_img);
