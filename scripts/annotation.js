@@ -40,7 +40,7 @@ $(document).ready( ()=> {
 
 function nextImage() {
     index++;
-    if (index > 9) index = 0;
+    if (index > 9) window.location = "http://cellswiper.cs.spu.edu/complete";
     $("#image").attr('src', '/images?index=' + index);
 }
 
