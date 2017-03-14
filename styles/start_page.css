@@ -21,7 +21,7 @@ html, body, .container-table {
     margin-bottom: auto;
 }
 
-.vcenter{
+.vcenter {
     height: 100%;
     display: flex;
     align-items: center;
