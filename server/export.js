@@ -16,7 +16,7 @@ module.exports = function(fs, db) {
                     fs.chmod('/tmp/csv', '777', (err) => {
                         if (err) {
                             // this should not happen
-                            reject(["Error chaning permissions: Please try again", err]);
+                            reject(["Error changing permissions: Please try again", err]);
                         }
                         resolve();
                     });
@@ -27,9 +27,12 @@ module.exports = function(fs, db) {
             });
         }) // run the command to output the table to a file
         // replace 'annotation' with a select query to get certain rows instead of the whole thing
-        .then(db.none(`copy annotation to '/tmp/csv/export.csv' DELIMITER ',' CSV HEADER`))
+        .then(db.none(`COPY annotation TO '/tmp/csv/export.csv' DELIMITER ',' CSV HEADER`))
         .then(function() {
             // download file to client
+            if (!fs.existsSync('/tmp/csv/export.csv')){
+                fs.writeFile('/tmp/csv/export.csv', 'content')
+            }
             res.download(`/tmp/csv/export.csv`, 'export.csv', (err) => {
                 if (err) {
                     throw ["Error downloading: Please try again\n", err]
@@ -40,6 +43,6 @@ module.exports = function(fs, db) {
             // runs on reject() or throw, meant to catch errors
             res.send(err[0] + err[1])
         });
-    }
+    };
     return module;
 };
