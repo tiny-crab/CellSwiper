@@ -17,7 +17,7 @@ $(document).ready( ()=> {
 			console.log("Form Filled");
             name = $("#name").val();
             structure = $("#structure").val();
-            $.post("insert_name")
+            $.post("insert_name", {name: name})
                 .done((data) => {
                     window.location.href = `annotation?index=0&name=${name}&structure=${structure}`;
                 })
