@@ -13,12 +13,12 @@ $.urlParam = function (a) {
 };
 
 //Our stuff
-$(document).ready(() => {
+$(document).ready( ()=> {
     $("#name").text($.urlParam('name'));
     $("#structure").text($.urlParam('structure'));
     index = $.urlParam('index');
     $("#image").attr('src', '/images?index=' + index);
-
+  
     document.onkeyup = function (event) {
         var e = (!event) ? window.event : event;
         switch (e.keyCode) {
@@ -33,7 +33,7 @@ $(document).ready(() => {
         }
     };
 
-    $("#image").click(() => {
+    $("#image").click( ()=> {
         nextImage();
     });
 });
