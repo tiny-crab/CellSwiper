@@ -31,13 +31,16 @@ module.exports = function(fs, db) {
         .then(function() {
             // download file to client
             if (!fs.existsSync('/tmp/csv/export.csv')){
-                fs.writeFile('/tmp/csv/export.csv', 'content')
+                // fs.writeFile('/tmp/csv/export.csv', 'content')
+                res.status(500).send("Error: no export file created")
             }
-            res.download(`/tmp/csv/export.csv`, 'export.csv', (err) => {
-                if (err) {
-                    throw ["Error downloading: Please try again\n", err]
-                }
-            });
+            else {
+                res.download(`/tmp/csv/export.csv`, 'export.csv', (err) => {
+                    if (err) {
+                        throw ["Error downloading: Please try again\n", err]
+                    }
+                });
+            }
         })
         .catch(function(err) {
             // runs on reject() or throw, meant to catch errors
