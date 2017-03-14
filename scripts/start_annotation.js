@@ -22,7 +22,8 @@ $(document).ready( ()=> {
                     window.location.href = `annotation?index=0&name=${name}&structure=${structure}`;
                 })
                 .fail(()=>{
-                    alert("Name is already in use");
+                    alert(`Name is already in use, continuing as "${name}"`);
+                    window.location.href = `annotation?index=0&name=${name}&structure=${structure}`;
                 });
 		}
 	});
