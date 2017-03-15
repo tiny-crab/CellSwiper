@@ -41,6 +41,37 @@ $(document).ready( ()=> {
         }
     };
 
+    let good = $("#good");
+    let bad = $("#bad");
+    let polaroid = $("#polaroid");
+
+    bad.hover( ()=> {
+        polaroid.css("border-color", "red");
+        polaroid.css("border-width", "5px");
+    }, ()=> {
+        polaroid.css("border-color", "black");
+        polaroid.css("border-width", "1px");
+    });
+
+    good.hover( ()=> {
+        polaroid.css("border-color", "green");
+        polaroid.css("border-width", "5px");
+
+    }, ()=> {
+        polaroid.css("border-color", "black");
+        polaroid.css("border-width", "1px");
+    });
+
+    bad.click( ()=> {
+        choice = false;
+        add_annotation()
+    });
+
+    good.click( ()=> {
+        choice = true;
+        add_annotation()
+    });
+
     image_div.click( ()=> {
         // nextImage();
     });

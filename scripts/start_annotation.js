@@ -38,6 +38,8 @@ $(document).ready( ()=> {
 
     }
 
+    // This block is for the input values on the login screen, in order to keep the
+    // masking text from falling back down once the user has typed in information.
     $('input').blur(function () {
 
         // check if the input has any value (if we've typed into it)
@@ -46,4 +48,6 @@ $(document).ready( ()=> {
         else
             $(this).removeClass('used');
     });
+
+
 });
