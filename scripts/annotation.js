@@ -4,7 +4,7 @@
  Minified.
  */
 $.urlParam = function (a) {
-    var b = new RegExp("[?&]" + a + "=([^&#]*)").exec(window.location.href);
+    let b = new RegExp("[?&]" + a + "=([^&#]*)").exec(window.location.href);
     if (b == null) {
         return null
     } else {
@@ -14,34 +14,67 @@ $.urlParam = function (a) {
 
 //Our stuff
 $(document).ready( ()=> {
-    $("#name").text($.urlParam('name'));
-    $("#structure").text($.urlParam('structure'));
-    index = $.urlParam('index');
-    $("#image").attr('src', '/images?index=' + index);
+    const name = $.urlParam('name');
+    const structure = $.urlParam('structure');
+    let index = $.urlParam('index');
+    let image_div = $("#image");
+    let choice;
+    $("#name").text(name);
+    $("#structure").text(structure);
+    image_div.attr('src', '/images?index=' + index);
   
     document.onkeyup = function (event) {
-        var e = (!event) ? window.event : event;
+        let e = (!event) ? window.event : event;
         switch (e.keyCode) {
             //left arrowkey
             case 37:
-                prevImage();
+                // prevImage();
+                choice = false;
                 break;
             //right arrowkey
             case 39:
-                nextImage();
+                // nextImage();
+                choice = true;
                 break;
         }
+        add_annotation()
     };
 
-    $("#image").click( ()=> {
-        nextImage();
+    image_div.click( ()=> {
+        // nextImage();
     });
+    
+    //takes image_div and applies "swipeleft" event 
+    //to the image
+    image_div.hammer().on("swipeleft", function() {
+        choice = false;
+        add_annotation()
+    });
+    
+    //Takes image_div and applies "swiperight" event
+    //to the image
+    image_div.hammer().on("swiperight", function(){
+        choice = true;
+        add_annotation()
+    });
+
+    function add_annotation() {
+        $.post("annotate", {imageid : index, user: name, annotation: choice, feature: structure})
+            .done( data => {
+                index = nextImage(index)
+            })
+            .fail( err => {
+                alert("Something went wrong...\n" + err.responseText);
+            })
+    }
+    
 });
 
-function nextImage() {
+function nextImage(index) {
     index++;
-    if (index > 9) window.location = "http://cellswiper.cs.spu.edu/complete";
-    $("#image").attr('src', '/images?index=' + index);
+    if (index > 10) window.location.href = 'export';
+    else $("#image").attr('src', '/images?index=' + index);
+    return index
 }
 
 function prevImage() {
@@ -49,3 +82,4 @@ function prevImage() {
     if (index < 0) index = 9;
     $("#image").attr('src', '/images?index=' + index);
 }
+

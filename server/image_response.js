@@ -12,7 +12,7 @@ module.exports = function(fs) {
         //var match_array = new RegExp('\/images\/(.*+?)', 'g').exec(url);
         //res.send(match_array);
         fs.readdir('./sample_pics/', function(err, items) {
-            res.sendFile(dir + 'sample_pics/' + items[index]);
+            res.sendFile(dir + 'sample_pics/' + items[index - 1]);
         });
     };
 

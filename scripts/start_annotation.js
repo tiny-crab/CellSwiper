@@ -17,12 +17,13 @@ $(document).ready( ()=> {
 			console.log("Form Filled");
             name = $("#name").val();
             structure = $("#structure").val();
-            $.post("insert_name")
+            $.post("insert_name", {name: name})
                 .done((data) => {
-                    window.location.href = `annotation?index=0&name=${name}&structure=${structure}`;
+                    window.location.href = `annotation?index=1&name=${name}&structure=${structure}`;
                 })
                 .fail(()=>{
-                    alert("Name is already in use");
+                    alert(`Name is already in use, continuing as "${name}"`);
+                    window.location.href = `annotation?index=1&name=${name}&structure=${structure}`;
                 });
 		}
 	});

@@ -38,7 +38,7 @@ app.get('/start', function(req, res) {
 });
 
 app.get('/annotation', function(req, res) {
-	var imgID = req.query.index;
+	let imgID = req.query.index;
 	res.sendFile(dir + 'pages/annotation.html');
 });
 
@@ -59,23 +59,32 @@ app.get('/confirm', function(req, res) {
 	//res.send(req.url);
 });
 
-//app.get('/confirm', images.get_img);
-
 app.get('/deny', function(req, res) {
 	res.send("Denied request");
 });
 
+app.post('/insert_name', function(req, res) {
+    let name = [req.body.name];
+    db.none("INSERT INTO users (username) VALUES ($1)", name)
+        .then( () => {
+            res.sendStatus(200); // status OK
+        })
+        .catch( err => {
+            res.sendStatus(200); // username probably already used
+        });
+});
+
 app.post('/annotate', function(req, res) {
-	var data = ['imageid', 'user', 'annotation', 'feature'].map(attr => req.body[attr]);
+	let data = ['imageid', 'user', 'annotation', 'feature'].map(attr => req.body[attr]);
 	// if any are not included
 	if (data.some(a => a === undefined)) {
-		res.send("Error: Invalid data format");
+		res.status(400).send("Error: Invalid data format");
 		return;
 	}
-	db.none("insert into annotation(imageid, username, annotation, feature) values($1, $2, $3, $4)", data)
+	db.none("INSERT INTO annotation(imageid, username, annotation, feature) VALUES($1, $2, $3, $4)", data)
 	.then(() => res.send("Annotation added"))
 	.catch(err => {
-		res.send("Annotation failed");
+		res.status(500).send("Error: Annotation failed");
 		console.log(err);
 	});
 });
