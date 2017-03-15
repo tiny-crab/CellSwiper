@@ -18,13 +18,13 @@ $(document).ready( ()=> {
     const structure = $.urlParam('structure');
     let index = $.urlParam('index');
     let image_div = $("#image");
+    let choice;
     $("#name").text(name);
     $("#structure").text(structure);
     image_div.attr('src', '/images?index=' + index);
   
     document.onkeyup = function (event) {
         let e = (!event) ? window.event : event;
-        let choice;
         switch (e.keyCode) {
             //left arrowkey
             case 37:
@@ -37,13 +37,7 @@ $(document).ready( ()=> {
                 choice = true;
                 break;
         }
-        $.post("annotate", {imageid : index, user: name, annotation: choice, feature: structure})
-            .done( data => {
-                index = nextImage(index)
-            })
-            .fail( err => {
-                alert("Something went wrong...\n" + err.responseText);
-            })
+        add_annotation()
     };
 
     image_div.click( ()=> {
@@ -54,30 +48,25 @@ $(document).ready( ()=> {
     //to the image
     image_div.hammer().on("swipeleft", function() {
         choice = false;
-        $.post("annotate", {imageid : index, user: name, annotation: choice, feature: structure})
-            .done( data => {
-            index = nextImage(index)
-            })
-            .fail( err => {
-                alert("Something went wrong...\n" + err.responseText);
-            })
-        //alert("Hey I've swiped left")
-    }); 
+        add_annotation()
+    });
     
     //Takes image_div and applies "swiperight" event
     //to the image
     image_div.hammer().on("swiperight", function(){
         choice = true;
+        add_annotation()
+    });
+
+    function add_annotation() {
         $.post("annotate", {imageid : index, user: name, annotation: choice, feature: structure})
             .done( data => {
-            index = nextImage(index)
+                index = nextImage(index)
             })
             .fail( err => {
                 alert("Something went wrong...\n" + err.responseText);
             })
-        //alert("Hey I've swiped RIGHT")
-    });
-
+    }
     
 });
 
