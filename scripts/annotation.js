@@ -30,14 +30,15 @@ $(document).ready( ()=> {
             case 37:
                 // prevImage();
                 choice = false;
+                add_annotation();
                 break;
             //right arrowkey
             case 39:
                 // nextImage();
                 choice = true;
+                add_annotation();
                 break;
         }
-        add_annotation()
     };
 
     image_div.click( ()=> {
@@ -72,7 +73,7 @@ $(document).ready( ()=> {
 
 function nextImage(index) {
     index++;
-    if (index > 10) window.location.href = 'complete';
+    if (index > 12) window.location.href = 'complete';
     else $("#image").attr('src', '/images?index=' + index);
     return index
 }
