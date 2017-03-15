@@ -28,6 +28,7 @@ $(document).ready( ()=> {
 		}
 	});
 
+    // This block is activated when the client is on a mobile device.
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         $("#sidebar").hide();
         let input_form = $(".submit-form");

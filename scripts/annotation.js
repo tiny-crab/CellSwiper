@@ -14,12 +14,10 @@ $.urlParam = function (a) {
 
 //Our stuff
 $(document).ready( ()=> {
-    const name = $.urlParam('name');
     const structure = $.urlParam('structure');
     let index = $.urlParam('index');
     let image_div = $("#image");
     let choice;
-    $("#name").text(name);
     $("#structure").text(structure);
     image_div.attr('src', '/images?index=' + index);
   
