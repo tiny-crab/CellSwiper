@@ -4,14 +4,28 @@ html, body {
     max-width: 100%;
     overflow-x: hidden;
     overflow-y: hidden;
-    background-color: #17243A;
+}
+
+#navbar {
+    height: 5%;
+    color: white;
+    text-align:right;
+}
+
+#swiper {
+    height: 92.5%;
 }
 
 #polaroid {
-    border: black 1px solid;
-    border-radius:.2em;
+    border: darkgrey 1px solid;
     height: 100%;
     background-color: whitesmoke;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+#polaroid:hover {
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 .col-md-3 {
@@ -19,11 +33,20 @@ html, body {
 }
 
 .polaroid-image {
-    width: 90%;
-    height: 75%;
-    margin-left: auto;
+    width: 85%;
+    height: 85%;
     margin-right: auto;
+    margin-left: auto;
     margin-top: 2em;
+}
+
+.polaroid-text {
+    height: 7.5%;
+}
+
+.polaroid-text > h2 {
+    font-size: 100%;
+    line-height: 100%;
 }
 
 #image {
