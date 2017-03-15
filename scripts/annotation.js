@@ -18,13 +18,13 @@ $(document).ready( ()=> {
     const structure = $.urlParam('structure');
     let index = $.urlParam('index');
     let image_div = $("#image");
+    let choice;
     $("#name").text(name);
     $("#structure").text(structure);
     image_div.attr('src', '/images?index=' + index);
   
     document.onkeyup = function (event) {
         let e = (!event) ? window.event : event;
-        let choice;
         switch (e.keyCode) {
             //left arrowkey
             case 37:
@@ -37,6 +37,28 @@ $(document).ready( ()=> {
                 choice = true;
                 break;
         }
+        add_annotation()
+    };
+
+    image_div.click( ()=> {
+        // nextImage();
+    });
+    
+    //takes image_div and applies "swipeleft" event 
+    //to the image
+    image_div.hammer().on("swipeleft", function() {
+        choice = false;
+        add_annotation()
+    });
+    
+    //Takes image_div and applies "swiperight" event
+    //to the image
+    image_div.hammer().on("swiperight", function(){
+        choice = true;
+        add_annotation()
+    });
+
+    function add_annotation() {
         $.post("annotate", {imageid : index, user: name, annotation: choice, feature: structure})
             .done( data => {
                 index = nextImage(index)
@@ -44,11 +66,8 @@ $(document).ready( ()=> {
             .fail( err => {
                 alert("Something went wrong...\n" + err.responseText);
             })
-    };
-
-    image_div.click( ()=> {
-        // nextImage();
-    });
+    }
+    
 });
 
 function nextImage(index) {
