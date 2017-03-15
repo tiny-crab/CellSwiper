@@ -72,7 +72,7 @@ $(document).ready( ()=> {
 
 function nextImage(index) {
     index++;
-    if (index > 10) window.location.href = 'export';
+    if (index > 10) window.location.href = 'complete';
     else $("#image").attr('src', '/images?index=' + index);
     return index
 }
