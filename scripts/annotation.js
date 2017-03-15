@@ -49,36 +49,6 @@ $(document).ready( ()=> {
     image_div.click( ()=> {
         // nextImage();
     });
-    
-    //takes image_div and applies "swipeleft" event 
-    //to the image
-    image_div.hammer().on("swipeleft", function() {
-        choice = false;
-        $.post("annotate", {imageid : index, user: name, annotation: choice, feature: structure})
-            .done( data => {
-            index = nextImage(index)
-            })
-            .fail( err => {
-                alert("Something went wrong...\n" + err.responseText);
-            })
-        //alert("Hey I've swiped left")
-    }); 
-    
-    //Takes image_div and applies "swiperight" event
-    //to the image
-    image_div.hammer().on("swiperight", function(){
-        choice = true;
-        $.post("annotate", {imageid : index, user: name, annotation: choice, feature: structure})
-            .done( data => {
-            index = nextImage(index)
-            })
-            .fail( err => {
-                alert("Something went wrong...\n" + err.responseText);
-            })
-        //alert("Hey I've swiped RIGHT")
-    });
-
-    
 });
 
 function nextImage(index) {
