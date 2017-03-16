@@ -11,8 +11,8 @@ module.exports = function(fs) {
         var index = req.query.index;
         //var match_array = new RegExp('\/images\/(.*+?)', 'g').exec(url);
         //res.send(match_array);
-        fs.readdir('./sample_pics/', function(err, items) {
-            res.sendFile(dir + 'sample_pics/' + items[index - 1]);
+        fs.readdir('./cell_images/', function(err, items) {
+            res.sendFile(dir + 'cell_images/' + items[index - 1]);
         });
     };
 

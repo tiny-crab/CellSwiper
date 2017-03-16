@@ -1,35 +1,54 @@
-html, body, .container-table {
+html, body {
     height: 100%;
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
-    background-color: #17243A;
+    overflow-y: hidden;
 }
 
-.container-table {
-    display: table;
+#navbar {
+    height: 5%;
+    color: white;
+    text-align:right;
 }
 
-.vertical-center-row {
-    display: table-cell;
-    vertical-align: middle;
+#swiper {
+    height: 92.5%;
 }
 
-.polaroid {
-    width: 30em;
-    height: 32.5em;
-    margin-left: auto;
-    margin-right: auto;
-    border: black 1px solid;
+#polaroid {
+    border: 1px whitesmoke solid;
+    padding-top: .25em;
+    height: 100%;
     background-color: whitesmoke;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.col-md-3 {
+    height: 100%;
 }
 
 .polaroid-image {
-    width: 80%;
-    height: 68%;
-    margin-left: auto;
+    width: 85%;
+    height: 85%;
     margin-right: auto;
+    margin-left: auto;
     margin-top: 2em;
+}
+
+.polaroid-text {
+    text-align: center;
+    height: 7.5%;
+    font-size: 2rem;
+    padding-top: .5em;
+}
+
+#bad-button {
+    color: red;
+}
+#good-button {
+    color: green;
 }
 
 #image {
@@ -37,6 +56,4 @@ html, body, .container-table {
     height: 100%;
 }
 
-.polaroid-text {
-    text-align: center;
-}
+
