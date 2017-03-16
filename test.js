@@ -50,6 +50,8 @@ app.get('/images', images.get_img);
 
 app.get('/export', exports.export_csv);
 
+app.get('/export-users', exports.send_users);
+
 app.get('/sample_script.js', function(req, res) {
 	res.sendFile(dir + 'sample_script.js');
 });
