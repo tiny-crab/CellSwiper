@@ -4,7 +4,7 @@ $(document).ready(() => {
         name_select = $("#name-select")
         $.each(data, (val, text) => {
             name_select.append(
-                $('<option></option>').val(val).html(text)
+                $('<option></option>').val(text).html(text)
             );
         })
     });
