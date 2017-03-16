@@ -25,7 +25,6 @@
                         options.push('before=' + $('#before-select option:selected')[0].value);
                         options.push('date=' + document.getElementById('date-select').value);
                     }
-                    console.log(options);
                     window.location.href = '/export?' + options.join('&');
                 });
             });
@@ -37,30 +36,23 @@
         </div>
         <form id="export-form">
             <div class="form-group">
-                <label for="name-option">By Name</label>
-                <input id="name-check" class="main-option" type="checkbox" name="name-option" value="">
-                <span class="option-body">
-                    <select id="name-select" name="name-select">
-                        <option value="matt">Matt</option>
-                        <option value="test">Test</option>
-                    </select>
-                </span>
+                <label for="name-check">By Name</label>
+                <input id="name-check" type="checkbox" value="">
+                <select id="name-select" name="name-select">
+                    <option value="matt">Matt</option>
+                    <option value="test">Test</option>
+                </select>
             </div>
             <div class="form-group">
-                <label for="date-option">By Date</label>
-                <input id="date-check" class="main-option" type="checkbox" name="date-option" value="">
-                <span class="option-body">
-                    <select disabled id="before-select" name="before-select">
-                        <option value="1">Before</option>
-                        <option value="0">After</option>
-                    </select>
-                    <input id="date-select" type="date" name="date-select">
-                </span>
+                <label for="date-check">By Date</label>
+                <input id="date-check" type="checkbox" value="">
+                <select id="before-select" name="before-select">
+                    <option value="1">Before</option>
+                    <option value="0">After</option>
+                </select>
+                <input id="date-select" type="date" name="date-select">
             </div>
-            <input id="export-button" type="submit" class="col-xs-offset-5 button btn btn-large btn-primary" value="Export as CSV">
+            <input id="export-button" type="submit" class="col-xs-offset-5 btn btn-large btn-primary" value="Export as CSV">
         </form>
-        <div class="row">
-            
-        </div>
     </body>
 </html>

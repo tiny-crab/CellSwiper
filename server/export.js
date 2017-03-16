@@ -29,15 +29,15 @@ module.exports = function(fs, db) {
         // replace 'annotation' with a select query to get certain rows instead of the whole thing
         .then(() => {
             let select = "SELECT * FROM annotation";
-            console.log(req.query.before);
-            if (req.query.name !== undefined && req.query.date !== undefined) {
-                select += " WHERE username = ($1) AND date_added " + (req.query.before == "1" ? "<=" : ">=") + " ($2)";
+            let options = [];
+            if (req.query.name !== undefined) {
+                options.push("username = ($1)");
             }
-            else if (req.query.name !== undefined) {
-                select += " WHERE username = ($1)";
+            if (req.query.date !== undefined) {
+                options.push("date_added " + (req.query.before == "1" ? "<=" : ">=") + " ($2)");
             }
-            else if (req.query.date !== undefined) {
-                select += " WHERE date_added " + (req.query.before == "1" ? "<=" : ">=") + " ($2)";
+            if (options.length > 0) {
+                select += " WHERE " + options.join(" AND ");
             }
             return db.none(`COPY (${select}) TO '/tmp/csv/export.csv' DELIMITER ',' CSV HEADER`, [req.query.name, req.query.date])
         })
@@ -50,14 +50,14 @@ module.exports = function(fs, db) {
             else {
                 res.download(`/tmp/csv/export.csv`, 'export.csv', (err) => {
                     if (err) {
-                        throw ["Error downloading: Please try again\n", err]
+                       res.status(500).send("Error downloading: Please try again\n")
                     }
                 });
             }
         })
         .catch(function(err) {
             // runs on reject() or throw, meant to catch errors
-            res.send(err[0] + err[1])
+            console.log(err);
         });
     };
     return module;
