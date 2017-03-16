@@ -41,6 +41,15 @@ $(document).ready( ()=> {
         }
     };
 
+    let good_classification = function() {
+        choice = true;
+        add_annotation();
+    };
+    let bad_classification = function() {
+        choice = false;
+        add_annotation();
+    };
+
     let good = $("#good");
     let bad = $("#bad");
     let polaroid = $("#polaroid");
@@ -49,7 +58,7 @@ $(document).ready( ()=> {
         polaroid.css("border-color", "red");
         polaroid.css("border-width", "5px");
     }, ()=> {
-        polaroid.css("border-color", "black");
+        polaroid.css("border-color", "whitesmoke");
         polaroid.css("border-width", "1px");
     });
 
@@ -58,37 +67,24 @@ $(document).ready( ()=> {
         polaroid.css("border-width", "5px");
 
     }, ()=> {
-        polaroid.css("border-color", "black");
+        polaroid.css("border-color", "whitesmoke");
         polaroid.css("border-width", "1px");
     });
 
-    bad.click( ()=> {
-        choice = false;
-        add_annotation()
-    });
+    let good_button = $("#good-button");
+    let bad_button = $("#bad-button");
 
-    good.click( ()=> {
-        choice = true;
-        add_annotation()
-    });
-
-    image_div.click( ()=> {
-        // nextImage();
-    });
-    
-    //takes image_div and applies "swipeleft" event 
+    bad.click(bad_classification);
+    bad_button.click(bad_classification);
+    //takes image_div and applies "swipeleft" event
     //to the image
-    image_div.hammer().on("swipeleft", function() {
-        choice = false;
-        add_annotation()
-    });
-    
+    image_div.hammer().on("swipeleft", bad_classification);
+
+    good.click(good_classification);
+    good_button.click(good_classification);
     //Takes image_div and applies "swiperight" event
     //to the image
-    image_div.hammer().on("swiperight", function(){
-        choice = true;
-        add_annotation()
-    });
+    image_div.hammer().on("swiperight", good_classification);
 
     function add_annotation() {
         $.post("annotate", {imageid : index, user: name, annotation: choice, feature: structure})

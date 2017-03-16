@@ -17,7 +17,8 @@ html, body {
 }
 
 #polaroid {
-    border: darkgrey 1px solid;
+    border: 1px whitesmoke solid;
+    padding-top: .25em;
     height: 100%;
     background-color: whitesmoke;
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
@@ -39,6 +40,15 @@ html, body {
 .polaroid-text {
     text-align: center;
     height: 7.5%;
+    font-size: 2rem;
+    padding-top: .5em;
+}
+
+#bad-button {
+    color: red;
+}
+#good-button {
+    color: green;
 }
 
 #image {
