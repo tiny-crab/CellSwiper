@@ -27,7 +27,20 @@ module.exports = function(fs, db) {
             });
         }) // run the command to output the table to a file
         // replace 'annotation' with a select query to get certain rows instead of the whole thing
-        .then(db.none(`COPY annotation TO '/tmp/csv/export.csv' DELIMITER ',' CSV HEADER`))
+        .then(() => {
+            let select = "SELECT * FROM annotation";
+            console.log(req.query.before);
+            if (req.query.name !== undefined && req.query.date !== undefined) {
+                select += " WHERE username = ($1) AND date_added " + (req.query.before == "1" ? "<=" : ">=") + " ($2)";
+            }
+            else if (req.query.name !== undefined) {
+                select += " WHERE username = ($1)";
+            }
+            else if (req.query.date !== undefined) {
+                select += " WHERE date_added " + (req.query.before == "1" ? "<=" : ">=") + " ($2)";
+            }
+            return db.none(`COPY (${select}) TO '/tmp/csv/export.csv' DELIMITER ',' CSV HEADER`, [req.query.name, req.query.date])
+        })
         .then(function() {
             // download file to client
             if (!fs.existsSync('/tmp/csv/export.csv')){

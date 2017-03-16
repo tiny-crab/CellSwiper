@@ -33,7 +33,7 @@ input[type=text]:focus {
     /*border-bottom: 0px;*/
 }
 
-label {
+label.shift {
     color: white;
     font-size: 18px;
     font-weight: normal;

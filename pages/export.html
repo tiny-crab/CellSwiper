@@ -10,13 +10,57 @@
         <link rel="stylesheet" href="../styles/theme.css">
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans|Sansita" rel="stylesheet">
+        <script>
+            // move this out to separate file eventually
+            $(document).ready(() => {
+                // set max date for date select to be today
+                document.getElementById('date-select').max = (new Date()).toISOString().substring(0, 10);
+                $('#export-form').submit((ev) => {
+                    ev.preventDefault();
+                    let options = [];
+                    if (document.getElementById('name-check').checked) {
+                        options.push('name=' + $('#name-select option:selected')[0].value)
+                    }
+                    if (document.getElementById('date-check').checked) {
+                        options.push('before=' + $('#before-select option:selected')[0].value);
+                        options.push('date=' + document.getElementById('date-select').value);
+                    }
+                    console.log(options);
+                    window.location.href = '/export?' + options.join('&');
+                });
+            });
+        </script>
     </head>
     <body>
         <div class="row">
-            <h1 class="col-xs-offset-5 col-xs-8">Export Page</h1>
+            <h1 class="col-xs-12 text-center">Export Page</h1>
         </div>
+        <form id="export-form">
+            <div class="form-group">
+                <label for="name-option">By Name</label>
+                <input id="name-check" class="main-option" type="checkbox" name="name-option" value="">
+                <span class="option-body">
+                    <select id="name-select" name="name-select">
+                        <option value="matt">Matt</option>
+                        <option value="test">Test</option>
+                    </select>
+                </span>
+            </div>
+            <div class="form-group">
+                <label for="date-option">By Date</label>
+                <input id="date-check" class="main-option" type="checkbox" name="date-option" value="">
+                <span class="option-body">
+                    <select disabled id="before-select" name="before-select">
+                        <option value="1">Before</option>
+                        <option value="0">After</option>
+                    </select>
+                    <input id="date-select" type="date" name="date-select">
+                </span>
+            </div>
+            <input id="export-button" type="submit" class="col-xs-offset-5 button btn btn-large btn-primary" value="Export as CSV">
+        </form>
         <div class="row">
-            <a class="col-xs-offset-5 button btn btn-large btn-primary" href="/export">Export as CSV</a>
+            
         </div>
     </body>
 </html>
