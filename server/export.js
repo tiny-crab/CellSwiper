@@ -60,5 +60,18 @@ module.exports = function(fs, db) {
             console.log(err);
         });
     };
+
+    module.send_users = function(req, res) {
+        db.any('select username from users', [true]).then((data) => {
+            users = [];
+            data.forEach(item => {
+                users.push(item.username);
+            });
+            res.send(users);
+        }).catch(err => {
+            res.sendStatus(500); // no users
+        });
+    };
+
     return module;
 };
