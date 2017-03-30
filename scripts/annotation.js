@@ -14,11 +14,13 @@ $.urlParam = function (a) {
 
 //Our stuff
 $(document).ready( ()=> {
+    const name = $.urlParam('name');
     const structure = $.urlParam('structure');
+    const image_div = $("#image");
+
     let index = $.urlParam('index');
-    let name = $.urlParam('name');
-    let image_div = $("#image");
     let choice;
+
     $("#user").text(name);
     $("#structure").text(structure);
     image_div.attr('src', '/images?index=' + index);
@@ -28,13 +30,11 @@ $(document).ready( ()=> {
         switch (e.keyCode) {
             //left arrowkey
             case 37:
-                // prevImage();
                 choice = false;
                 add_annotation();
                 break;
             //right arrowkey
             case 39:
-                // nextImage();
                 choice = true;
                 add_annotation();
                 break;
@@ -103,11 +103,5 @@ function nextImage(index) {
     if (index > 12) window.location.href = 'complete';
     else $("#image").attr('src', '/images?index=' + index);
     return index
-}
-
-function prevImage() {
-    index--;
-    if (index < 0) index = 9;
-    $("#image").attr('src', '/images?index=' + index);
 }
 

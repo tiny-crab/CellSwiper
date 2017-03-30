@@ -1,7 +1,7 @@
 $(document).ready(() => {
     // set max date for date select to be today
     $.get('/export-users', data => {
-        name_select = $("#name-select")
+        let name_select = $("#name-select");
         $.each(data, (val, text) => {
             name_select.append(
                 $('<option></option>').val(text).html(text)
