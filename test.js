@@ -29,8 +29,8 @@ app.get('/dbtest', function(req,res) {
 	});
 });
 
-app.get('/', function(req, res) {
-	res.sendFile(dir + 'sample.html');
+app.get('/home', function(req, res) {
+    res.sendFile(dir + 'pages/home.html');
 });
 
 app.get('/start', function(req, res) {

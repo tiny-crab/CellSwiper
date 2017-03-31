@@ -1,32 +1,32 @@
 //Logic for starting the annotation process
 
 console.log("Start annotation script received");
-var name;
-var structure;
+let name;
+let structure;
 
-$(document).ready( ()=> {
-	$("form").submit( (e)=> {
+$(document).ready(() => {
+    $("form").submit((e) => {
         e.preventDefault();
-		if (!$("#name").val()) {
-			alert("Name field not filled");
-		}
-		else if (!$("#structure").val()) {
-			alert("Structure field not filled");
-		}
-		else {
-			console.log("Form Filled");
+        if (!$("#name").val()) {
+            alert("Name field not filled");
+        }
+        else if (!$("#structure").val()) {
+            alert("Structure field not filled");
+        }
+        else {
+            console.log("Form Filled");
             name = $("#name").val();
             structure = $("#structure").val();
             $.post("insert_name", {name: name})
-                .done((data) => {
-                    window.location.href = `annotation?index=1&name=${name}&structure=${structure}`;
+                .done(() => {
+                    window.location.href = `home?&name=${name}&structure=${structure}`;
                 })
-                .fail(()=>{
+                .fail(() => {
                     alert(`Name is already in use, continuing as "${name}"`);
-                    window.location.href = `annotation?index=1&name=${name}&structure=${structure}`;
+                    window.location.href = `home?name=${name}&structure=${structure}`;
                 });
-		}
-	});
+        }
+    });
 
     // This block is activated when the client is on a mobile device.
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
