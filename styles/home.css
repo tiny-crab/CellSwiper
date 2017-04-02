@@ -1,0 +1,51 @@
+.nav {
+    background-color: #17243A;
+    color: white;
+    height: 5em;
+}
+
+#logo {
+    padding-left: 1em;
+}
+
+#image-dir {
+    border: 1px solid black;
+    height: 10em;
+}
+
+#task-list {
+    border: 1px solid black;
+    height: 10em;
+}
+
+#new-batch {
+    margin: auto;
+    width: 60%;
+    font-size: 2rem;
+    text-align: center;
+    font-family: "Open Sans", sans-serif;
+    border: 2px #5483D3 solid;
+    border-radius: 1em;
+    line-height: 3rem;
+    color: #5483D3;
+}
+
+#continue-batch {
+    margin: auto;
+    width: 60%;
+    font-size: 2rem;
+    text-align: center;
+    font-family: "Open Sans", sans-serif;
+    border: 2px #B7760E solid;
+    border-radius: 1em;
+    line-height: 3rem;
+    color: #B7760E;
+}
+
+#new-batch:hover {
+    cursor: pointer;
+}
+
+#continue-batch:hover {
+    cursor: pointer;
+}
