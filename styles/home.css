@@ -18,34 +18,35 @@
     height: 10em;
 }
 
-#new-batch {
+#new-batch, #continue-batch {
     margin: auto;
     width: 60%;
     font-size: 2rem;
     text-align: center;
     font-family: "Open Sans", sans-serif;
-    border: 2px #5483D3 solid;
     border-radius: 1em;
     line-height: 3rem;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+#new-batch {
     color: #5483D3;
+    border: 2px #5483D3 solid;
 }
 
 #continue-batch {
-    margin: auto;
-    width: 60%;
-    font-size: 2rem;
-    text-align: center;
-    font-family: "Open Sans", sans-serif;
     border: 2px #B7760E solid;
-    border-radius: 1em;
-    line-height: 3rem;
     color: #B7760E;
 }
 
 #new-batch:hover {
     cursor: pointer;
+    background-color: #5483D3;
+    color: white;
 }
 
 #continue-batch:hover {
     cursor: pointer;
+    background-color: #B7760E;
+    color: white;
 }
