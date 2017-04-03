@@ -21,6 +21,9 @@ echo `forever stop 0`
 echo `git checkout master`
 echo `git pull`
 
+# Update npm dependencies
+echo `npm install`
+
 # Restart server
 #   TODO standardize name
 echo `forever start test.js`
