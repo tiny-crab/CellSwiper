@@ -26,6 +26,6 @@ echo `npm install`
 
 # Restart server
 #   TODO standardize name
-echo `forever start test.js`
+echo `forever start app.js`
 
 echo -e "\e[1;34mServer restart attempted\e[0m"
