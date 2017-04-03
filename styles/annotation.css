@@ -50,6 +50,10 @@ html, body {
 #good-button {
     color: green;
 }
+#bad-button:hover, #good-button:hover {
+    cursor: pointer;
+}
+
 
 #image {
     width: 100%;
