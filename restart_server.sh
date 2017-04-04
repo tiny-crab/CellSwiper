@@ -4,11 +4,11 @@
 IPADDR=`/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 
 # If this is the server, specify home directory
-#   Otherwise, get CLI arg
+#   Otherwise, get the execution directory of the server
 if [ "$IPADDR" == "138.68.15.82" ]; then
     SERVERDIR=/home/cellswiper/
 else
-    SERVERDIR=$1
+    SERVERDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 fi
 
 # Go to server directory
@@ -25,7 +25,6 @@ echo `git pull`
 echo `npm install`
 
 # Restart server
-#   TODO standardize name
 echo `forever start app.js`
 
 echo -e "\e[1;34mServer restart attempted\e[0m"
