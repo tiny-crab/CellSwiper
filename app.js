@@ -94,7 +94,7 @@ app.post('/annotate', function(req, res) {
 var server = app.listen(port, () => {
 	console.log(`listening on port ${port}`);
 }).on('error', (err) => {
-	if (err.code == "EADDRINUSE") {
+	if (err.code === "EADDRINUSE") {
 		console.log(`Port ${port} already in use`);
 	}
 	else {
