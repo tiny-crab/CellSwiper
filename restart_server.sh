@@ -6,8 +6,10 @@ IPADDR=`/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}
 # If this is the server, specify home directory
 #   Otherwise, get the execution directory of the server
 if [ "$IPADDR" == "138.68.15.82" ]; then
+    ISSERVER=true
     SERVERDIR=/home/cellswiper/
 else
+    ISSERVER=false
     SERVERDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 fi
 
@@ -17,9 +19,11 @@ cd $SERVERDIR
 # Stop process (should always be process 0)
 echo `forever stop 0`
 
-# Pull master branch
-echo `git checkout master`
-echo `git pull`
+# Pull master branch only if on server
+if $ISSERVER ; then
+    echo `git checkout master`
+    echo `git pull`
+fi
 
 # Update npm dependencies
 echo `npm install`
