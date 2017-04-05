@@ -9,7 +9,7 @@ let port = info.server_port;
 let dir = info.parent_dir;
 global.dir = dir;
 let images = require('./server/image_response.js');
-let exports = require('./server/export.js')(db);
+let exports = require('./server/export.js')(db, info.data_dir);
 let imports = require('./server/import_dir')();
 
 // serv static pages

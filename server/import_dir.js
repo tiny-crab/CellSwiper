@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const sharp = require('sharp');
 
-module.exports = function(db) {
+module.exports = function(db, data_dir) {
     let module = {};
 
     // Author: Evan
