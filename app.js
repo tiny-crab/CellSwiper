@@ -8,8 +8,9 @@ let db = pg({host: info.db_host, port: info.db_port, database: info.db_name, use
 let port = info.server_port;
 let dir = info.parent_dir;
 global.dir = dir;
-let images = require('./server/image_response.js')(fs);
-let exports = require('./server/export.js')(fs, db);
+let images = require('./server/image_response.js');
+let exports = require('./server/export.js')(db);
+let imports = require('./server/import_dir')();
 
 // serv static pages
 app.use('/pages', express.static('pages'));

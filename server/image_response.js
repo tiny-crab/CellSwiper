@@ -1,4 +1,6 @@
-module.exports = function(fs) {
+const fs = require('fs');
+
+module.exports = function() {
     let module = {};
 
     // Author: Matthew
