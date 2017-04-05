@@ -1,4 +1,5 @@
 const fs = require('fs');
+const walk = require('walk');
 const path = require('path');
 const sharp = require('sharp');
 
@@ -39,16 +40,77 @@ module.exports = function(db, data_dir) {
 
     // Author: Matthew
     module.import_dir = function(req, res) {
-        // check if valid directory
-        fs.stat(dir, (err, stats) => {
-            if (err.code === "ENOENT") {
-                res.status(400).send("No such directory exists");
-                return
-            }
-            else {
+        let img_list = [];
+        const dir = req.query.dir;
+        const recursive = req.query.recursive;
+        const imgExts = new Set(['.jpg', '.png', '.bmp', '.tif']);
 
+        // whole process done as a single promise
+        new Promise(function(resolve, reject) {
+            // check if valid directory
+            fs.stat(dir, (err, stats) => {
+                if (err.code === "ENOENT") {
+                    reject([400, "No such directory exists"]);
+                }
+                else {
+                    if (!stats.isDirectory()) {
+                        reject([400, "Path specified is not a directory"]);
+                    }
+                }
+            });
+            resolve();
+        })
+        // read directory and compile a list of images
+        .then(() => {
+            // recursively walk paths
+            if (recursive === True) {
+                let walker = walk.walk(dir);
+
+                walker.on("file", (root, fileStats, next) => {
+                    // add to list if valid image file
+                    if (imgExts.has(path.extname(fileStats.name))) {
+                        img_list.add(path.join(root, fileStats.name));
+                    }
+                    next();
+                });
+
+                walker.on("error", (root, nodeStatsArray, next) => {
+                    console.log(nodeStatsArray.error);
+                    next();
+                });
+
+                walker.on("end", () => {
+                    if (img_list.length === 0) {
+                        throw [400, "No images found in this directory or its children"]
+                    }
+                })
+            }
+            // only search in current directory
+            else {
+                fs.readdir(dir, (err, files) => {
+                    if (err) {
+                        console.log(`Error getting files from ${dir}`, err);
+                        throw [400, "Error getting files, perhaps a read permissions error?"]
+                    }
+                    for (let f of files) {
+                        // loop through all files
+                        if (imgExts.has(path.extname(f)))
+                            img_list.add(path.join(dir, path.basename(f)))
+                    }
+                });
+                if (img_list.length === 0) {
+                    throw [400, "No images found in this directory"]
+                }
             }
         })
+        // create batch entry in DB
+        .then(() => {
+
+        })
+        // Catch any errors, will be of the form [HTTP_STATUS, ERR_MSG}
+        .catch((err) => {
+            res.status(err[0]).send(err[1])
+        });
     };
 
 
