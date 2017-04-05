@@ -105,6 +105,13 @@ module.exports = function(db, data_dir) {
         })
         // create batch entry in DB
         .then(() => {
+            db.none("INSERT INTO batches(original_dir) VALUES($1)", [dir])
+                .catch(err => {
+                    throw [500, "Couldn't create new batch entry in database"]
+                });
+        })
+        // add image to database
+        .then(() => {
 
         })
         // Catch any errors, will be of the form [HTTP_STATUS, ERR_MSG}
