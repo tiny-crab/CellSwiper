@@ -38,8 +38,17 @@ module.exports = function(db) {
     };
 
     // Author: Matthew
-    module.import_dir = function(dir, data_location) {
-        
+    module.import_dir = function(req, res) {
+        // check if valid directory
+        fs.stat(dir, (err, stats) => {
+            if (err.code === "ENOENT") {
+                res.status(400).send("No such directory exists");
+                return
+            }
+            else {
+
+            }
+        })
     };
 
 
