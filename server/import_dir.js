@@ -5,6 +5,7 @@ const sharp = require('sharp');
 module.exports = function(db) {
     let module = {};
 
+    // Author: Evan
     module.downsize_dir = function (dir) {
         let ds_path = path.join(dir, 'ds');
         let downsampleSize = 300;
@@ -34,7 +35,13 @@ module.exports = function(db) {
                 }
             });
         });
-    }
+    };
+
+    // Author: Matthew
+    module.import_dir = function(dir, data_location) {
+        
+    };
+
 
     return module;
 };
