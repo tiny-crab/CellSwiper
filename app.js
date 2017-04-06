@@ -8,9 +8,9 @@ let db = pg({host: info.db_host, port: info.db_port, database: info.db_name, use
 let port = info.server_port;
 let dir = info.parent_dir;
 global.dir = dir;
-let images = require('./server/image_response.js');
-let exports = require('./server/export.js')(db, info.data_dir);
-let imports = require('./server/import_dir')();
+let images = require('./server/image_response.js')();
+let exporter = require('./server/export.js')(db);
+let importer = require('./server/import_dir.js')(db, info.data_dir);
 
 // serv static pages
 app.use('/pages', express.static('pages'));
@@ -49,9 +49,11 @@ app.get('/complete', function(req, res) {
 
 app.get('/images', images.get_img);
 
-app.get('/export', exports.export_csv);
+app.get('/export', exporter.export_csv);
 
-app.get('/export-users', exports.send_users);
+app.get('/export-users', exporter.send_users);
+
+app.get('/test-add', importer.import_dir);
 
 app.get('/sample_script.js', function(req, res) {
 	res.sendFile(dir + 'sample_script.js');
