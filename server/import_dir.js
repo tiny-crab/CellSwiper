@@ -46,8 +46,12 @@ module.exports = function(db, data_dir) {
         const recursive = req.query.recursive;
         const imgExts = new Set(['.jpg', '.png', '.bmp', '.tif']);
 
-        // whole process done as a single promise
-        new Promise(function(resolve, reject) {
+        // --- Hebrews 8:7-8 ---
+        // For if there had been nothing wrong with that first promise, no place would have
+        // been sought for another. But god found fault with the people and said:
+        // "The days are coming, declares the Lord, when I will make a
+        new Promise( // with the people of Israel and with the people of Judah."
+            function(resolve, reject) {
             // check if valid directory
             fs.stat(dir, (err, stats) => {
                 if (err && err.code === "ENOENT") {
@@ -126,21 +130,20 @@ module.exports = function(db, data_dir) {
             console.log("here");
             let batchID = payload[0];
             let batch_path = payload[1];
-            // for (let img_ind in img_list) {
-            //     why do I have to do this python is so much better
-            //     let img = img_list[img_ind];
-                let img = img_list[1];
+            let promise_list = [];
+            for (let img of img_list) {
                 let hash;
                 console.log(img);
-                phash(img, true)
+                promise_list.push(phash(img, true)
                     .then(hash => {
                         console.log("Image hashed: " + hash);
-                        db.any("SELECT imageid FROM image WHERE hash = $1", [hash])
+                        return db.any("SELECT imageid FROM images WHERE hash = $1", [hash])
                             .then(data => {
                                 if (data.length === 0) {
                                     return hash;
                                 }
                                 else {
+                                    // TODO: replace with adding directory to existing entry
                                     throw [500, "Hash already exists"]
                                 }
                             })
@@ -148,24 +151,19 @@ module.exports = function(db, data_dir) {
                     })
                     // this should technically be possible since I'm returning a promise here
                     .then(hash => {
-                        // if there's already this image in the DB
-                        // if (data.length !== 0) {
-                        // }
-                        // else {
                             let entries = [batch_path, hash, [batchID]];
-                            console.log(entries);
-                            db.none("INSERT INTO images(directory, hash, batches) VALUES ($1, $2, $3)")
+                            return db.none("INSERT INTO images(directory, hash, batches) VALUES ($1, $2, $3)", entries)
+                                .then(() => {
+                                    // copy into batch directory
+                                    let img_path = path.join(batch_path, hash + path.extname(img));
+                                    fs.createReadStream(img).pipe(fs.createWriteStream(img_path)).on('error', () => {
+                                        throw [500, "Couldn't copy image file into batch path"]
+                                    });
+                                })
                                 .catch(err => {
                                     console.log(err);
                                     throw [500, "Couldn't add new image to database"]
                                 });
-                            // copy into batch directory
-                            let img_path = path.join(batch_path, hash + path.extname(img));
-                            fs.createReadStream(img).pipe(fs.createWriteStream(img_path)).on('error', () => {
-                                throw [500, "Couldn't copy image file into batch path"]
-                            });
-                                // .catch(err => { throw [500, "Couldn't copy image file into batch path"]});
-                        // }
                     })
                     .catch(err => {
                         if (err.length !== 2) {
@@ -174,10 +172,12 @@ module.exports = function(db, data_dir) {
                             "contact an administrator for remediation"]
                         }
                         else throw err;
-                    })
-            // }
-            // console.log("Images added to database")
+                    }))
+            }
+            return Promise.all(promise_list);
         })
+        // if no errors by now, everything went okay
+        .then(() => {throw [400, "Directory successfully added"]})
         // Catch any errors, will be of the form [HTTP_STATUS, ERR_MSG}
         .catch((err) => {
             if (err.length !== 2) {
