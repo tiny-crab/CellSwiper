@@ -137,20 +137,42 @@ module.exports = function(db, data_dir) {
                 promise_list.push(phash(img, true)
                     .then(hash => {
                         console.log("Image hashed: " + hash);
-                        return db.any("SELECT imageid FROM images WHERE hash = $1", [hash])
+                        if (hash === "0") {
+                            console.log("Bad hash");
+                            // throw [400, "Could not hash image " + path.basename(img)]
+                            // TODO: Let user know which images couldn't be added
+                            //      This seems to be because of transparency in .png files, not sure exactly though
+                            return 0;
+                        }
+                        return db.any("SELECT id FROM images WHERE hash = $1", [hash])
                             .then(data => {
                                 if (data.length === 0) {
                                     return hash;
                                 }
+                                else if (data.length > 1) {
+                                    throw [500, "Multiple image entries with same hash detected in database, please " +
+                                    "contact an administrator for remediation"]
+                                }
                                 else {
                                     // TODO: replace with adding directory to existing entry
-                                    throw [500, "Hash already exists"]
+                                    // throw [500, "Hash already exists"]
+                                    return db.none("UPDATE images SET batches = array_append(batches, $1) WHERE " +
+                                        "id = $2", [batchID, data[0].id])
+                                        .catch(err => {throw [500, "Couldn't update batches in existing image entry"]})
                                 }
+                            })
+                            .then(record => {
+                                // item was hashed and we want to insert it
+                                if (record) {
+                                   return record
+                                }
+                                else return 0
                             })
                             .catch(err => {throw err})
                     })
                     // this should technically be possible since I'm returning a promise here
                     .then(hash => {
+                        if (hash) {
                             let entries = [batch_path, hash, [batchID]];
                             return db.none("INSERT INTO images(directory, hash, batches) VALUES ($1, $2, $3)", entries)
                                 .then(() => {
@@ -164,12 +186,11 @@ module.exports = function(db, data_dir) {
                                     console.log(err);
                                     throw [500, "Couldn't add new image to database"]
                                 });
+                        }
                     })
                     .catch(err => {
                         if (err.length !== 2) {
                             console.log(err);
-                            throw [500, "Multiple image entries with same hash detected in database, please " +
-                            "contact an administrator for remediation"]
                         }
                         else throw err;
                     }))
@@ -180,6 +201,7 @@ module.exports = function(db, data_dir) {
         .then(() => {throw [400, "Directory successfully added"]})
         // Catch any errors, will be of the form [HTTP_STATUS, ERR_MSG}
         .catch((err) => {
+            // TODO: Add cleanup function that deletes empty directories and clears the batch out of the database
             if (err.length !== 2) {
                 console.log(err)
             }
