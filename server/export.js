@@ -1,5 +1,7 @@
-module.exports = function(fs, db) {
-    var module = {};
+const fs = require('fs');
+
+module.exports = function(db) {
+    let module = {};
 
     // Author: Evan
     // Purpose: (currently) Export entire database
@@ -34,7 +36,7 @@ module.exports = function(fs, db) {
                 options.push("username = ($1)");
             }
             if (req.query.date !== undefined) {
-                options.push("date_added " + (req.query.before == "1" ? "<=" : ">=") + " ($2)");
+                options.push("date_added " + (req.query.before === "1" ? "<=" : ">=") + " ($2)");
             }
             if (options.length > 0) {
                 select += " WHERE " + options.join(" AND ");
