@@ -65,6 +65,10 @@ app.get('/deny', function(req, res) {
 	res.send("Denied request");
 });
 
+app.get('/add_directory', function(req, res) {
+    res.sendFile(dir + 'pages/add_directory.html');
+});
+
 app.post('/insert_name', function(req, res) {
     let name = [req.body.name];
     db.none("INSERT INTO users (username) VALUES ($1)", name)
