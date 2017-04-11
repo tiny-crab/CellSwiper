@@ -1,0 +1,1 @@
+All looks good - for non-edge cases (and non alpha/transparent pngs), phash seems to work great
