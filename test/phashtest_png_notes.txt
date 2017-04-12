@@ -1,0 +1,291 @@
+The following are all the failed hashes
+Failure rate is 57/181 or 31.5% (with corrupted)
+Failure rate is 44/168 or 26.2% (without corrupted)
+Hashes (and failures) are deterministic, as expected
+
+==Trends==
+ - 4 bit-depth grayscale+alpha images failed
+ - ALL rgb+alpha images failed
+ - hardly any paletted images failed
+ - all but 1 transparent background image failed
+ - sig-bit chunking failed (less important)
+ - minimum resolution appears to be 6x6 (also not important)
+ - corrupted images failed (good, that was our control)
+
+==Suggestions==
+ - don't use alpha (convert somehow)
+ - don't use transparency (convert somehow)
+ - these two should cover ~90% of our failures
+
+==Failed Images==
+File: basi0g04.png	Hash: 0 | basic, interlaced, grayscale, 4 bit-depth
+File: basi4a08.png	Hash: 0 | basic, interlaced, gray+a, 8 bit-depth
+File: basi6a08.png	Hash: 0 | basic, interlaced, rgb+a, 8 bd
+File: basi6a16.png	Hash: 0 | basic, interlaced, rgb+a, 16 bd
+File: basn0g04.png	Hash: 0 | basic, non-int, gray, 4 bd
+File: basn4a08.png	Hash: 0 | basic, non-int, gray+a, 8 bd
+File: basn6a08.png	Hash: 0 | basic, non-int, rgb+a, 8 bd
+File: basn6a16.png	Hash: 0 | basic, non-int, rgb+a, 16 bd
+File: bgai4a08.png	Hash: 0 | a+no background, int, gray+a, 8 bd
+File: bgan6a08.png	Hash: 0 | a+no bg, non-int, rgb+a, 8 bd
+File: bgan6a16.png	Hash: 0 | a+no bg, non-int, rgb+a, 16 bd
+File: bgbn4a08.png	Hash: 0 | a+black bg, non-int, gray+a, 8 bd
+File: bgwn6a08.png	Hash: 0 | a+white bg, non-int, rgb+a, 8 bd
+File: bgyn6a16.png	Hash: 0 | a+yellow bg, non-int, rgb+a, 16 bd
+File: cs3n2c16.png	Hash: 0 | ancillary chunks, all values with significant
+File: cs3n3p08.png	Hash: 0 |   bits failed
+File: cs5n2c08.png	Hash: 0
+File: cs5n3p08.png	Hash: 0
+File: cs8n2c08.png	Hash: 0
+File: cs8n3p08.png	Hash: 0
+File: pnggrad16rgba.png	Hash: 0 | of the fnordware images, only those WITHOUT alpha
+File: pnggradHDrgba.png	Hash: 0 |   passed, (2/6) all those w/ alpha failed
+File: pngtest16rgba.png	Hash: 0
+File: pngtest8rgba.png	Hash: 0
+File: pp0n6a08.png	Hash: 0 | palette chunk, non-int, rgb+a, 8 bd
+File: s01i3p01.png	Hash: 0 | these next few were of odd sizes, essentially those
+File: s01n3p01.png	Hash: 0 |   below a 5x5 paletted threshold failed regardless of 
+File: s02i3p01.png	Hash: 0 |   other settings, all others passed
+File: s02n3p01.png	Hash: 0
+File: s03i3p01.png	Hash: 0
+File: s03n3p01.png	Hash: 0
+File: s04i3p01.png	Hash: 0
+File: s04n3p01.png	Hash: 0
+File: s05i3p02.png	Hash: 0
+File: s05n3p02.png	Hash: 0
+File: tbbn2c16.png	Hash: 0 | transparent + black bg, non-int, rgb, 16 bd
+File: tbbn3p08.png	Hash: 0 | trans + black bg, non-int, paletted, 8 bd
+File: tbgn2c16.png	Hash: 0 | essentially all transparent w/ background images failed
+File: tbgn3p08.png	Hash: 0 |   except one grayscale w/ white background, the reference
+File: tbrn2c08.png	Hash: 0 |   images of this set with a background passed
+File: tbwn3p08.png	Hash: 0
+File: tbyn3p08.png	Hash: 0
+File: tm3n3p02.png	Hash: 0
+File: tp1n3p08.png	Hash: 0
+File: xc1n0g08.png	Hash: 0 | corrupted images (bound to fail)
+File: xc9n2c08.png	Hash: 0
+File: xcrn0g04.png	Hash: 0
+File: xcsn0g01.png	Hash: 0
+File: xd0n2c08.png	Hash: 0
+File: xd3n2c08.png	Hash: 0
+File: xd9n2c08.png	Hash: 0
+File: xdtn0g01.png	Hash: 0
+File: xhdn0g08.png	Hash: 0
+File: xlfn0g04.png	Hash: 0
+File: xs1n0g01.png	Hash: 0
+File: xs2n0g01.png	Hash: 0
+File: xs4n0g01.png	Hash: 0
+File: xs7n0g01.png	Hash: 0
+
+
+
+==Passed Images==
+File: PngSuite.png	Hash: 11391364229367225950  | regular PNG
+File: basi0g01.png	Hash: 2989913093663356105   | basic grayscale int, only 4 bd failed on this set
+File: basi0g02.png	Hash: 2252552921022642
+File: basi0g08.png	Hash: 18083618082177215104
+File: basi0g16.png	Hash: 2708269597816628521
+File: basi2c08.png	Hash: 10814720194174318338  | basic rgb int, none failed here
+File: basi2c16.png	Hash: 4923865359980503423
+File: basi3p01.png	Hash: 23925738098196565     | basic paletted int, again none failed here
+File: basi3p02.png	Hash: 24488766705631354
+File: basi3p04.png	Hash: 18392873439979995856
+File: basi3p08.png	Hash: 6773799211377974870
+File: basi4a16.png	Hash: 576469551114356736    | basic gray+a int, failed at 8 bd but not 16
+File: basn0g01.png	Hash: 2989913093663356105   | basic gray int, only 4 bd failed on this set (again)
+File: basn0g02.png	Hash: 2252552921022642
+File: basn0g08.png	Hash: 18083618082177215104
+File: basn0g16.png	Hash: 2708269597816628521
+File: basn2c08.png	Hash: 10814720194174318338  | basic rgb nint, none failed
+File: basn2c16.png	Hash: 4923865359980503423   
+File: basn3p01.png	Hash: 23925738098196565     | basic paletted nint, none failed
+File: basn3p02.png	Hash: 24488766705631354
+File: basn3p04.png	Hash: 18392873439979995856
+File: basn3p08.png	Hash: 6773799211377974870
+File: basn4a16.png	Hash: 576469551114356736    | basic nint gray+a, 8bd failed
+File: bgai4a16.png	Hash: 576469551114356736    | same for a+no bg, 8bd failed
+File: bggn4a16.png	Hash: 576469551114356736    | same for a+gray bg, 8bd failed
+File: ccwn2c08.png	Hash: 6051907518163654151   | all chunking passed but sig bits
+File: ccwn3p08.png	Hash: 6051907518163654151
+File: cdfn2c08.png	Hash: 6855919539591644216
+File: cdhn2c08.png	Hash: 18415527395259250817
+File: cdsn2c08.png	Hash: 5919045831304820
+File: cdun2c08.png	Hash: 11418976794692921351
+File: ch1n3p04.png	Hash: 18392873439979995856
+File: ch2n3p08.png	Hash: 6773799211377974870
+File: cm0n0g04.png	Hash: 11956169874108072347
+File: cm7n0g04.png	Hash: 11956169874108072347
+File: cm9n0g04.png	Hash: 11956169874108072347
+File: ct0n0g04.png	Hash: 11956169874108072347
+File: ct1n0g04.png	Hash: 11956169874108072347
+File: cten0g04.png	Hash: 18411701559623762175
+File: ctfn0g04.png	Hash: 38003253546336767
+File: ctgn0g04.png	Hash: 18411153563095960823
+File: cthn0g04.png	Hash: 19002863757560947
+File: ctjn0g04.png	Hash: 18410892296041496801
+File: ctzn0g04.png	Hash: 11956169874108072347
+File: f00n0g08.png	Hash: 7450804930032200977   | all filtering passed
+File: f00n2c08.png	Hash: 7450804925806439681
+File: f01n0g08.png	Hash: 4139203770298505572
+File: f01n2c08.png	Hash: 12788084282591058273
+File: f02n0g08.png	Hash: 3685852816156683665
+File: f02n2c08.png	Hash: 3703901295232183681
+File: f03n0g08.png	Hash: 12077443803020610864
+File: f03n2c08.png	Hash: 16616790821153033505
+File: f04n0g08.png	Hash: 951160488737839460
+File: f04n2c08.png	Hash: 11327172555222686049
+File: f99n0g04.png	Hash: 9367489424121702912
+File: g03n0g16.png	Hash: 14289583819219985935  | all gamma correction passed
+File: g03n2c08.png	Hash: 14325474078042277390
+File: g03n3p04.png	Hash: 6014585693056525327
+File: g04n0g16.png	Hash: 14863687218861884943
+File: g04n2c08.png	Hash: 14901932631322445326
+File: g04n3p04.png	Hash: 7201319379240674319
+File: g05n0g16.png	Hash: 14863739995151590927
+File: g05n2c08.png	Hash: 14294034642557650446
+File: g05n3p04.png	Hash: 15238098467382813711
+File: g07n0g16.png	Hash: 15481735881794438671
+File: g07n2c08.png	Hash: 16634798141002401294
+File: g07n3p04.png	Hash: 14085071409676477455
+File: g10n0g16.png	Hash: 15227402349615441423
+File: g10n2c08.png	Hash: 15227402366744978958
+File: g10n3p04.png	Hash: 14082925162979026703
+File: g25n0g16.png	Hash: 9753171466559853327
+File: g25n2c08.png	Hash: 14364857484987248910
+File: g25n3p04.png	Hash: 14301317790349824783
+File: oi1n0g16.png	Hash: 2708269597816628521   | all chunk ordering passed
+File: oi1n2c16.png	Hash: 4923865359980503423
+File: oi2n0g16.png	Hash: 2708269597816628521
+File: oi2n2c16.png	Hash: 4923865359980503423
+File: oi4n0g16.png	Hash: 2708269597816628521
+File: oi4n2c16.png	Hash: 4923865359980503423
+File: oi9n0g16.png	Hash: 2708269597816628521
+File: oi9n2c16.png	Hash: 4923865359980503423
+File: pnggrad16rgb.png	Hash: 18233052933682626442  | all non-alpha fnord rgbs passed
+File: pnggrad8rgb.png	Hash: 541204714406346484
+File: pp0n2c16.png	Hash: 4923865359980503423   | all additional palettes (except nint rgb+a 8bd one)
+File: ps1n0g08.png	Hash: 18083618082177215104  
+File: ps1n2c16.png	Hash: 4923865359980503423
+File: ps2n0g08.png	Hash: 18083618082177215104
+File: ps2n2c16.png	Hash: 4923865359980503423
+File: s06i3p02.png	Hash: 795746303174767860    | all sizes above 6x6 passed
+File: s06n3p02.png	Hash: 795746303174767860
+File: s07i3p02.png	Hash: 14686304856641407883
+File: s07n3p02.png	Hash: 14686304856641407883
+File: s08i3p02.png	Hash: 10995653156864
+File: s08n3p02.png	Hash: 10995653156864
+File: s09i3p02.png	Hash: 4341663055502586932
+File: s09n3p02.png	Hash: 4341663055502586932
+File: s32i3p04.png	Hash: 12982566708036544634
+File: s32n3p04.png	Hash: 12982566708036544634
+File: s33i3p04.png	Hash: 16881051706897815226
+File: s33n3p04.png	Hash: 16881051706897815226
+File: s34i3p04.png	Hash: 17475381938468027640
+File: s34n3p04.png	Hash: 17475381938468027640
+File: s35i3p04.png	Hash: 12485960709888890298
+File: s35n3p04.png	Hash: 12485960709888890298
+File: s36i3p04.png	Hash: 12612195898578532592
+File: s36n3p04.png	Hash: 12612195898578532592
+File: s37i3p04.png	Hash: 14341446471622442104
+File: s37n3p04.png	Hash: 14341446471622442104
+File: s38i3p04.png	Hash: 11461380061760682224
+File: s38n3p04.png	Hash: 11461380061760682224
+File: s39i3p04.png	Hash: 505015967190744570
+File: s39n3p04.png	Hash: 505015967190744570
+File: s40i3p04.png	Hash: 16040215353705978
+File: s40n3p04.png	Hash: 16040215353705978
+File: tbbn0g04.png	Hash: 11291770705749349613  | only a few transparent images passed (namely the non-transparents)
+File: tbwn0g16.png	Hash: 15899230137104942572
+File: tp0n0g08.png	Hash: 10825577775580755046
+File: tp0n2c08.png	Hash: 10825577775580755046
+File: tp0n3p08.png	Hash: 10825577775580755046
+File: z00n2c08.png	Hash: 8968729628098626047   | all z-lib compressed files passed (albeit with same hash, which 
+File: z03n2c08.png	Hash: 8968729628098626047   |   has to be good)
+File: z06n2c08.png	Hash: 8968729628098626047
+File: z09n2c08.png	Hash: 8968729628098626047
+
+
+
+For good measure, I converted all of the basic, size, pngrgba, and transparent images to .jpg to see if the conversion
+  resolved the issues, here are the results:
+
+==JPG Convert Failures==
+File: basn4a08.jpg	Hash: 0 | again, gray+a 8bd seems to be a problem for phash
+File: bgai4a08.jpg	Hash: 0
+File: bgbn4a08.jpg	Hash: 0
+File: s01i3p01.jpg	Hash: 0 | size resolution is better in JPG (6x6 min -> 4x4 min)
+File: s01n3p01.jpg	Hash: 0
+File: s02i3p01.jpg	Hash: 0
+File: s02n3p01.jpg	Hash: 0
+File: s03i3p01.jpg	Hash: 0
+File: s03n3p01.jpg	Hash: 0
+File: tm3n3p02.jpg	Hash: 0 | multi-layered transparency was the only transparency image that filed to convert well
+                                |   enough to be passed by phash
+
+==JPG Convert Pass==
+File: basi0g01.jpg	Hash: 2989913093663356105   | most basic ones passed
+File: basi0g02.jpg	Hash: 9847888800184842896
+File: basi0g08.jpg	Hash: 18085885275153672832
+File: basi0g16.jpg	Hash: 16841819636045064538
+File: basi2c08.jpg	Hash: 7520772225054562178
+File: basi2c16.jpg	Hash: 5330367457372606677
+File: basi3p01.jpg	Hash: 432070682031752541
+File: basi3p02.jpg	Hash: 9643708629065946584
+File: basi3p04.jpg	Hash: 18430028132613980804
+File: basi3p08.jpg	Hash: 6777176627631185430
+File: basi4a16.jpg	Hash: 2305994742388762624
+File: basi6a08.jpg	Hash: 6172840067103457365
+File: basi6a16.jpg	Hash: 18079351856915992065
+File: basn0g01.jpg	Hash: 2989913093663356105
+File: basn0g02.jpg	Hash: 9847888800184842896
+File: basn0g04.jpg	Hash: 4945590117287858442
+File: basn0g08.jpg	Hash: 18085885275153672832
+File: basn0g16.jpg	Hash: 16841819636045064538
+File: basn2c08.jpg	Hash: 7520772225054562178
+File: basi0g04.jpg	Hash: 4945590117287858442
+File: basn2c16.jpg	Hash: 5330367457372606677
+File: basn3p04.jpg	Hash: 18430028132613980804
+File: basn3p08.jpg	Hash: 6777176627631185430
+File: basn4a16.jpg	Hash: 2305994742388762624
+File: basn6a08.jpg	Hash: 6172840067103457365
+File: basn6a16.jpg	Hash: 18079351856915992065
+File: bgai4a16.jpg	Hash: 2305994742388762624
+File: bgan6a08.jpg	Hash: 6172840067103457365
+File: bgan6a16.jpg	Hash: 18079351856915992065
+File: bggn4a16.jpg	Hash: 2305994742388762624
+File: bgwn6a08.jpg	Hash: 6172840067103457365
+File: bgyn6a16.jpg	Hash: 18079351856915992065
+File: basn3p02.jpg	Hash: 9643708629065946584
+File: basn3p01.jpg	Hash: 432070682031752541
+File: pngtest16rgba.jpg	Hash: 18079351856915992065  | rgba conversion passed
+File: pngtest8rgba.jpg	Hash: 6675778451105537918
+File: pnggrad16rgba.jpg	Hash: 13739637048322033142 
+File: pnggradHDrgba.jpg	Hash: 5637788889553834937
+File: s04i3p01.jpg	Hash: 22518341734563845     | size resolution now 4x4 minimum
+File: s04n3p01.jpg	Hash: 22518341734563845
+File: s05i3p02.jpg	Hash: 15778942914031639045
+File: s05n3p02.jpg	Hash: 15778942914031639045
+File: s06i3p02.jpg	Hash: 750547574901634347
+File: s06n3p02.jpg	Hash: 750547574901634347
+File: s07i3p02.jpg	Hash: 14687712235804986068
+File: s07n3p02.jpg	Hash: 14687712235804986068
+File: s08i3p02.jpg	Hash: 1224874029769056
+File: s08n3p02.jpg	Hash: 1224874029769056
+File: s09i3p02.jpg	Hash: 4341676520226108560
+File: s09n3p02.jpg	Hash: 4341676520226108560
+File: tbbn0g04.jpg	Hash: 11291770705749349613  | all but 1 transparency conversion passed
+File: tbbn2c16.jpg	Hash: 11291770705749349613
+File: tbbn3p08.jpg	Hash: 11291770705749349613
+File: tbgn2c16.jpg	Hash: 11291770705749349613
+File: tbgn3p08.jpg	Hash: 11291770705749349613
+File: tbrn2c08.jpg	Hash: 11291770705749349613
+File: tbwn0g16.jpg	Hash: 11291770705749349613
+File: tbwn3p08.jpg	Hash: 11291770705749349613
+File: tbyn3p08.jpg	Hash: 11291770705749349613
+File: tp0n0g08.jpg	Hash: 10825542866086573158
+File: tp0n2c08.jpg	Hash: 10825542866086573158
+File: tp0n3p08.jpg	Hash: 10825577775580755046
+File: tp1n3p08.jpg	Hash: 11291770705749349613
+
+==Test of PNGs + JPGs==
+All looks good - for non-edge cases (and non alpha/transparent pngs), phash seems to work great
