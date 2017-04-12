@@ -5,3 +5,4 @@ node_modules/
 launch.json
 .idea/
 .vscode/
+test/*/*
