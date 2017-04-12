@@ -6,9 +6,9 @@
 $.urlParam = function (a) {
     let b = new RegExp("[?&]" + a + "=([^&#]*)").exec(window.location.href);
     if (b == null) {
-        return null
+        return null;
     } else {
-        return b[1] || 0
+        return b[1] || 0;
     }
 };
 
