@@ -286,3 +286,6 @@ File: tp0n0g08.jpg	Hash: 10825542866086573158
 File: tp0n2c08.jpg	Hash: 10825542866086573158
 File: tp0n3p08.jpg	Hash: 10825577775580755046
 File: tp1n3p08.jpg	Hash: 11291770705749349613
+
+==Test of PNGs + JPGs==
+All looks good - for non-edge cases (and non alpha/transparent pngs), phash seems to work great

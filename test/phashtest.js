@@ -5,9 +5,11 @@ const path = require('path');
 // sample PNGs acquired from:
 //      http://www.schaik.com/pngsuite/
 //      http://www.fnordware.com/superpng/samples.html
-// note: images with 'x' preface are intentionally corrupted
+//      note: images with 'x' preface are intentionally corrupted
+// other samples taken from: 
+//      https://github.com/bradleyflood/sample-testing-images
 
-let dir = './pngtest/'
+let dir = 'DIRECTORY_TO_TEST'
 fs.readdir(dir, (err, files) => {
     if (err) {
         console.log(err)
