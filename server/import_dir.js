@@ -40,11 +40,13 @@ module.exports = function(db, data_dir) {
     };
 
     // Author: Matthew
-    module.import_dir = function(req, res) {
+    module.add_batch = function(req, res) {
         let img_list = [];
         const dir = req.query.dir;
         const recursive = req.query.recursive;
+        const batch_name = req.query.batch_name;
         const imgExts = new Set(['.jpg', '.png']);
+        let batchID, batch_path;
 
         // --- Hebrews 8:7-8 ---
         // For if there had been nothing wrong with that first promise, no place would have
@@ -115,26 +117,27 @@ module.exports = function(db, data_dir) {
         })
         // first, create folder for the batch
         .then((query_data) => {
-            let batchID = query_data.id;
-            let batch_path = path.join(data_dir, batchID.toString());
-            console.log(batch_path);
+            batchID = query_data.id;
+            batch_path = path.join(data_dir, batchID.toString());
             // fs.mkdir(batch_path, err => {
             //     if (err) throw [500, "Couldn't create new batch folder in file system"];
             //     else return [batchID, batch_path]
             // })
-            fs.mkdirSync(batch_path);
-            return [batchID, batch_path]
+            try {
+                fs.mkdirSync(batch_path);
+            } catch (err) {
+                // remove reference so later error catching doesn't try to remove nonexistent folder
+                batch_path = undefined;
+                throw [500, "Couldn't create new batch folder in file system"]
+            }
         })
         // add image to database
-        .then(payload => {
-            console.log("here");
-            let batchID = payload[0];
-            let batch_path = payload[1];
+        .then(() => {
             let promise_list = [];
             for (let img of img_list) {
-                let hash;
                 console.log(img);
-                promise_list.push(phash(img, true)
+                promise_list.push(
+                    phash(img, true)
                     .then(hash => {
                         console.log("Image hashed: " + hash);
                         if (hash === "0") {
@@ -158,7 +161,7 @@ module.exports = function(db, data_dir) {
                                     // throw [500, "Hash already exists"]
                                     return db.none("UPDATE images SET batches = array_append(batches, $1) WHERE " +
                                         "id = $2", [batchID, data[0].id])
-                                        .catch(err => {throw [500, "Couldn't update batches in existing image entry"]})
+                                        .catch(err => {throw [600, "Couldn't update batches in existing image entry"]})
                                 }
                             })
                             .then(record => {
@@ -172,6 +175,7 @@ module.exports = function(db, data_dir) {
                     })
                     // this should technically be possible since I'm returning a promise here
                     .then(hash => {
+                        // if the has isn't 0
                         if (hash) {
                             let entries = [batch_path, hash, [batchID]];
                             return db.none("INSERT INTO images(directory, hash, batches) VALUES ($1, $2, $3)", entries)
@@ -183,29 +187,60 @@ module.exports = function(db, data_dir) {
                                     });
                                 })
                                 .catch(err => {
-                                    console.log(err);
-                                    throw [500, "Couldn't add new image to database"]
+                                    throw [600, "Couldn't add new image to database"]
                                 });
                         }
                     })
-                    .catch(err => {
-                        if (err.length !== 2) {
-                            console.log(err);
-                        }
-                        else throw err;
-                    }))
+                    // not sure this is necessary
+                    // .catch(err => {
+                    //     if (err.length !== 2) {
+                    //         console.log(err);
+                    //     }
+                    //     else throw err;
+                    // })
+                )
             }
             return Promise.all(promise_list);
         })
         // if no errors by now, everything went okay
-        .then(() => {throw [400, "Directory successfully added"]})
-        // Catch any errors, will be of the form [HTTP_STATUS, ERR_MSG}
+        .then(() => {
+            // TODO: JSON PACKET OK
+            res.status(200).send("All OK");
+        })
+        // Catch any errors, will be of the form [HTTP_STATUS, ERR_MSG]
         .catch((err) => {
-            // TODO: Add cleanup function that deletes empty directories and clears the batch out of the database
-            if (err.length !== 2) {
-                console.log(err)
+            console.log(err);
+
+            // Transaction cleanup
+            //   if batchID is initialized we need to proceed with removal
+            if (batchID) {
+                // start in reverse, remove batchID from all image entries
+                db.none("UPDATE images SET batches = array_remove(batches, $1)", batchID);
+                // remove all images with no batchIDs
+                db.none("DELETE FROM images WHERE batches = '{}'");
+                if (batch_path) {
+                    // remove batch folder from file system
+                    try {
+                        let file_list = fs.readdirSync(batch_path);
+                        for (let f of file_list) {
+                            fs.unlinkSync(path.join(batch_path, f));
+                        }
+                        fs.rmdirSync(batch_path);
+                    } catch (err) {
+                        console.log(err);
+                    }
+                }
+                // remove batch entry from batches table
+                db.none("DELETE FROM batches WHERE id = $1", batchID);
             }
-            else res.status(err[0]).send(err[1])
+
+            // TODO: Add cleanup function that deletes empty directories and clears the batch out of the database
+            if (err.length === 2) {
+                res.status(err[0]).send(err[1]);
+            }
+            else {
+                // nothing here yet
+            }
         });
     };
 
