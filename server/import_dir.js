@@ -23,7 +23,7 @@ module.exports = function(db, data_dir) {
                     return;
                 }
                 // supported image extensions
-                const imgExts = new Set(['.jpg', '.png', '.bmp', '.tif']);
+                const imgExts = new Set(['.jpg', '.png']);
                 for (let f of files) {
                     // loop through all files
                     if (!imgExts.has(path.extname(f)))
@@ -44,7 +44,7 @@ module.exports = function(db, data_dir) {
         let img_list = [];
         const dir = req.query.dir;
         const recursive = req.query.recursive;
-        const imgExts = new Set(['.jpg', '.png', '.bmp', '.tif']);
+        const imgExts = new Set(['.jpg', '.png']);
 
         // --- Hebrews 8:7-8 ---
         // For if there had been nothing wrong with that first promise, no place would have
