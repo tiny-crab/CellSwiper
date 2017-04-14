@@ -47,7 +47,7 @@ module.exports = function(db, data_dir) {
         const batch_name = req.query.batch_name;
         const imgExts = new Set(['.jpg', '.png']);
         let batchID, batch_path;
-        let return_payload = {};
+        let return_payload = {result: "", err_msg: [], img_errs: []};
 
         // --- Hebrews 8:7-8 ---
         // For if there had been nothing wrong with that first promise, no place would have
@@ -71,7 +71,7 @@ module.exports = function(db, data_dir) {
         // read directory and compile a list of images
         .then(() => {
             // recursively walk paths
-            if (recursive === true) {
+            if (recursive === "true") {
                 let walker = walk.walk(img_dir);
 
                 walker.on("file", (root, fileStats, next) => {
@@ -143,23 +143,29 @@ module.exports = function(db, data_dir) {
                         console.log("Image hashed: " + hash);
                         if (hash === "0") {
                             console.log("Bad hash");
-                            // throw [400, "Could not hash image " + path.basename(img)]
                             // TODO: Let user know which images couldn't be added
-                            //      This seems to be because of transparency in .png files, not sure exactly though
+                            return_payload.img_errs.push({
+                                image: path.basename(img),
+                                batch_name: batch_name,
+                                err: "Unhashable image"
+                            });
+                            return_payload.result = "ERROR";
+                            return_payload.err_msg = "Some images could not be processed correctly";
                             return 0;
                         }
                         return db.any("SELECT id FROM images WHERE hash = $1", [hash])
                             .then(data => {
                                 if (data.length === 0) {
+                                    // hash not present in the DB, so we need to add it
                                     return hash;
                                 }
                                 else if (data.length > 1) {
+                                    // this shouldn't happen, but just in case
                                     throw [500, "Multiple image entries with same hash detected in database, please " +
-                                    "contact an administrator for remediation"]
+                                    "contact an administrator for remediation.\nHash in question:" + hash]
                                 }
                                 else {
-                                    // TODO: replace with adding directory to existing entry
-                                    // throw [500, "Hash already exists"]
+                                    // add the batchID to the image that already exists with that hash
                                     return db.none("UPDATE images SET batches = array_append(batches, $1) WHERE " +
                                         "id = $2", [batchID, data[0].id])
                                         .catch(err => {throw [600, "Couldn't update batches in existing image entry"]})
@@ -183,12 +189,20 @@ module.exports = function(db, data_dir) {
                                 .then(() => {
                                     // copy into batch directory
                                     let img_path = path.join(batch_path, hash + path.extname(img));
-                                    fs.createReadStream(img).pipe(fs.createWriteStream(img_path)).on('error', () => {
-                                        throw [500, "Couldn't copy image file into batch path"]
-                                    });
+                                    try {
+                                        fs.createReadStream(img).pipe(fs.createWriteStream(img_path)).on('error', () => {
+                                            // TODO: Fix this so it is caught properly and doesn't crash server
+                                            throw [500, "Couldn't copy image file into batch path"]
+                                        });
+                                    } catch (err) {
+                                        throw err;
+                                    }
                                 })
                                 .catch(err => {
-                                    throw [600, "Couldn't add new image to database"]
+                                    if (err.length !== 2) {
+                                        throw [600, "Couldn't add new image to database"]
+                                    }
+                                    else throw err
                                 });
                         }
                     })
@@ -199,7 +213,10 @@ module.exports = function(db, data_dir) {
         // if no errors by now, everything went okay
         .then(() => {
             // TODO: JSON PACKET OK
-            res.status(200).send("All OK");
+            if (return_payload.result !== "ERROR") {
+                return_payload.result = "PASS";
+            }
+            res.status(200).send(return_payload);
         })
         // Catch any errors, will be of the form [HTTP_STATUS, ERR_MSG]
         .catch((err) => {
@@ -208,29 +225,39 @@ module.exports = function(db, data_dir) {
             // Transaction cleanup
             //   if batchID is initialized we need to proceed with removal
             if (batchID) {
-                // start in reverse, remove batchID from all image entries
-                db.none("UPDATE images SET batches = array_remove(batches, $1)", batchID);
-                // remove all images with no batchIDs
-                db.none("DELETE FROM images WHERE batches = '{}'");
-                if (batch_path) {
-                    // remove batch folder from file system
-                    try {
-                        let file_list = fs.readdirSync(batch_path);
-                        for (let f of file_list) {
-                            fs.unlinkSync(path.join(batch_path, f));
+                // wrap transaction cleanup in transaction so all operated on at once
+                db.tx(t => {
+
+                    if (batch_path) {
+                        // remove batch folder from file system
+                        try {
+                            let file_list = fs.readdirSync(batch_path);
+                            for (let f of file_list) {
+                                fs.unlinkSync(path.join(batch_path, f));
+                            }
+                            fs.rmdirSync(batch_path);
+                        } catch (err) {
+                            console.log(err);
                         }
-                        fs.rmdirSync(batch_path);
-                    } catch (err) {
-                        console.log(err);
                     }
-                }
-                // remove batch entry from batches table
-                db.none("DELETE FROM batches WHERE id = $1", batchID);
+
+                    // start in reverse, remove batchID from all image entries
+                    return t.none("UPDATE images SET batches = array_remove(batches, $1)", batchID)
+                        // remove all images with no batchIDs
+                        .then(() => { return t.none("DELETE FROM images WHERE batches = '{}'")})
+                        // remove batch entry from batches table
+                        .then(() => { return t.none("DELETE FROM batches WHERE id = $1", batchID)})
+                        .catch(err => { console.log(err)});
+
+                }).then(data => {console.log("Transaction Complete");})
+                .catch(err => { console.log("Transaction cleanup error: " + err);});
             }
 
-            // TODO: Add cleanup function that deletes empty directories and clears the batch out of the database
             if (err.length === 2) {
-                res.status(err[0]).send(err[1]);
+                // okay to override previously set result if it fails here
+                return_payload.result = "FAIL";
+                return_payload.err_msg = err[1];
+                res.status(err[0]).send(return_payload);
             }
             else {
                 // nothing here yet
