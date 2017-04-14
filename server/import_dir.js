@@ -42,11 +42,12 @@ module.exports = function(db, data_dir) {
     // Author: Matthew
     module.add_batch = function(req, res) {
         let img_list = [];
-        const dir = req.query.dir;
+        const img_dir = req.query.dir;
         const recursive = req.query.recursive;
         const batch_name = req.query.batch_name;
         const imgExts = new Set(['.jpg', '.png']);
         let batchID, batch_path;
+        let return_payload = {};
 
         // --- Hebrews 8:7-8 ---
         // For if there had been nothing wrong with that first promise, no place would have
@@ -55,7 +56,7 @@ module.exports = function(db, data_dir) {
         new Promise( // with the people of Israel and with the people of Judah."
             function(resolve, reject) {
             // check if valid directory
-            fs.stat(dir, (err, stats) => {
+            fs.stat(img_dir, (err, stats) => {
                 if (err && err.code === "ENOENT") {
                     reject([400, "No such directory exists"]);
                 }
@@ -71,7 +72,7 @@ module.exports = function(db, data_dir) {
         .then(() => {
             // recursively walk paths
             if (recursive === true) {
-                let walker = walk.walk(dir);
+                let walker = walk.walk(img_dir);
 
                 walker.on("file", (root, fileStats, next) => {
                     // add to list if valid image file
@@ -94,15 +95,15 @@ module.exports = function(db, data_dir) {
             }
             // only search in current directory
             else {
-                fs.readdir(dir, (err, files) => {
+                fs.readdir(img_dir, (err, files) => {
                     if (err) {
-                        console.log(`Error getting files from ${dir}`, err);
+                        console.log(`Error getting files from ${img_dir}`, err);
                         throw [400, "Error getting files, perhaps a read permissions error?"]
                     }
                     for (let f of files) {
                         // loop through all files
                         if (imgExts.has(path.extname(f)))
-                            img_list.push(path.join(dir, path.basename(f)))
+                            img_list.push(path.join(img_dir, path.basename(f)))
                     }
                     if (img_list.length === 0) {
                         throw [400, "No images found in this directory"]
@@ -113,7 +114,7 @@ module.exports = function(db, data_dir) {
         // create batch entry in DB
         .then(() => {
             // should return the promise associated with the DB call
-            return db.one("INSERT INTO batches(original_dir) VALUES ($1) RETURNING id", [dir])
+            return db.one("INSERT INTO batches(original_dir, batch_name) VALUES ($1, $2) RETURNING id", [img_dir, batch_name])
         })
         // first, create folder for the batch
         .then((query_data) => {
@@ -191,13 +192,6 @@ module.exports = function(db, data_dir) {
                                 });
                         }
                     })
-                    // not sure this is necessary
-                    // .catch(err => {
-                    //     if (err.length !== 2) {
-                    //         console.log(err);
-                    //     }
-                    //     else throw err;
-                    // })
                 )
             }
             return Promise.all(promise_list);
