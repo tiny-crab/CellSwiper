@@ -10,7 +10,7 @@ let dir = info.parent_dir;
 global.dir = dir;
 let images = require('./server/image_response.js')();
 let exporter = require('./server/export.js')(db);
-let importer = require('./server/import.js')(db, info.data_dir);
+let importer = require('./server/import_dir.js')(db, info.data_dir);
 
 // serv static pages
 app.use('/pages', express.static('pages'));
