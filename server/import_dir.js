@@ -87,6 +87,7 @@ module.exports = function(db, data_dir) {
                     next();
                 });
 
+                // TODO - fix async promise throw
                 walker.on("end", () => {
                     if (img_list.length === 0) {
                         throw [400, "No images found in this directory or its children"]
@@ -95,6 +96,7 @@ module.exports = function(db, data_dir) {
             }
             // only search in current directory
             else {
+                // TODO - fix async promise throw
                 fs.readdir(img_dir, (err, files) => {
                     if (err) {
                         console.log(`Error getting files from ${img_dir}`, err);
@@ -124,6 +126,7 @@ module.exports = function(db, data_dir) {
             //     if (err) throw [500, "Couldn't create new batch folder in file system"];
             //     else return [batchID, batch_path]
             // })
+            // TODO - fix async promise throw
             try {
                 fs.mkdirSync(batch_path);
             } catch (err) {
@@ -189,14 +192,11 @@ module.exports = function(db, data_dir) {
                                 .then(() => {
                                     // copy into batch directory
                                     let img_path = path.join(batch_path, hash + path.extname(img));
-                                    try {
-                                        fs.createReadStream(img).pipe(fs.createWriteStream(img_path)).on('error', () => {
-                                            // TODO: Fix this so it is caught properly and doesn't crash server
-                                            throw [500, "Couldn't copy image file into batch path"]
-                                        });
-                                    } catch (err) {
-                                        throw err;
-                                    }
+                                    // TODO fix async promise exception
+                                    fs.createReadStream(img).pipe(fs.createWriteStream(img_path)).on('error', () => {
+                                        // TODO: Fix this so it is caught properly and doesn't crash server
+                                        throw [500, "Couldn't copy image file into batch path"]
+                                    });
                                 })
                                 .catch(err => {
                                     if (err.length !== 2) {
@@ -212,7 +212,6 @@ module.exports = function(db, data_dir) {
         })
         // if no errors by now, everything went okay
         .then(() => {
-            // TODO: JSON PACKET OK
             if (return_payload.result !== "ERROR") {
                 return_payload.result = "PASS";
             }
@@ -249,7 +248,7 @@ module.exports = function(db, data_dir) {
                         .then(() => { return t.none("DELETE FROM batches WHERE id = $1", batchID)})
                         .catch(err => { console.log(err)});
 
-                }).then(data => {console.log("Transaction Complete");})
+                })
                 .catch(err => { console.log("Transaction cleanup error: " + err);});
             }
 
