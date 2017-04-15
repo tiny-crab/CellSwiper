@@ -4,8 +4,13 @@
     height: 5em;
 }
 
+#name {
+    text-align: right;
+    padding-right: 2em;
+}
+
 #logo {
-    padding-left: 1em;
+    padding-left: 2em;
 }
 
 #image-dir {
