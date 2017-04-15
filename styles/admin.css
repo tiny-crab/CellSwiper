@@ -1,16 +1,25 @@
 .nav {
     background-color: #17243A;
-    color: white;
     height: 5em;
 }
 
 #name {
     text-align: right;
     padding-right: 2em;
+    color: white;
+}
+
+#account-info.col-xs-6 {
+    padding-right: 1em;
 }
 
 #logo {
     padding-left: 2em;
+    color: white;
+}
+
+#logo:hover {
+    cursor: pointer;
 }
 
 #image-dir {

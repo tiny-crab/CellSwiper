@@ -13,4 +13,18 @@ $.urlParam = function (a) {
 $(document).ready( ()=> {
     const name = $.urlParam('name');
     $("#name").text(name);
+
+    post_to_home = function () {
+        let structure = $.urlParam("structure");
+        $.post("insert_name", {name: name})
+            .done(() => {
+                window.location.href = `home?name=${name}`;
+            })
+            .fail(() => {
+                alert(`Name is already in use, continuing as "${name}"`);
+                window.location.href = `home?name=${name}`;
+        });
+    };
+
+    $("#logo").click(post_to_home);
 });
