@@ -1,0 +1,38 @@
+.nav {
+    background-color: #17243A;
+    color: white;
+    height: 5em;
+}
+
+#logo {
+    padding-left: 1em;
+}
+
+#image-dir {
+    border: 1px solid black;
+    height: 10em;
+}
+
+#user-list {
+    border: 1px solid black;
+    height: 10em;
+}
+
+#assign-batch {
+    margin: auto;
+    width: 60%;
+    font-size: 2rem;
+    text-align: center;
+    font-family: "Open Sans", sans-serif;
+    border-radius: 1em;
+    line-height: 3rem;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    border: 2px #B7760E solid;
+    color: #B7760E;
+}
+
+#assign-batch:hover {
+    cursor: pointer;
+    background-color: #B7760E;
+    color: white;
+}
