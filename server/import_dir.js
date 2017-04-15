@@ -72,44 +72,49 @@ module.exports = function(db, data_dir) {
         .then(() => {
             // recursively walk paths
             if (recursive === "true") {
-                let walker = walk.walk(img_dir);
+                return new Promise((resolve, reject) => {
+                    let walker = walk.walk(img_dir);
 
-                walker.on("file", (root, fileStats, next) => {
-                    // add to list if valid image file
-                    if (imgExts.has(path.extname(fileStats.name))) {
-                        img_list.push(path.join(root, fileStats.name));
-                    }
-                    next();
+                    walker.on("file", (root, fileStats, next) => {
+                        // add to list if valid image file
+                        if (imgExts.has(path.extname(fileStats.name))) {
+                            img_list.push(path.join(root, fileStats.name));
+                        }
+                        next();
+                    });
+
+                    walker.on("error", (root, nodeStatsArray, next) => {
+                        console.log(nodeStatsArray.error);
+                        next();
+                    });
+
+                    walker.on("end", () => {
+                        if (img_list.length === 0) {
+                            // throw [400, "No images found in this directory or its children"]
+                            reject([400, "No images found in this directory or its children"])
+                        }
+                        else resolve();
+                    })
                 });
-
-                walker.on("error", (root, nodeStatsArray, next) => {
-                    console.log(nodeStatsArray.error);
-                    next();
-                });
-
-                // TODO - fix async promise throw
-                walker.on("end", () => {
-                    if (img_list.length === 0) {
-                        throw [400, "No images found in this directory or its children"]
-                    }
-                })
             }
             // only search in current directory
             else {
-                // TODO - fix async promise throw
-                fs.readdir(img_dir, (err, files) => {
-                    if (err) {
-                        console.log(`Error getting files from ${img_dir}`, err);
-                        throw [400, "Error getting files, perhaps a read permissions error?"]
-                    }
-                    for (let f of files) {
-                        // loop through all files
-                        if (imgExts.has(path.extname(f)))
-                            img_list.push(path.join(img_dir, path.basename(f)))
-                    }
-                    if (img_list.length === 0) {
-                        throw [400, "No images found in this directory"]
-                    }
+                return new Promise((resolve, reject) => {
+                    fs.readdir(img_dir, (err, files) => {
+                        if (err) {
+                            console.log(`Error getting files from ${img_dir}`, err);
+                            reject([400, "Error getting files, perhaps a read permissions error?"]);
+                        }
+                        for (let f of files) {
+                            // loop through all files
+                            if (imgExts.has(path.extname(f)))
+                                img_list.push(path.join(img_dir, path.basename(f)))
+                        }
+                        if (img_list.length === 0) {
+                            reject([400, "No images found in this directory"]);
+                        }
+                        else resolve();
+                    });
                 });
             }
         })
@@ -121,32 +126,28 @@ module.exports = function(db, data_dir) {
         // first, create folder for the batch
         .then((query_data) => {
             batchID = query_data.id;
-            batch_path = path.join(data_dir, batchID.toString());
-            // fs.mkdir(batch_path, err => {
-            //     if (err) throw [500, "Couldn't create new batch folder in file system"];
-            //     else return [batchID, batch_path]
-            // })
-            // TODO - fix async promise throw
-            try {
+            if (data_dir) {
+                batch_path = path.join(data_dir, batchID.toString());
+            }
+            else throw [500, "Server data directory not configured properly"];
+            return new Promise((resolve, reject) => {
                 fs.mkdirSync(batch_path);
-            } catch (err) {
+                resolve()
+            }).catch(() => {
                 // remove reference so later error catching doesn't try to remove nonexistent folder
                 batch_path = undefined;
                 throw [500, "Couldn't create new batch folder in file system"]
-            }
+            });
         })
         // add image to database
         .then(() => {
             let promise_list = [];
+            console.log("Starting hashing");
             for (let img of img_list) {
-                console.log(img);
                 promise_list.push(
                     phash(img, true)
                     .then(hash => {
-                        console.log("Image hashed: " + hash);
                         if (hash === "0") {
-                            console.log("Bad hash");
-                            // TODO: Let user know which images couldn't be added
                             return_payload.img_errs.push({
                                 image: path.basename(img),
                                 batch_name: batch_name,
@@ -192,10 +193,10 @@ module.exports = function(db, data_dir) {
                                 .then(() => {
                                     // copy into batch directory
                                     let img_path = path.join(batch_path, hash + path.extname(img));
-                                    // TODO fix async promise exception
-                                    fs.createReadStream(img).pipe(fs.createWriteStream(img_path)).on('error', () => {
-                                        // TODO: Fix this so it is caught properly and doesn't crash server
-                                        throw [500, "Couldn't copy image file into batch path"]
+                                    return new Promise((resolve, reject) => {
+                                        fs.createReadStream(img).pipe(fs.createWriteStream(img_path)).on('error', () => {
+                                            reject([500, "Couldn't copy image file into batch path"]);
+                                        });
                                     });
                                 })
                                 .catch(err => {
