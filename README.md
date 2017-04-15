@@ -15,7 +15,9 @@ The phash library may need to be compiled from source. On Ubuntu, the following 
  1. `curl -O http://www.phash.org/releases/pHash-0.9.6.tar.gz`
  2. `tar -xvzf pHash-0.9.6.tar.gz`
  3. `cd pHash-0.9.6/`
- 4. `sudo apt install -y libsndfile1-dev libsamplerate0-dev libmpg123-dev cimg-dev`
- 5. `sudo make && make install`
- 6. `npm install phash-image`
+ 4. `sudo apt install -y libsndfile1-dev libvips-dev libsamplerate0-dev libmpg123-dev cimg-dev ffmpeg`
+ 5. `./configure --enable-openmp=yes --enable-video-hash=no --enable-audio-hash=no LDFLAGS='-lpthread'` (as only image hashing is needed here)`
+ 5. `sudo ./configure`
+ 6. `sudo make && make install`
+ 7. `npm install phash-image`
 
