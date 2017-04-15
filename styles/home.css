@@ -5,7 +5,14 @@
 }
 
 #logo {
-    padding-left: 1em;
+    padding-left: 2em;
+    color: white;
+}
+
+#name {
+    color: white;
+    text-align:right;
+    padding-right: 2em;
 }
 
 #image-dir {
