@@ -43,6 +43,10 @@ app.get('/annotation', function(req, res) {
 	res.sendFile(dir + 'pages/annotation.html');
 });
 
+app.get('/admin', function(req, res) {
+    res.sendFile(dir + 'pages/admin.html');
+});
+
 app.get('/complete', function(req, res) {
     res.sendFile(dir + 'pages/export.html');
 });

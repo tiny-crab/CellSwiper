@@ -11,11 +11,11 @@ $.urlParam = function (a) {
 };
 
 $(document).ready( ()=> {
-    const name = $.urlParam('name');
+    const name = $.urlParam("name");
     $("#name").text(name);
 
-    post = function(){
-        let structure = $.urlParam('structure');
+    post_to_annotation = function() {
+        let structure = $.urlParam("structure");
         $.post("insert_name", {name: name})
             .done(() => {
                 window.location.href = `annotation?index=1&name=${name}&structure=${structure}`;
@@ -26,6 +26,18 @@ $(document).ready( ()=> {
             });
     };
 
-    $('#new-batch').click(post);
-    $('#continue-batch').click(post);
+    post_to_admin = function() {
+        $.post("insert_name", {name: name})
+            .done(() => {
+                window.location.href = `admin?name=${name}`;
+            })
+            .fail(() => {
+                alert(`Name is already in use, continuing as "${name}"`);
+                window.location.href = `admin?name=${name}`;
+            });
+    };
+
+    $(`#new-batch`).click(post_to_annotation);
+    $(`#continue-batch`).click(post_to_annotation);
+    $(`#account-info`).click(post_to_admin);
 });
