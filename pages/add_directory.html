@@ -11,32 +11,28 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
+        <script src="../scripts/awesomplete-gh-pages/awesomplete.js"></script>
         <script src="../scripts/add_directory.js"></script>
+        <link rel="stylesheet" href="../scripts/awesomplete-gh-pages/awesomplete.css">
         <link rel="stylesheet" href="../styles/add_directory.css">
         <meta charset="UTF-8">
     </head>
 <body>
     <div class="container">
-        <div id="title" class="row">
+        <div id="title" class="text-center row col-xs-12">
             <h1>Add Annotation</h1>
         </div>
-        <!--
-        <ul class="list-group">
-            <li class="folder list-group-item">
-                <a role="button" class="folder-link collapsed" href="#collapseOne" data-toggle="collapse">
-                    <span class="caret"></span>data/
-                </a>
-                <div class="folder-list collapse" id="collapseOne">
-                    <ul class="list-group">
-                        <li class="folder list-group-item">/data/cat-pics</li>
-                        <li class="folder list-group-item">/data/dog-pics</li>
-                    </ul>
-                </div>
-            </li>
-            <li class="folder list-group-item selected">etc/</li>
-            <li class="folder list-group-item">dev/</li>
-        </ul>
-        -->
+        <div id="add-directory-wrapper" class="row">
+            <form id="add-directory-form" class="form-inline">
+                <input id="folder-input" type="text" placeholder="Search for directories...">
+                <input class="btn btn-primary" type="submit" value="Add">
+                <input type="button" class="btn btn-default" value="Add subfolders as batches" onclick="addSubfolders()">
+                <span id="batch-response" style="display: none;"></span>
+            </form>
+            
+        </div>
+        
+    
     </div>
 </body>
 </html>

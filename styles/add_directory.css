@@ -1,3 +1,37 @@
+.batch {
+    margin-top: 10px;
+}
+
+.rotating {
+    -ms-animation: rotating 1.5s linear infinite;
+    -o-animation: rotating 1.5s linear infinite;
+    -webkit-animation: rotating 1.5s linear infinite;
+    -moz-animation: rotating 1.5s linear infinite;
+    animation: rotating 1.5s linear infinite;
+    margin-right: 5px;
+}
+
+@-webkit-keyframes rotating {
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotating {
+    to {
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+.alert-wrapper {
+    margin-top: 20px;
+}
+/*
 .collapsed .caret{
     -webkit-transform: rotate(-90deg);
     -ms-transform: rotate(-90deg);
@@ -22,8 +56,12 @@
     color: #333;
 }
 
-.selected .folder-link {
+.selected > .folder-link {
     color: white;
+}
+
+.file {
+    color: #333;
 }
 
 .folder.selected {
@@ -65,3 +103,27 @@ a.list-group-item.folder:focus {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 }
+
+.selected-pill {
+    border: 1px;
+    border-radius: 4px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    background: lightgrey;
+    font-size: 120%;
+}
+
+.selected-pill-close {
+    opacity: 0.5;
+    padding-right: 10px;
+    padding-left: 3px;
+}
+
+.selected-pill-close:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+*/

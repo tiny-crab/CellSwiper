@@ -1,9 +1,5 @@
 {
-    "data/": {
-        "etc/": {
-            "files": ["sub-sub-1.png"]
-        },
-        "files": ["sub1.png", "sub2.png", "sub3.png"]
-    },
-    "files": ["root.png", "root2.png"]
+    "folders": [
+        "data/", "data/sub1", "etc/"
+    ]
 }
