@@ -1,5 +1,7 @@
-module.exports = function(fs) {
-    var module = {};
+const fs = require('fs');
+
+module.exports = function() {
+    let module = {};
 
     // Author: Matthew
     // Purpose: Pull the next image from the list of sample pictures
@@ -8,7 +10,7 @@ module.exports = function(fs) {
     //      - find the image that matches that index
     // Outputs: Image file of next image
     module.get_img = function (req, res) {
-        var index = req.query.index;
+        let index = req.query.index;
         //var match_array = new RegExp('\/images\/(.*+?)', 'g').exec(url);
         //res.send(match_array);
         fs.readdir('./cell_images/', function(err, items) {
