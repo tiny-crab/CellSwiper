@@ -53,7 +53,7 @@ app.get('/export', exporter.export_csv);
 
 app.get('/export-users', exporter.send_users);
 
-app.get('/test-add', importer.import_dir);
+app.get('/test-add', importer.add_batch);
 
 app.get('/sample_script.js', function(req, res) {
 	res.sendFile(dir + 'sample_script.js');
