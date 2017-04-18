@@ -40,14 +40,28 @@ module.exports = function(db, data_dir) {
     };
 
     // Author: Matthew
+    // Parameters:
+    //      batch_dir: (string) server path to images to add to batch
+    //      recursive: (boolean) flag to search for images recursively
+    //      batch_name: (string) name [preferably unique] for the batch
+    // Output JSON:
+    //      result: (string) function result
+    //          PASS: all OK
+    //          ERROR: errors occurred with some or all images, but batch entered successfully
+    //          FAIL: batch not created successfully
+    //      err_msg: (string) error message associated with failure
+    //      img_errs: (list) image error information
+    //          image: (string) image basename
+    //          batch_name: (string) associated batch name
+    //          err: (string) associated error message
     module.add_batch = function(req, res) {
         let img_list = [];
-        const img_dir = req.query.dir;
+        const batch_dir = req.query.batch_dir;
         const recursive = req.query.recursive;
         const batch_name = req.query.batch_name;
         const imgExts = new Set(['.jpg', '.png']);
         let batchID, batch_path;
-        let return_payload = {result: "", err_msg: [], img_errs: []};
+        let return_payload = {result: "", err_msg: "", img_errs: []};
 
         // --- Hebrews 8:7-8 ---
         // For if there had been nothing wrong with that first promise, no place would have
@@ -56,7 +70,7 @@ module.exports = function(db, data_dir) {
         new Promise( // with the people of Israel and with the people of Judah."
             function(resolve, reject) {
             // check if valid directory
-            fs.stat(img_dir, (err, stats) => {
+            fs.stat(batch_dir, (err, stats) => {
                 if (err && err.code === "ENOENT") {
                     reject([400, "No such directory exists"]);
                 }
@@ -73,7 +87,7 @@ module.exports = function(db, data_dir) {
             // recursively walk paths
             if (recursive === "true") {
                 return new Promise((resolve, reject) => {
-                    let walker = walk.walk(img_dir);
+                    let walker = walk.walk(batch_dir);
 
                     walker.on("file", (root, fileStats, next) => {
                         // add to list if valid image file
@@ -100,15 +114,15 @@ module.exports = function(db, data_dir) {
             // only search in current directory
             else {
                 return new Promise((resolve, reject) => {
-                    fs.readdir(img_dir, (err, files) => {
+                    fs.readdir(batch_dir, (err, files) => {
                         if (err) {
-                            console.log(`Error getting files from ${img_dir}`, err);
+                            console.log(`Error getting files from ${batch_dir}`, err);
                             reject([400, "Error getting files, perhaps a read permissions error?"]);
                         }
                         for (let f of files) {
                             // loop through all files
                             if (imgExts.has(path.extname(f)))
-                                img_list.push(path.join(img_dir, path.basename(f)))
+                                img_list.push(path.join(batch_dir, path.basename(f)))
                         }
                         if (img_list.length === 0) {
                             reject([400, "No images found in this directory"]);
@@ -121,7 +135,7 @@ module.exports = function(db, data_dir) {
         // create batch entry in DB
         .then(() => {
             // should return the promise associated with the DB call
-            return db.one("INSERT INTO batches(original_dir, batch_name) VALUES ($1, $2) RETURNING id", [img_dir, batch_name])
+            return db.one("INSERT INTO batches(original_dir, batch_name) VALUES ($1, $2) RETURNING id", [batch_dir, batch_name])
         })
         // first, create folder for the batch
         .then((query_data) => {
