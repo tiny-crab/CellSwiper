@@ -104,7 +104,6 @@ module.exports = function(db, data_dir) {
 
                     walker.on("end", () => {
                         if (img_list.length === 0) {
-                            // throw [400, "No images found in this directory or its children"]
                             reject([400, "No images found in this directory or its children"])
                         }
                         else resolve();
@@ -211,6 +210,7 @@ module.exports = function(db, data_dir) {
                                         fs.createReadStream(img).pipe(fs.createWriteStream(img_path)).on('error', () => {
                                             reject([500, "Couldn't copy image file into batch path"]);
                                         });
+                                        resolve();
                                     });
                                 })
                                 .catch(err => {
@@ -229,6 +229,20 @@ module.exports = function(db, data_dir) {
         .then(() => {
             if (return_payload.result !== "ERROR") {
                 return_payload.result = "PASS";
+            }
+            // check if folder is empty (i.e. all images in database already)
+            //      if so, delete it
+            try {
+                let file_list = fs.readdirSync(batch_path);
+                if (file_list.length === 0) {
+                    fs.rmdirSync(batch_path)
+                }
+                else {
+                    // downsample batch
+                    module.downsize_dir(batch_path);
+                }
+            } catch (err) {
+                console.log(err);
             }
             res.status(200).send(return_payload);
         })
