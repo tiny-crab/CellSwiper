@@ -4,13 +4,14 @@ let batchDirs = new Set();
 let autocomplete;
 // iterator used to give all batch UI's distinct ID's
 let i = 0;
-// reference to 
+// reference to fadeOut timeout for the resultText, used for cancelling the timeout if another result text needs to
+// be shown before the last result text has faded
 let fadeTimeout;
 
 $(function() {    
     // matches strings for top level directories
     let parentDirReg = /^\w+\/$/;
-    $.getJSON("scripts/folder.json").done(function(dirObject) {
+    $.getJSON("scripts/folders.json").done(function(dirObject) {
         let input = document.getElementById('folder-input');
         autocomplete = new Awesomplete(input, {
             list: dirObject.folders,
@@ -54,6 +55,7 @@ function addBatch(dir) {
 }
 
 function resultText(dir, suc) {
+    // displays text when one batch is added
     let resText = $("#batch-response");
     let textClass, text;
     if (suc) {
@@ -82,6 +84,7 @@ function resultText(dir, suc) {
 }
 
 function resultTextMult(suc, err) {
+    // displays text when multiple batches are added at once
     let resText = $("#batch-response");
     let textClass, text;
     if (suc == 0 && err == 0) {
@@ -139,7 +142,7 @@ function createBatchUi(folder, num) {
                                 <button id="batch-submit-${num}" class="btn btn-success" onclick="submitBatch(${num})"><span class="hidden rotating glyphicon glyphicon-repeat"></span>Create</button>
                             </span>
                             <span class="col-sm-6 col-xs-12">
-                                <button class="btn btn-danger" onclick="deleteBatch(${num})">Cancel</button>
+                                <button id="batch-cancel-${num}" class="btn btn-danger" onclick="deleteBatch(${num})">Cancel</button>
                             </span>
                         </div>
                     </span>
@@ -155,17 +158,37 @@ function submitBatch(n) {
         recursive: $("#recursive-check-" + n)[0].checked,
         batch_name: $("#batch-dir-" + n).text()
     };
-    let button = $("#batch-submit-" + n);
-    button.toggleClass("disabled");
-    $(".glyphicon", button).toggleClass("hidden");
-    // $.post('test-add/', batchReq, function(data) {
-
-    // }, "json");
+    let buttons = $(`[data-batch=${n}] button`);
+    buttons.toggleClass("disabled");
+    $(".glyphicon", buttons).toggleClass("hidden");
+    // eventually this will make an actual post request
     setTimeout(function() {
-        $("#alert-wrapper-" + n).html($("<div class='col-xs-10 col-xs-offset-1 alert alert-success'><strong>Success:</strong> Batch created</div>"));
-        button.toggleClass("disabled");
-        $(".glyphicon", button).toggleClass("hidden");
-    }, 3000)
+        res = [{result: "success", err_msg: null, img_errs: []},
+            {result: "error", err_msg: "Unhashable images detected", img_errs: ["02_98.png", "03_98.png"]},
+            {result: "fail", err_msg: "Database unreachable", img_errs: []}
+            ][Math.floor(Math.random() * 100) % 3];
+        let resAlert = "<div class='col-xs-10 col-xs-offset-1 alert ";
+        switch (res.result) {
+            case "success":
+                resAlert += "alert-success'><strong>Success:</strong> Batch Created</div>";
+                buttons.each(function(i, b) { b.onclick = undefined;});
+                break;
+            case "error":
+                resAlert += `alert-warning'><strong>Success:</strong> Batch created, some images skipped. Errors hashing ${res.img_errs.join(", ")}.</div>`;
+                buttons.each(function(i, b) { b.onclick = undefined;});
+                break;
+            case "fail":
+                resAlert += `alert-danger'><strong>Failed: </strong>${res.err_msg}</div>`;
+                $(buttons[0]).text("Retry");
+                buttons.toggleClass("disabled");
+                break;
+            default:
+                console.log("Unexpected response");
+                break;
+        }
+        $("#alert-wrapper-" + n).html($(resAlert));
+        $(".glyphicon", buttons).toggleClass("hidden");
+    }, 1000)
 }
 
 function deleteBatch(n) {

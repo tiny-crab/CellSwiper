@@ -11,6 +11,12 @@ global.dir = dir;
 let images = require('./server/image_response.js')();
 let exporter = require('./server/export.js')(db);
 let importer = require('./server/import_dir.js')(db, info.data_dir);
+let exec = require('child_process').exec
+
+// build the folders.json file
+// eventually this shoiuld be run once every couple of minutes
+exec("./watch.sh");
+
 
 // serv static pages
 app.use('/pages', express.static('pages'));
