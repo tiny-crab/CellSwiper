@@ -8,7 +8,7 @@ let db = pg({host: info.db_host, port: info.db_port, database: info.db_name, use
 let port = info.server_port;
 let dir = info.parent_dir;
 global.dir = dir;
-let images = require('./server/image_response.js')();
+let images = require('./server/image_response.js')(db);
 let exporter = require('./server/export.js')(db);
 let importer = require('./server/import_dir.js')(db, info.data_dir);
 
@@ -58,6 +58,8 @@ app.get('/export', exporter.export_csv);
 app.get('/export-users', exporter.send_users);
 
 app.get('/test-add', importer.add_batch);
+
+app.get('/test-img', images.get_batch_status);
 
 app.get('/sample_script.js', function(req, res) {
 	res.sendFile(dir + 'sample_script.js');
