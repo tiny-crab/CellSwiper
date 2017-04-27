@@ -11,11 +11,20 @@ module.exports = function(db) {
     // Outputs: Image file of next image
     module.get_img = function (req, res) {
         let id = req.query.id;
+        let large = req.query.large;
         //var match_array = new RegExp('\/images\/(.*+?)', 'g').exec(url);
-        //res.send(match_array);
-        fs.readdir('./cell_images/', function(err, items) {
-            res.sendFile(dir + 'cell_images/' + items[id - 1]);
-        });
+        let img_dir = dir + 'cell_images/';
+        if (large) {
+            fs.readdir(img_dir, function(err, items) {
+                res.sendFile(img_dir + items[id - 1]);
+            });
+        }
+        else {
+            // send smaller files
+            fs.readdir(img_dir + "ds/", function (err, items) {
+                res.sendFile(img_dir + "ds/" + items[id - 1]);
+            });
+        }
     };
 
 
