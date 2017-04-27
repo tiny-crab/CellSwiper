@@ -15,16 +15,24 @@ $.urlParam = function (a) {
 //Our stuff
 $(document).ready( ()=> {
     const name = $.urlParam('name');
-    const structure = $.urlParam('structure');
+    const feature = $.urlParam('feature');
     const image_div = $("#image");
 
-    let index = $.urlParam('index');
+
+
+    let batchID = $.urlParam('batchid');
     let choice;
+    let batch_status;
+    let image;
 
     $("#user").text(name);
-    $("#structure").text(structure);
-    image_div.attr('src', '/images?index=' + index);
-  
+    $("#feature").text(feature);
+
+    // acquire image status (testing)
+    $.post("/test-img", {batchid: batchID, user: name, feature: feature}, (data) => { batch_status = data;});
+
+    image_div.attr('src', '/images?id=' + image);
+
     document.onkeyup = function (event) {
         let e = (!event) ? window.event : event;
         switch (e.keyCode) {
@@ -87,21 +95,22 @@ $(document).ready( ()=> {
     image_div.hammer().on("swiperight", good_classification);
 
     function add_annotation() {
-        $.post("annotate", {imageid : index, user: name, annotation: choice, feature: structure})
+        $.post("annotate", {imageid : batchID, user: name, annotation: choice, feature: feature})
             .done( data => {
-                index = nextImage(index)
+                batchID = nextImage(batchID)
             })
             .fail( err => {
                 alert("Something went wrong...\n" + err.responseText);
             })
     }
-    
+
+    function nextImage(batchID) {
+        // TODO: refactor to retrieve new image
+        batchID++;
+        if (batchID > 12) window.location.href = 'complete';
+        else $("#image").attr('src', '/images?batchid=' + batchID);
+        return batchID
+    }
 });
 
-function nextImage(index) {
-    index++;
-    if (index > 12) window.location.href = 'complete';
-    else $("#image").attr('src', '/images?index=' + index);
-    return index
-}
 

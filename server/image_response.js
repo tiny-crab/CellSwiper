@@ -6,21 +6,21 @@ module.exports = function(db) {
     // Author: Matthew
     // Purpose: Pull the next image from the list of sample pictures
     // Actions:
-    //      - get the index from the URL query
-    //      - find the image that matches that index
+    //      - get the id from the URL query
+    //      - find the image that matches that id
     // Outputs: Image file of next image
     module.get_img = function (req, res) {
-        let index = req.query.index;
+        let id = req.query.id;
         //var match_array = new RegExp('\/images\/(.*+?)', 'g').exec(url);
         //res.send(match_array);
         fs.readdir('./cell_images/', function(err, items) {
-            res.sendFile(dir + 'cell_images/' + items[index - 1]);
+            res.sendFile(dir + 'cell_images/' + items[id - 1]);
         });
     };
 
 
     module.get_batch_status = function (req, res) {
-        let batchID = req.query.id;
+        let batchID = req.query.batchid;
         let user = req.query.user;
         let feature = req.query.feature;
         let payload = [];
