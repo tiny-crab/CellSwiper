@@ -76,7 +76,7 @@ module.exports = function(db) {
                 else {
                     // annotation only part-way through set, find which ones to finish
                     for (item of payload) {
-                        item.status = (id_count[item.id] > 0 ? 1 : 0)
+                        item.status = (id_count[item.id] === id_max ? 1 : 0)
                     }
                 }
                 res.status(200).send(payload);
