@@ -32,10 +32,6 @@ module.exports = function(db) {
                 }
                 // query db about annotations
                 return db.any("SELECT id FROM images WHERE $1 = ANY(images.batches)", batchID)
-                // return db.any("SELECT * FROM annotation WHERE username = $1" +
-                //     "AND feature = $2 " +
-                //     "AND annotation.imageid IN (SELECT images.id FROM images WHERE $3 = ANY(images.batches))",
-                //     [user, feature, data.id])
             })
             .then(images => {
                 // add images to payload
@@ -46,6 +42,8 @@ module.exports = function(db) {
                     return ((x < y) ? -1 : ((x > y) ? 1 : 0));
                 });
                 let ids = payload.map(x => { return x.id });
+                // get annotations with this user, this feature,
+                // and where the image ID is in the list of images for this batch
                 return db.any("SELECT * FROM annotation WHERE username = $1" +
                     "AND feature = $2 " +
                     "AND annotation.imageid IN ($3:csv)",
@@ -63,32 +61,31 @@ module.exports = function(db) {
                 for (item of annotations) {
                     id_count[item.imageid]++
                 }
-                console.log(id_count);
                 let id_max = id_count[Object.keys(id_count).reduce(function(a, b){ return id_count[a] > id_count[b] ? a : b })];
                 let id_min = id_count[Object.keys(id_count).reduce(function(a, b){ return id_count[a] < id_count[b] ? a : b })];
-                console.log(id_max + " " + id_min);
                 if (!(id_max === id_min) && !(id_max - id_min === 1)){
-                    console.log(id_max - id_min);
                     // in the unlikely case...
                     throw [500, "Critical DB error, entries are not properly sequential for user, batch, and structure"]
                 }
                 // start the annotation over
-                console.log(payload);
                 if (id_max === id_min) {
                     for (let i = 0; i < payload.length; i++) {
                         payload[i].status = 0;
                     }
                 }
                 else {
-                    // TODO refactor this because the dictionary component isn't functioning for normal iterations
-                    for (let i = 0; i < payload.length; i++) {
-                        if (id_count[i] === id_max)
-                            payload[i].status = 1;
-                        else payload[i].status = 0;
+                    // annotation only part-way through set, find which ones to finish
+                    for (item of payload) {
+                        item.status = (id_count[item.id] > 0 ? 1 : 0)
                     }
                 }
-                console.log(payload);
-                res.status(200).send("OK");
+                res.status(200).send(payload);
+            })
+            .catch(err => {
+                console.log(err);
+                if (err.length === 2) {
+                    res.status(err[0]).send(err[1])
+                }
             })
     };
 
