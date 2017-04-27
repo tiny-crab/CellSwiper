@@ -128,7 +128,7 @@ function createBatchUi(folder, num) {
                                 <label for="name-input-${num}">Batch Name</label>
                             </span>
                             <span class="col-sm-8 col-xs-12">
-                                <input id="name-input-${num}" type="text" placeholder="Batch name...">
+                                <input id="name-input-${num}" type="text" placeholder="Batch name..." value="${folder}">
                             </span>
                         </div>
                     </span>
@@ -154,7 +154,7 @@ function createBatchUi(folder, num) {
 
 function submitBatch(n) {
     let batchReq = {
-        dir: $("#name-input-" + n).val(),
+        batch_dir: $("#name-input-" + n).val(),
         recursive: $("#recursive-check-" + n)[0].checked,
         batch_name: $("#batch-dir-" + n).text()
     };
@@ -163,21 +163,21 @@ function submitBatch(n) {
     $(".glyphicon", buttons).toggleClass("hidden");
     // eventually this will make an actual post request
     setTimeout(function() {
-        res = [{result: "success", err_msg: null, img_errs: []},
-            {result: "error", err_msg: "Unhashable images detected", img_errs: ["02_98.png", "03_98.png"]},
-            {result: "fail", err_msg: "Database unreachable", img_errs: []}
+        res = [{result: "PASS", err_msg: null, img_errs: []},
+            {result: "ERROR", err_msg: "Unhashable images detected", img_errs: ["02_98.png", "03_98.png"]},
+            {result: "FAIL", err_msg: "Database unreachable", img_errs: []}
             ][Math.floor(Math.random() * 100) % 3];
         let resAlert = "<div class='col-xs-10 col-xs-offset-1 alert ";
         switch (res.result) {
-            case "success":
+            case "PASS":
                 resAlert += "alert-success'><strong>Success:</strong> Batch Created</div>";
                 buttons.each(function(i, b) { b.onclick = undefined;});
                 break;
-            case "error":
+            case "ERROR":
                 resAlert += `alert-warning'><strong>Success:</strong> Batch created, some images skipped. Errors hashing ${res.img_errs.join(", ")}.</div>`;
                 buttons.each(function(i, b) { b.onclick = undefined;});
                 break;
-            case "fail":
+            case "FAIL":
                 resAlert += `alert-danger'><strong>Failed: </strong>${res.err_msg}</div>`;
                 $(buttons[0]).text("Retry");
                 buttons.toggleClass("disabled");
@@ -201,6 +201,8 @@ function deleteBatch(n) {
 function addSubfolders() {
     let parentDir = $("#folder-input").val();
     let filterReg = new RegExp(`^${parentDir}\\w+\/?$`);
+    // get all folders that are direct children of the parent folder (by regex) and create
+    // batches for all of them
     let res = autocomplete._list.filter(filterReg.test.bind(filterReg)).map(addBatch);
     // get all true values from array
     let successes = res.filter(b => b).length;

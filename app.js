@@ -78,7 +78,7 @@ app.get('/deny', function(req, res) {
 	res.send("Denied request");
 });
 
-app.get('/add_directory', function(req, res) {
+app.get('/add-directory', function(req, res) {
     res.sendFile(dir + 'pages/add_directory.html');
 });
 
