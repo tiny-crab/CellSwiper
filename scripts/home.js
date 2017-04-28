@@ -2,9 +2,6 @@
  * Created by zach on 3/31/17.
  */
 
-let info = require('./serverinfo.json');
-let feature_list = info.features;
-
 $.urlParam = function (a) {
     let b = new RegExp("[?&]" + a + "=([^&#]*)").exec(window.location.href);
     if (b == null) {
