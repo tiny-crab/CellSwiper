@@ -16,7 +16,20 @@ $(document).ready( ()=> {
     $("#name").text(name);
     let feature_dropdown = $("#feature-dropdown");
     let info = '/server-info';
-    let feature_list = info.features;
+
+    http.get(info, function(res){
+        let info_json = '';
+
+        res.on('data', function(chunk){
+            info_json += chunk;
+        });
+        res.on('end', function(){
+            let json_response = JSON.parse(body);
+            console.log("Got a response: ", fbResponse.picture);
+        });
+    }).on('error', function(e){
+        console.log("Got an error: ", e);
+    });
 
     for (i =0; i < feature_list.length; i++) {
         let item = document.createElement('li');
