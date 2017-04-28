@@ -1,7 +1,16 @@
 .nav {
     background-color: #17243A;
-    color: white;
     height: 5em;
+}
+
+#name {
+    text-align: right;
+    padding-right: 2em;
+    color: white;
+}
+
+#account-info.col-xs-6 {
+    padding-right: 1em;
 }
 
 #logo {
@@ -9,10 +18,8 @@
     color: white;
 }
 
-#name {
-    color: white;
-    text-align:right;
-    padding-right: 2em;
+#logo:hover {
+    cursor: pointer;
 }
 
 #image-dir {
@@ -20,12 +27,12 @@
     height: 10em;
 }
 
-#task-list {
+#user-list {
     border: 1px solid black;
     height: 10em;
 }
 
-#new-batch, #continue-batch {
+#assign-batch {
     margin: auto;
     width: 60%;
     font-size: 2rem;
@@ -34,25 +41,11 @@
     border-radius: 1em;
     line-height: 3rem;
     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-}
-
-#new-batch {
-    color: #5483D3;
-    border: 2px #5483D3 solid;
-}
-
-#continue-batch {
     border: 2px #B7760E solid;
     color: #B7760E;
 }
 
-#new-batch:hover {
-    cursor: pointer;
-    background-color: #5483D3;
-    color: white;
-}
-
-#continue-batch:hover {
+#assign-batch:hover {
     cursor: pointer;
     background-color: #B7760E;
     color: white;

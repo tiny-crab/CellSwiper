@@ -11,6 +11,12 @@ global.dir = dir;
 let images = require('./server/image_response.js')();
 let exporter = require('./server/export.js')(db);
 let importer = require('./server/import_dir.js')(db, info.data_dir);
+let exec = require('child_process').exec
+
+// build the folders.json file
+// eventually this shoiuld be run once every couple of minutes
+exec("./watch.sh");
+
 
 // serv static pages
 app.use('/pages', express.static('pages'));
@@ -43,6 +49,10 @@ app.get('/annotation', function(req, res) {
 	res.sendFile(dir + 'pages/annotation.html');
 });
 
+app.get('/admin', function(req, res) {
+    res.sendFile(dir + 'pages/admin.html');
+});
+
 app.get('/complete', function(req, res) {
     res.sendFile(dir + 'pages/export.html');
 });
@@ -53,7 +63,7 @@ app.get('/export', exporter.export_csv);
 
 app.get('/export-users', exporter.send_users);
 
-app.get('/test-add', importer.import_dir);
+app.get('/test-add', importer.add_batch);
 
 app.get('/sample_script.js', function(req, res) {
 	res.sendFile(dir + 'sample_script.js');
@@ -66,6 +76,10 @@ app.get('/confirm', function(req, res) {
 
 app.get('/deny', function(req, res) {
 	res.send("Denied request");
+});
+
+app.get('/add-directory', function(req, res) {
+    res.sendFile(dir + 'pages/add_directory.html');
 });
 
 app.post('/insert_name', function(req, res) {

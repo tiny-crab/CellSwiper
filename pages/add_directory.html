@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Add Annotation</title>
+        <!-- Bootstrap -->
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+            integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+        <script src="../scripts/awesomplete/awesomplete.js"></script>
+        <script src="../scripts/add_directory.js"></script>
+        <link rel="stylesheet" href="../scripts/awesomplete/awesomplete.css">
+        <link rel="stylesheet" href="../styles/add_directory.css">
+        <meta charset="UTF-8">
+    </head>
+<body>
+    <div class="container">
+        <div id="title" class="text-center row col-xs-12">
+            <h1>Add Annotation</h1>
+        </div>
+        <div id="add-directory-wrapper" class="row">
+            <form id="add-directory-form" class="form-inline">
+                <input id="folder-input" type="text" placeholder="Search for directories...">
+                <input class="btn btn-primary" type="submit" value="Add">
+                <input type="button" class="btn btn-default" value="Add subfolders as batches" onclick="addSubfolders()">
+                <span id="batch-response" style="display: none;"></span>
+            </form>
+            
+        </div>
+        
+    
+    </div>
+</body>
+</html>
