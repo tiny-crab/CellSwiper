@@ -44,8 +44,9 @@ app.get('/home', function(req, res) {
     res.sendFile(dir + 'pages/home.html');
 });
 
-app.get('/features', function(req, res) {
-    res.json(info.feature_list)
+app.get('/feature-list', function(req, res) {
+	//for the time being (this should be changed to exist in the DB)
+    res.json(info.features)
 });
 
 app.get('/annotation', function(req, res) {

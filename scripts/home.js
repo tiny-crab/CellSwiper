@@ -15,17 +15,21 @@ $(document).ready( ()=> {
     const name = $.urlParam("name");
     $("#name").text(name);
     let feature_dropdown = $("#feature-dropdown");
-
-    $.getJSON('/features', function (data) {
-        console.log(data);
+    let feature;
+    // get the feature list
+    $.get({
+        url: '/feature-list',
+        success: (feature_list) => {
+            console.log(feature_list);
+            for (i =0; i < feature_list.length; i++) {
+                let item = document.createElement('li');
+                // Set its contents:
+                item.append(document.createTextNode(feature_list[i]));
+                feature_dropdown.append(item);
+            }
+        }
     });
 
-    // for (i =0; i < feature_list.length; i++) {
-    //     let item = document.createElement('li');
-    //     // Set its contents:
-    //     item.appendChild(document.createTextNode(array[i]));
-    //     feature_dropdown.appendChild(item);
-    // }
 
     post_to_annotation = function() {
         let structure = $.urlParam("structure");
