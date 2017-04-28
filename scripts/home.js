@@ -15,9 +15,8 @@ $(document).ready( ()=> {
     const name = $.urlParam("name");
     $("#name").text(name);
     let feature_dropdown = $("#feature-dropdown");
-    let info = '/server-info';
 
-    http.get(info, function(res){
+    $.get('/features', function(res){
         let info_json = '';
 
         res.on('data', function(chunk){

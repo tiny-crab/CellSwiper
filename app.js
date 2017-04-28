@@ -44,8 +44,8 @@ app.get('/home', function(req, res) {
     res.sendFile(dir + 'pages/home.html');
 });
 
-app.get('/server-info', function(req, res) {
-    res.json(info)
+app.get('/features', function(req, res) {
+    res.json(info.feature_list)
 });
 
 app.get('/annotation', function(req, res) {
