@@ -14,9 +14,9 @@ $.urlParam = function (a) {
 $(document).ready( ()=> {
     const name = $.urlParam("name");
     $("#name").text(name);
-    feature_dropdown = $("#feature-dropdown");
-    info = '/server-info';
-    feature_list = info.features;
+    let feature_dropdown = $("#feature-dropdown");
+    let info = '/server-info';
+    let feature_list = info.features;
 
     for (i =0; i < feature_list.length; i++) {
         let item = document.createElement('li');
