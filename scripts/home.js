@@ -16,26 +16,16 @@ $(document).ready( ()=> {
     $("#name").text(name);
     let feature_dropdown = $("#feature-dropdown");
 
-    $.get('/features', function(res){
-        let info_json = '';
-
-        res.on('data', function(chunk){
-            info_json += chunk;
-        });
-        res.on('end', function(){
-            let json_response = JSON.parse(body);
-            console.log("Got a response: ", fbResponse.picture);
-        });
-    }).on('error', function(e){
-        console.log("Got an error: ", e);
+    $.getJSON('/features', function (data) {
+        console.log(data);
     });
 
-    for (i =0; i < feature_list.length; i++) {
-        let item = document.createElement('li');
-        // Set its contents:
-        item.appendChild(document.createTextNode(array[i]));
-        feature_dropdown.appendChild(item);
-    }
+    // for (i =0; i < feature_list.length; i++) {
+    //     let item = document.createElement('li');
+    //     // Set its contents:
+    //     item.appendChild(document.createTextNode(array[i]));
+    //     feature_dropdown.appendChild(item);
+    // }
 
     post_to_annotation = function() {
         let structure = $.urlParam("structure");
