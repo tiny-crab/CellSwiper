@@ -11,7 +11,7 @@ global.dir = dir;
 let images = require('./server/image_response.js')();
 let exporter = require('./server/export.js')(db);
 let importer = require('./server/import_dir.js')(db, info.data_dir);
-let exec = require('child_process').exec
+let exec = require('child_process').exec;
 
 // build the folders.json file
 // eventually this shoiuld be run once every couple of minutes
@@ -42,6 +42,10 @@ app.get('/', function(req, res) {
 
 app.get('/home', function(req, res) {
     res.sendFile(dir + 'pages/home.html');
+});
+
+app.get('/server-info', function(req, res) {
+    res.json(info)
 });
 
 app.get('/annotation', function(req, res) {

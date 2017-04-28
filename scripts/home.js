@@ -1,6 +1,10 @@
 /**
  * Created by zach on 3/31/17.
  */
+
+let info = require('./serverinfo.json');
+let feature_list = info.features;
+
 $.urlParam = function (a) {
     let b = new RegExp("[?&]" + a + "=([^&#]*)").exec(window.location.href);
     if (b == null) {
@@ -13,6 +17,16 @@ $.urlParam = function (a) {
 $(document).ready( ()=> {
     const name = $.urlParam("name");
     $("#name").text(name);
+    feature_dropdown = $("#feature-dropdown");
+    info = '/server-info';
+    feature_list = info.features;
+
+    for (i =0; i < feature_list.length; i++) {
+        let item = document.createElement('li');
+        // Set its contents:
+        item.appendChild(document.createTextNode(array[i]));
+        feature_dropdown.appendChild(item);
+    }
 
     post_to_annotation = function() {
         let structure = $.urlParam("structure");
