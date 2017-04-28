@@ -6,3 +6,4 @@ launch.json
 .idea/
 .vscode/
 test/*/*
+scripts/folders.json
