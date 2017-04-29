@@ -15,16 +15,24 @@ $.urlParam = function (a) {
 //Our stuff
 $(document).ready( ()=> {
     const name = $.urlParam('name');
-    const structure = $.urlParam('structure');
+    const feature = $.urlParam('feature');
     const image_div = $("#image");
 
-    let index = $.urlParam('index');
+    let batchID = $.urlParam('batchid');
     let choice;
+    let batch_status;
+    let image;
 
     $("#user").text(name);
-    $("#structure").text(structure);
-    image_div.attr('src', '/images?index=' + index);
-  
+    $("#feature").text(feature);
+
+    // acquire image status (testing)
+    $.get("/test-img", {batchid: batchID, user: name, feature: feature}, (data) => {
+        batch_status = data;
+        // now we can pull the first image
+        getNextImage();
+    });
+
     document.onkeyup = function (event) {
         let e = (!event) ? window.event : event;
         switch (e.keyCode) {
@@ -87,21 +95,40 @@ $(document).ready( ()=> {
     image_div.hammer().on("swiperight", good_classification);
 
     function add_annotation() {
-        $.post("annotate", {imageid : index, user: name, annotation: choice, feature: structure})
-            .done( data => {
-                index = nextImage(index)
-            })
-            .fail( err => {
-                alert("Something went wrong...\n" + err.responseText);
-            })
+        if (image) {
+            $.post("annotate", {imageid: image, user: name, annotation: choice, feature: feature})
+                .done(data => {
+                    getNextImage()
+                })
+                .fail(err => {
+                    alert("Something went wrong...\n" + err.responseText);
+                })
+        }
+        else {
+            window.location.href = 'complete'
+        }
     }
-    
+
+    function getNextImage() {
+        // set current image to 1 i.e. annotated
+        if (image) {
+            batch_status.find((item) => {
+                return item.id === image;
+            }).status = 1;
+        }
+        // get next unannotated image
+        image = batch_status.find((item) => {
+            return item.status === 0;
+        });
+        if (image === undefined) {
+            // batch done, do something here
+            window.location.href = 'complete'
+        }
+        else {
+            image = image.id;
+            image_div.attr('src', '/images?id=' + image);
+        }
+    }
 });
 
-function nextImage(index) {
-    index++;
-    if (index > 12) window.location.href = 'complete';
-    else $("#image").attr('src', '/images?index=' + index);
-    return index
-}
 

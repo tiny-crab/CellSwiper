@@ -132,10 +132,10 @@ module.exports = function(db, data_dir) {
             }
         })
         // create batch entry in DB
-        .then(() => {
+        .then(
             // should return the promise associated with the DB call
-            return db.one("INSERT INTO batches(original_dir, batch_name) VALUES ($1, $2) RETURNING id", [batch_dir, batch_name])
-        })
+            db.one("INSERT INTO batches(original_dir, batch_name) VALUES ($1, $2) RETURNING id", [batch_dir, batch_name])
+        )
         // first, create folder for the batch
         .then((query_data) => {
             batchID = query_data.id;
@@ -201,11 +201,13 @@ module.exports = function(db, data_dir) {
                     .then(hash => {
                         // if the has isn't 0
                         if (hash) {
-                            let entries = [batch_path, hash, [batchID]];
-                            return db.none("INSERT INTO images(directory, hash, batches) VALUES ($1, $2, $3)", entries)
+                            let extension = path.extname(img);
+                            let entries = [batch_path, hash, [batchID], extension];
+                            return db.none("INSERT INTO images(directory, hash, batches, extension) " +
+                                "VALUES ($1, $2, $3, $4)", entries)
                                 .then(() => {
                                     // copy into batch directory
-                                    let img_path = path.join(batch_path, hash + path.extname(img));
+                                    let img_path = path.join(batch_path, hash + extension);
                                     return new Promise((resolve, reject) => {
                                         fs.createReadStream(img).pipe(fs.createWriteStream(img_path)).on('error', () => {
                                             reject([500, "Couldn't copy image file into batch path"]);
