@@ -1,7 +1,3 @@
-/**
- * Created by zach on 3/31/17.
- */
-
 $.urlParam = function (a) {
     let b = new RegExp("[?&]" + a + "=([^&#]*)").exec(window.location.href);
     if (b == null) {
@@ -16,6 +12,7 @@ $(document).ready( ()=> {
     $("#name").text(name);
     let feature_dropdown = $("#feature-dropdown");
     let feature;
+
     // get the feature list
     $.get({
         url: '/feature-list',
@@ -25,13 +22,17 @@ $(document).ready( ()=> {
                 let item = document.createElement('li');
                 // Set its contents:
                 item.append(document.createTextNode(feature_list[i]));
+                item.onclick = change_drop_text(item.text());
                 feature_dropdown.append(item);
             }
         }
     });
 
+    function change_drop_text(structure) {
+        $("#dropdown-button").text(structure);
+    }
 
-    post_to_annotation = function() {
+    function post_to_annotation(){
         let structure = $.urlParam("structure");
         $.post("insert_name", {name: name})
             .done(() => {
@@ -41,9 +42,9 @@ $(document).ready( ()=> {
                 alert(`Name is already in use, continuing as "${name}"`);
                 window.location.href = `annotation?index=1&name=${name}&structure=${structure}`;
             });
-    };
+    }
 
-    post_to_admin = function() {
+    function post_to_admin() {
         $.post("insert_name", {name: name})
             .done(() => {
                 window.location.href = `admin?name=${name}`;
@@ -52,7 +53,7 @@ $(document).ready( ()=> {
                 alert(`Name is already in use, continuing as "${name}"`);
                 window.location.href = `admin?name=${name}`;
             });
-    };
+    }
 
     $(`#new-batch`).click(post_to_annotation);
     $(`#continue-batch`).click(post_to_annotation);
