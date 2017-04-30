@@ -11,6 +11,8 @@ global.dir = dir;
 let images = require('./server/image_response.js')();
 let exporter = require('./server/export.js')(db);
 let importer = require('./server/import_dir.js')(db, info.data_dir);
+let batches = require('./server/batch_info')(db);
+let exec = require('child_process').exec
 
 // serv static pages
 app.use('/pages', express.static('pages'));
@@ -56,6 +58,8 @@ app.get('/images', images.get_img);
 app.get('/export', exporter.export_csv);
 
 app.get('/export-users', exporter.send_users);
+
+app.get('/all-batch-info', batches.getBatchInfo);
 
 app.get('/test-add', importer.add_batch);
 
