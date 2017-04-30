@@ -19,7 +19,6 @@ $(document).ready( ()=> {
         dropdownMenuButton.text(ftr);
     }
 
-
     function postToAnnotation() {
         let ftr = dropdownMenuButton.text();
         if ( ftr === defaultDropDown) {
@@ -57,16 +56,16 @@ $(document).ready( ()=> {
                 let listItem = document.createElement('li');
                 listItem.setAttribute("id", listCounter);
 
-                let feature = featureList[i];
-                $(listCounter).click({ftr: feature}, changeDropdownText);
                 let item = document.createElement('a');
                 item.setAttribute("class", "dropdown-item");
                 item.setAttribute("href", "#");
+                let feature = featureList[i];
                 // Set its text contents
                 item.append(document.createTextNode(feature));
                 // on click, change the main dropdown button to show the feature name
                 listItem.append(item);
                 featureDropdown.append(listItem);
+                $("#" + listCounter).click({ftr: feature}, changeDropdownText);
             }
         }
     });
