@@ -18,12 +18,13 @@ $(document).ready( ()=> {
     $.get({
         url: '/feature-list',
         success: (featureList) => {
-            for (i =0; i < featureList.length; i++) {
-                let feature = featureList[i];
+            for (i = 0; i < featureList.length; i++) {
+                let listCounter = "list-item-" + i.toString();
                 let listItem = document.createElement('li');
-                listItem.setAttribute("id", "click-selector");
-                $("click-selector").click({ftr: feature}, changeDropdownText);
-                listItem.removeAttribute("id");
+                listItem.setAttribute("id", listCounter);
+
+                let feature = featureList[i];
+                $(listCounter).click({ftr: feature}, changeDropdownText);
                 let item = document.createElement('a');
                 item.setAttribute("class", "dropdown-item");
                 item.setAttribute("href", "#");
