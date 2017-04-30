@@ -6,7 +6,7 @@ module.exports = function(db) {
     let module = {};
 
     module.getBatchInfo = function(req, res) {
-        db.any("SELECT * FROM batches")
+        db.any("SELECT * FROM batches ORDER BY date_added")
             .then(batches => {
                 if (batches) {
                     res.send(batches);
