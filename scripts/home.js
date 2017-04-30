@@ -16,12 +16,14 @@ $(document).ready( ()=> {
     $.get({
         url: '/feature-list',
         success: (feature_list) => {
-            console.log(feature_list);
             for (i =0; i < feature_list.length; i++) {
                 let feature = feature_list[i];
-                let item = document.createElement('li');
-                // Set its contents:
+                let item = document.createElement('a');
+                item.addClass("dropdown-item");
+                item.setAttribute("href", "#");
+                // Set its text contents
                 item.append(document.createTextNode(feature));
+                // on click, change the main dropdown button to show the structure name
                 item.onclick = change_drop_text(feature);
                 feature_dropdown.append(item);
             }
