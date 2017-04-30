@@ -19,7 +19,7 @@ $(document).ready( ()=> {
             for (i =0; i < feature_list.length; i++) {
                 let feature = feature_list[i];
                 let item = document.createElement('a');
-                item.addClass("dropdown-item");
+                item.setAttribute("class", "dropdown-item");
                 item.setAttribute("href", "#");
                 // Set its text contents
                 item.append(document.createTextNode(feature));
