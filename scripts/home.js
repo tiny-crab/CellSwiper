@@ -11,7 +11,6 @@ $(document).ready( ()=> {
     const name = $.urlParam("name");
     $("#name").text(name);
     let feature_dropdown = $("#feature-dropdown");
-    let feature;
 
     // get the feature list
     $.get({
@@ -19,10 +18,11 @@ $(document).ready( ()=> {
         success: (feature_list) => {
             console.log(feature_list);
             for (i =0; i < feature_list.length; i++) {
+                let feature = feature_list[i];
                 let item = document.createElement('li');
                 // Set its contents:
-                item.append(document.createTextNode(feature_list[i]));
-                item.onclick = change_drop_text(item.text());
+                item.append(document.createTextNode(feature));
+                item.onclick = change_drop_text(feature);
                 feature_dropdown.append(item);
             }
         }
