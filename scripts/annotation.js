@@ -16,7 +16,10 @@ $.urlParam = function (a) {
 $(document).ready( ()=> {
     const name = $.urlParam('name');
     const feature = $.urlParam('feature');
-    const image_div = $("#image");
+    let image_div = $("#image");
+    let seadragon = $("#openseadragon");
+    let image_container = $("#image-container");
+    let viewer;
 
     let batchID = $.urlParam('batchid');
     let choice;
@@ -109,6 +112,25 @@ $(document).ready( ()=> {
         }
     }
 
+    image_div.dblclick(e => {
+        e.preventDefault();
+        image_div.hide();
+        viewer = OpenSeadragon({
+            id: "openseadragon",
+            prefixUrl: '/scripts/openseadragon_images/',
+            tileSources: {
+                type: 'image',
+                url: `/images?id=${image}&large=${true}`,
+            },
+            autoHideControls: false,
+            defaultZoomLevel: 0,
+            minZoomLevel: 0.5,
+            maxZoomLevel: 5
+        });
+        seadragon.show();
+    });
+
+
     function getNextImage() {
         // set current image to 1 i.e. annotated
         if (image) {
@@ -126,6 +148,12 @@ $(document).ready( ()=> {
         }
         else {
             image = image.id;
+            if (viewer) {
+                viewer.destroy();
+                viewer = null;
+                seadragon.hide();
+                image_div.show();
+            }
             image_div.attr('src', '/images?id=' + image);
         }
     }
