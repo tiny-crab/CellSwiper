@@ -7,6 +7,40 @@ $.urlParam = function (a) {
     }
 };
 
+function changeDropdownText(event) {
+    let ftr = event.data.ftr;
+    dropdownMenuButton.text(ftr);
+}
+
+
+function postToAnnotation() {
+    let ftr = dropdownMenuButton.text();
+    if ( ftr === defaultDropDown) {
+        alert("Feature not selected from dropdown list.");
+    } else {
+        $.post("insert_name", {name: name})
+            .done(() => {
+                window.location.href = `annotation?index=1&name=${name}&feature=${ftr}`;
+            })
+            .fail(() => {
+                alert(`Name is already in use, continuing as "${name}"`);
+                window.location.href = `annotation?index=1&name=${name}&feature=${ftr}`;
+            });
+    }
+
+}
+
+function postToAdmin() {
+    $.post("insert_name", {name: name})
+        .done(() => {
+            window.location.href = `admin?name=${name}`;
+        })
+        .fail(() => {
+            alert(`Name is already in use, continuing as "${name}"`);
+            window.location.href = `admin?name=${name}`;
+        });
+}
+
 $(document).ready( ()=> {
     const name = $.urlParam("name");
     $("#name").text(name);
@@ -36,39 +70,6 @@ $(document).ready( ()=> {
             }
         }
     });
-
-    function changeDropdownText(event) {
-        let ftr = event.data.ftr;
-        dropdownMenuButton.text(ftr);
-    }
-
-    function postToAnnotation() {
-        let ftr = dropdownMenuButton.text();
-        if ( ftr === defaultDropDown) {
-            alert("Feature not selected from dropdown list.");
-        } else {
-            $.post("insert_name", {name: name})
-                .done(() => {
-                    window.location.href = `annotation?index=1&name=${name}&feature=${ftr}`;
-                })
-                .fail(() => {
-                    alert(`Name is already in use, continuing as "${name}"`);
-                    window.location.href = `annotation?index=1&name=${name}&feature=${ftr}`;
-                });
-        }
-
-    }
-
-    function postToAdmin() {
-        $.post("insert_name", {name: name})
-            .done(() => {
-                window.location.href = `admin?name=${name}`;
-            })
-            .fail(() => {
-                alert(`Name is already in use, continuing as "${name}"`);
-                window.location.href = `admin?name=${name}`;
-            });
-    }
 
     $(`#new-batch`).click(postToAnnotation);
     $(`#continue-batch`).click(postToAnnotation);
