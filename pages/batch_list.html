@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Batch List</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <!-- Bootstrap -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../scripts/batch_list.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="../styles/batch_list.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans|Sansita" rel="stylesheet">
+    </head>
+    <body>
+        <div class="batch-wrapper" style="height:40px;">
+            <ul class="list-group">
+                <li data-toggle="collapse" data-target="#2017-list" class="year list-group-item collapsed">
+                    <span class="expand-glyph glyphicon glyphicon-chevron-down"></span>
+                    2017
+                </li>
+                <div data-year="2017" id="2017-list" class="collapse year-list">
+                    <li class="month list-group-item">December <span class="text-right text-nowrap"><button class="btn btn-sm btn-primary right">Y</button></span></li>
+                    <li class="month list-group-item">October</li>
+                    <li class="month list-group-item">June</li>
+                </div>
+                <li data-toggle="collapse" data-target="#2016-list" class="year list-group-item collapsed">
+                    <span class="expand-glyph glyphicon glyphicon-chevron-down"></span>
+                    2016
+                </li>
+                <div data-year="2016" id="2016-list" class="collapse year-list">
+                    <li class="month list-group-item">December</li>
+                    <li class="month list-group-item">October</li>
+                    <li class="month list-group-item">June</li>
+                </div>
+            </ul>
+        </div>
+    </body>
+</html>
