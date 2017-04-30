@@ -15,14 +15,15 @@ $(document).ready( ()=> {
     $("#name").text(name);
 
     post_to_annotation = function() {
-        let structure = $.urlParam("structure");
+        let feature = $.urlParam("feature");
         $.post("insert_name", {name: name})
             .done(() => {
-                window.location.href = `annotation?index=1&name=${name}&structure=${structure}`;
+                window.location.href = `annotation?batchid=1&name=${name}&feature=${feature}`;
             })
             .fail(() => {
+                // what would be the fail condition here?
                 alert(`Name is already in use, continuing as "${name}"`);
-                window.location.href = `annotation?index=1&name=${name}&structure=${structure}`;
+                window.location.href = `annotation?batchid=1&name=${name}&feature=${feature}`;
             });
     };
 
