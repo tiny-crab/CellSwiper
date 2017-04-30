@@ -74,7 +74,7 @@ module.exports = function(db) {
                 let id_min = id_count[Object.keys(id_count).reduce(function(a, b){ return id_count[a] < id_count[b] ? a : b })];
                 if (!(id_max === id_min) && !(id_max - id_min === 1)){
                     // in the unlikely case...
-                    throw [500, "Critical DB error, entries are not properly sequential for user, batch, and structure"]
+                    throw [500, "Critical DB error, entries are not properly sequential for user, batch, and feature"]
                 }
                 // start the annotation over
                 if (id_max === id_min) {
