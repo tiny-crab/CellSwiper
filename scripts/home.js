@@ -10,31 +10,33 @@ $.urlParam = function (a) {
 $(document).ready( ()=> {
     const name = $.urlParam("name");
     $("#name").text(name);
-    let feature_dropdown = $("#feature-dropdown");
+    let featureDropdown = $("#feature-dropdown");
 
     // get the feature list
     $.get({
         url: '/feature-list',
-        success: (feature_list) => {
-            for (i =0; i < feature_list.length; i++) {
-                let feature = feature_list[i];
+        success: (featureList) => {
+            for (i =0; i < featureList.length; i++) {
+                let feature = featureList[i];
+                let listItem = document.createElement('li');
                 let item = document.createElement('a');
                 item.setAttribute("class", "dropdown-item");
                 item.setAttribute("href", "#");
                 // Set its text contents
                 item.append(document.createTextNode(feature));
                 // on click, change the main dropdown button to show the structure name
-                item.onclick = change_drop_text(feature);
-                feature_dropdown.append(item);
+                item.onclick = changeDropText(feature);
+                listItem.append(item);
+                featureDropdown.append(listItem);
             }
         }
     });
 
-    function change_drop_text(structure) {
-        $("#dropdown-button").text(structure);
+    function changeDropText(structure) {
+        $("#dropdownMenuButton").text(structure);
     }
 
-    function post_to_annotation(){
+    function postToAnnotation(){
         let structure = $.urlParam("structure");
         $.post("insert_name", {name: name})
             .done(() => {
@@ -46,7 +48,7 @@ $(document).ready( ()=> {
             });
     }
 
-    function post_to_admin() {
+    function postToAdmin() {
         $.post("insert_name", {name: name})
             .done(() => {
                 window.location.href = `admin?name=${name}`;
@@ -57,7 +59,7 @@ $(document).ready( ()=> {
             });
     }
 
-    $(`#new-batch`).click(post_to_annotation);
-    $(`#continue-batch`).click(post_to_annotation);
-    $(`#account-info`).click(post_to_admin);
+    $(`#new-batch`).click(postToAnnotation);
+    $(`#continue-batch`).click(postToAnnotation);
+    $(`#account-info`).click(postToAdmin);
 });
