@@ -11,6 +11,8 @@ $(document).ready( ()=> {
     const name = $.urlParam("name");
     $("#name").text(name);
     let featureDropdown = $("#feature-dropdown");
+    let dropdownMenuButton = $("#dropdownMenuButton");
+    let defaultDropDown = dropdownMenuButton.text();
 
     // get the feature list
     $.get({
@@ -24,28 +26,33 @@ $(document).ready( ()=> {
                 item.setAttribute("href", "#");
                 // Set its text contents
                 item.append(document.createTextNode(feature));
-                // on click, change the main dropdown button to show the structure name
-                item.onclick = changeDropText(feature);
+                // on click, change the main dropdown button to show the feature name
+                item.click({ftr: feature}, changeDropdownText);
                 listItem.append(item);
                 featureDropdown.append(listItem);
             }
         }
     });
 
-    function changeDropText(structure) {
-        $("#dropdownMenuButton").text(structure);
+    function changeDropdownText() {
+        dropdownMenuButton.text(event.data.ftr);
     }
 
-    function postToAnnotation(){
-        let structure = $.urlParam("structure");
-        $.post("insert_name", {name: name})
-            .done(() => {
-                window.location.href = `annotation?index=1&name=${name}&structure=${structure}`;
-            })
-            .fail(() => {
-                alert(`Name is already in use, continuing as "${name}"`);
-                window.location.href = `annotation?index=1&name=${name}&structure=${structure}`;
-            });
+    function postToAnnotation() {
+        let ftr = dropdownMenuButton.text();
+        if ( ftr === defaultDropDown) {
+            alert("Feature not selected from dropdown list.");
+        } else {
+            $.post("insert_name", {name: name})
+                .done(() => {
+                    window.location.href = `annotation?index=1&name=${name}&feature=${ftr}`;
+                })
+                .fail(() => {
+                    alert(`Name is already in use, continuing as "${name}"`);
+                    window.location.href = `annotation?index=1&name=${name}&feature=${ftr}`;
+                });
+        }
+
     }
 
     function postToAdmin() {
