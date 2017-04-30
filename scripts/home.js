@@ -21,21 +21,24 @@ $(document).ready( ()=> {
             for (i =0; i < featureList.length; i++) {
                 let feature = featureList[i];
                 let listItem = document.createElement('li');
+                listItem.setAttribute("id", "click-selector");
+                $("click-selector").click({ftr: feature}, changeDropdownText);
+                listItem.removeAttribute("id");
                 let item = document.createElement('a');
                 item.setAttribute("class", "dropdown-item");
                 item.setAttribute("href", "#");
                 // Set its text contents
                 item.append(document.createTextNode(feature));
                 // on click, change the main dropdown button to show the feature name
-                item.click({ftr: feature}, changeDropdownText);
                 listItem.append(item);
                 featureDropdown.append(listItem);
             }
         }
     });
 
-    function changeDropdownText() {
-        dropdownMenuButton.text(event.data.ftr);
+    function changeDropdownText(event) {
+        let ftr = event.data.ftr;
+        dropdownMenuButton.text(ftr);
     }
 
     function postToAnnotation() {
