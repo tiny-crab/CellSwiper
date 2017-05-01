@@ -132,10 +132,10 @@ module.exports = function(db, data_dir) {
             }
         })
         // create batch entry in DB
-        .then(
-            // should return the promise associated with the DB call
-            db.one("INSERT INTO batches(original_dir, batch_name) VALUES ($1, $2) RETURNING id", [batch_dir, batch_name])
-        )
+        .then(() => {
+                // should return the promise associated with the DB call
+                db.one("INSERT INTO batches(original_dir, batch_name) VALUES ($1, $2) RETURNING id", [batch_dir, batch_name])
+        })
         // first, create folder for the batch
         .then((query_data) => {
             batchID = query_data.id;

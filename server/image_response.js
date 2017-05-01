@@ -13,7 +13,7 @@ module.exports = function(db) {
         let id = req.query.id;
         let large = req.query.large;
         //var match_array = new RegExp('\/images\/(.*+?)', 'g').exec(url);
-        let img_dir = dir + 'cell_images/';
+        let img_dir = data_dir;
         if (large) {
             fs.readdir(img_dir, function(err, items) {
                 res.sendFile(img_dir + items[id - 1]);
