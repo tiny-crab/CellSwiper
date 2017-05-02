@@ -24,14 +24,8 @@ $(document).ready( ()=> {
         if ( ftr === defaultDropDown) {
             alert("Feature not selected from dropdown list.");
         } else {
-            $.post("insert_name", {name: name})
-                .done(() => {
-                    window.location.href = `annotation?index=1&name=${name}&feature=${ftr}`;
-                })
-                .fail(() => {
-                    alert(`Name is already in use, continuing as "${name}"`);
-                    window.location.href = `annotation?index=1&name=${name}&feature=${ftr}`;
-                });
+            // this will need to be changed to be batch specific
+            window.location.href = `annotation?batchid=2&name=${name}&feature=${ftr}`;
         }
 
     }
