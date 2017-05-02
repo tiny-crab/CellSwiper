@@ -34,6 +34,10 @@ $(document).ready( ()=> {
         batch_status = data;
         // now we can pull the first image
         getNextImage();
+    })
+    .fail((err) => {
+        alert(`HTTP ERROR ${err.status}: ${err.responseText}`);
+        window.location.href = '/home'
     });
 
     document.onkeyup = function (event) {
@@ -112,25 +116,6 @@ $(document).ready( ()=> {
         }
     }
 
-    image_div.dblclick(e => {
-        e.preventDefault();
-        image_div.hide();
-        viewer = OpenSeadragon({
-            id: "openseadragon",
-            prefixUrl: '/scripts/openseadragon_images/',
-            tileSources: {
-                type: 'image',
-                url: `/images?id=${image}&large=${true}`,
-            },
-            autoHideControls: false,
-            defaultZoomLevel: 0,
-            minZoomLevel: 0.5,
-            maxZoomLevel: 5
-        });
-        seadragon.show();
-    });
-
-
     function getNextImage() {
         // set current image to 1 i.e. annotated
         if (image) {
@@ -154,9 +139,45 @@ $(document).ready( ()=> {
                 seadragon.hide();
                 image_div.show();
             }
-            image_div.attr('src', '/images?id=' + image);
+            let imgURL = '/images?id=' + image;
+            $.get(imgURL)
+                .done(() => {
+                    // knowing the image exists
+                    image_div.attr('src', imgURL);
+                })
+                .fail(() => {
+                    // TODO: make a modal dialog for this, and move to the next image or return home
+                    alert(`Error retrieving downsampled image with id ${image}`)
+                })
         }
     }
+
+    image_div.dblclick(e => {
+        e.preventDefault();
+        let imgURL = `/images?id=${image}&large=${true}`;
+        $.get(imgURL)
+            .done(() => {
+                // knowing the image exists
+                image_div.hide();
+                viewer = OpenSeadragon({
+                    id: "openseadragon",
+                    prefixUrl: '/scripts/openseadragon_images/',
+                    tileSources: {
+                        type: 'image',
+                        url: imgURL
+                    },
+                    autoHideControls: false,
+                    defaultZoomLevel: 0,
+                    minZoomLevel: 0.5,
+                    maxZoomLevel: 5
+                });
+                seadragon.show();
+            })
+            .fail(() => {
+                // TODO: make a modal dialog for this, and move to the next image or return home
+                alert(`Error retrieving full-size image with id ${image}`)
+            });
+    });
 });
 
 
