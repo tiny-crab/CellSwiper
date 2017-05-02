@@ -14,6 +14,8 @@ $(document).ready( ()=> {
     const name = $.urlParam('name');
     $("#name").text(name);
 
+    createBatchUI("image-dir");
+
     post_to_home = function () {
         let structure = $.urlParam("structure");
         $.post("insert_name", {name: name})

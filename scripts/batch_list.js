@@ -1,6 +1,9 @@
 months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-$(function() {
+// call this one to create the batch ui
+// pass in the id of the element you want filled with
+// the ui
+function createBatchUI(container_id) {
     $.get('/all-batch-info').done(function(data) {
         batch_dict = {}
         let date_reg = /^(\d{4})-(\d{2})/;
@@ -20,9 +23,9 @@ $(function() {
         for (let y in batch_dict) {
             batch_list += makeYear(y, batch_dict[y]);
         }
-        $("#batch-wrapper").html(batch_list + "</ul>");
+        $("#" + container_id).html(batch_list + "</ul>");
     });
-});
+}
 
 function makeYear(year, obj) {
     let year_html = `<li data-toggle="collapse" data-target="#${year}-list" 
@@ -43,8 +46,8 @@ function makeMonth(year, month, month_list) {
     <div id="${year}-${month}-list" class="collapse month-list">`;
     for (let b of month_list) {
         month_html += `<li class="batch list-group-item row">
-        <span class="col-xs-2">${b.batch_name}</span><small class="col-xs-offset-1 col-xs-3">${b.original_dir}</small>
-        <button onclick="startBatch(${b.id})" class="btn btn-primary col-xs-offset-1">Start</button></li>`
+        <span class="col-xs-8">${b.batch_name}<small class="batch-path">${b.original_dir}</small></span>
+        <span class="col-xs-2"><button onclick="startBatch(${b.id})" class="btn btn-sm btn-primary">Start batch</button></span></li>`
     }
     month_html += '</div>';
     return month_html;

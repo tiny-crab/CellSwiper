@@ -162,11 +162,11 @@ function submitBatch(n) {
     buttons.toggleClass("disabled");
     $(".glyphicon", buttons).toggleClass("hidden");
     // eventually this will make an actual post request
-    setTimeout(function() {
-        res = [{result: "PASS", err_msg: null, img_errs: []},
-            {result: "ERROR", err_msg: "Unhashable images detected", img_errs: ["02_98.png", "03_98.png"]},
-            {result: "FAIL", err_msg: "Database unreachable", img_errs: []}
-            ][Math.floor(Math.random() * 100) % 3];
+    $.get("/test-add", batchReq, function(res) {
+        // res = [{result: "PASS", err_msg: null, img_errs: []},
+        //     {result: "ERROR", err_msg: "Unhashable images detected", img_errs: [{image: "095.jpg", err: "Not hashable"}]},
+        //     {result: "FAIL", err_msg: "Database unreachable", img_errs: []}
+        //     ][/*Math.floor(Math.random() * 100) % 3*/1];
         let resAlert = "<div class='col-xs-10 col-xs-offset-1 alert ";
         switch (res.result) {
             case "PASS":
@@ -174,7 +174,8 @@ function submitBatch(n) {
                 buttons.each(function(i, b) { b.onclick = undefined;});
                 break;
             case "ERROR":
-                resAlert += `alert-warning'><strong>Success:</strong> Batch created, some images skipped. Errors hashing ${res.img_errs.join(", ")}.</div>`;
+                resAlert += `alert-warning'><strong>Success:</strong> Batch created, some images skipped.
+                 Errors hashing ${res.img_errs.map(img_err => makeImgErrorHover(img_err.image, img_err.err)).join("")}.</div>`;
                 buttons.each(function(i, b) { b.onclick = undefined;});
                 break;
             case "FAIL":
@@ -187,8 +188,14 @@ function submitBatch(n) {
                 break;
         }
         $("#alert-wrapper-" + n).html($(resAlert));
+        // activate tooltips
+        $("#alert-wrapper-" + n + ' [data-toggle="tooltip"]').tooltip();
         $(".glyphicon", buttons).toggleClass("hidden");
-    }, 1000)
+    });
+}
+
+function makeImgErrorHover(img, err) {
+    return `<a href="#" data-toggle="tooltip" title="${err}">${img}</a>`;
 }
 
 function deleteBatch(n) {

@@ -21,6 +21,7 @@
 
 .month {
     margin-left: 20px;
+    overflow: hidden;
 }
 
 .month:hover {
@@ -39,4 +40,11 @@
 
 .batch {
     margin-left: 40px;
+    margin-right: 0;
+    overflow: hidden;
+}
+
+.batch-path {
+    color: lightgrey;
+    padding-left: 5px;
 }
