@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>CellSwiper</title>
+    <meta charset="UTF-8"/>
+
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
     <!-- Bootstrap -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
@@ -8,32 +14,37 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Sansita" rel="stylesheet">
 
+    <!-- Local stylesheets -->
+    <link rel="stylesheet" href="../styles/theme.css">
     <link rel="stylesheet" href="../styles/home.css">
+
+    <!-- Local JavaScript-->
     <script src="../scripts/home.js"></script>
 
-    <meta charset="UTF-8">
 </head>
 <body>
     <div class="row nav">
-        <!--Need to get hide these column margins when shifting to mobile screens-->
-        <!--Don't know if this is the best way... but I think the navbar stretching
-            across the whole screen looks better than scaling body to some % of screen-->
-        <div class="col-md-1 margin"></div>
-        <div class="col-md-2" id="logo">
-            <h3>CellSwiper</h3>
+        <div class="col-xs-6 col-sm-6 col-md-offset-1 col-md-2">
+            <h3 id="logo">CellSwiper</h3>
         </div>
-        <div class="col-md-6 margin"></div>
-        <div class="col-md-2" id="account-info">
+        <div class="col-xs-6 col-sm-6 col-md-offset-6 col-md-2" id="account-info">
             <h3 id="name"></h3>
         </div>
-        <div class="col-md-1 margin"></div>
     </div>
     <div class="row">
         <div class="col-md-1 margin"></div>
         <div class="col-md-5" id="image-dir">
             <p>image directories</p>
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton">
+                    Select a Structure
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" id="feature-dropdown" aria-labelledby="dropdownMenuButton"></ul>
+            </div>
         </div>
         <div class="col-md-5" id="task-list">
             <p>tasks</p>
@@ -43,10 +54,10 @@
     <div class="row">
         <div class="col-md-1 margin"></div>
         <div class="col-md-5">
-            <div id="new-batch">start new batch button</div>
+            <div id="new-batch">start new batch</div>
         </div>
         <div class="col-md-5">
-            <div id="continue-batch">continue batch button</div>
+            <div id="continue-batch">continue batch</div>
         </div>
         <div class="col-md-1 margin"></div>
     </div>

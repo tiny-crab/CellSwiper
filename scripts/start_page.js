@@ -2,7 +2,7 @@
 
 console.log("Start annotation script received");
 let name;
-let structure;
+let feature;
 
 $(document).ready(() => {
     $("form").submit((e) => {
@@ -10,20 +10,21 @@ $(document).ready(() => {
         if (!$("#name").val()) {
             alert("Name field not filled");
         }
-        else if (!$("#structure").val()) {
-            alert("Structure field not filled");
+        // TODO: Make feature a drop down list on batch selection page
+        else if (!$("#feature").val()) {
+            alert("Feature field not filled");
         }
         else {
             console.log("Form Filled");
             name = $("#name").val();
-            structure = $("#structure").val();
+            feature = $("#feature").val();
             $.post("insert_name", {name: name})
                 .done(() => {
-                    window.location.href = `home?&name=${name}&structure=${structure}`;
+                    window.location.href = `home?&name=${name}&feature=${feature}`;
                 })
                 .fail(() => {
-                    alert(`Name is already in use, continuing as "${name}"`);
-                    window.location.href = `home?name=${name}&structure=${structure}`;
+                    console.log(`Name is already in use, continuing as "${name}"`);
+                    window.location.href = `home?name=${name}&feature=${feature}`;
                 });
         }
     });

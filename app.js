@@ -1,20 +1,29 @@
-var express = require('express');
-var pg = require('pg-promise')();
-var fs = require('fs');
-var app = express();
-var info = require('./serverinfo.json');
-var bodyparser = require('body-parser');
-var db = pg({host: info.db_host, port: info.db_port, database: info.db_name, user: info.db_user, password: info.db_pass});
-var port = info.server_port;
-var dir = info.parent_dir;
+let express = require('express');
+let pg = require('pg-promise')();
+let fs = require('fs');
+let app = express();
+let info = require('./serverinfo.json');
+let bodyparser = require('body-parser');
+let db = pg({host: info.db_host, port: info.db_port, database: info.db_name, user: info.db_user, password: info.db_pass});
+let port = info.server_port;
+let dir = info.parent_dir;
 global.dir = dir;
-var images = require('./server/image_response.js')(fs);
-var exports = require('./server/export.js')(fs, db);
+let images = require('./server/image_response.js')(db);
+let exporter = require('./server/export.js')(db);
+let importer = require('./server/import_dir.js')(db, info.data_dir);
+let batches = require('./server/batch_info')(db);
+
+let exec = require('child_process').exec;
+
+// build the folders.json file
+// eventually this shoiuld be run once every couple of minutes
+exec(`./watch.sh ${info.data_dir} .`);
+
 
 // serv static pages
-app.use('/pages', express.static('pages'))
-app.use('/styles', express.static('styles'))
-app.use('/scripts', express.static('scripts'))
+app.use('/pages', express.static('pages'));
+app.use('/styles', express.static('styles'));
+app.use('/scripts', express.static('scripts'));
 
 // for getting post parameters in req.body
 app.use(bodyparser.urlencoded({extended: false}));
@@ -33,13 +42,26 @@ app.get('/', function(req, res) {
     res.sendFile(dir + 'pages/start_page.html');
 });
 
+app.get('/batch-list', function(req, res) {
+    res.sendFile(dir + 'pages/batch_list.html');
+});
+
 app.get('/home', function(req, res) {
     res.sendFile(dir + 'pages/home.html');
+});
+
+app.get('/feature-list', function(req, res) {
+	//for the time being (this should be changed to exist in the DB)
+    res.json(info.features)
 });
 
 app.get('/annotation', function(req, res) {
 	let imgID = req.query.index;
 	res.sendFile(dir + 'pages/annotation.html');
+});
+
+app.get('/admin', function(req, res) {
+    res.sendFile(dir + 'pages/admin.html');
 });
 
 app.get('/complete', function(req, res) {
@@ -48,9 +70,15 @@ app.get('/complete', function(req, res) {
 
 app.get('/images', images.get_img);
 
-app.get('/export', exports.export_csv);
+app.get('/export', exporter.export_csv);
 
-app.get('/export-users', exports.send_users);
+app.get('/export-users', exporter.send_users);
+
+app.get('/all-batch-info', batches.getBatchInfo);
+
+app.get('/test-add', importer.add_batch);
+
+app.get('/test-img', images.get_batch_status);
 
 app.get('/sample_script.js', function(req, res) {
 	res.sendFile(dir + 'sample_script.js');
@@ -63,6 +91,10 @@ app.get('/confirm', function(req, res) {
 
 app.get('/deny', function(req, res) {
 	res.send("Denied request");
+});
+
+app.get('/add-directory', function(req, res) {
+    res.sendFile(dir + 'pages/add_directory.html');
 });
 
 app.post('/insert_name', function(req, res) {
@@ -91,10 +123,10 @@ app.post('/annotate', function(req, res) {
 	});
 });
 
-var server = app.listen(port, () => {
+let server = app.listen(port, () => {
 	console.log(`listening on port ${port}`);
 }).on('error', (err) => {
-	if (err.code == "EADDRINUSE") {
+	if (err.code === "EADDRINUSE") {
 		console.log(`Port ${port} already in use`);
 	}
 	else {
