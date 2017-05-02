@@ -8,6 +8,8 @@ $.urlParam = function (a) {
 };
 
 $(document).ready( ()=> {
+    // load batch ui
+    createBatchUI("batch-wrapper");
     const name = $.urlParam("name");
     $("#name").text(name);
     let featureDropdown = $("#feature-dropdown");
@@ -17,6 +19,12 @@ $(document).ready( ()=> {
     function changeDropdownText(event) {
         let ftr = event.data.ftr;
         dropdownMenuButton.text(ftr);
+        if (ftr !== defaultDropDown) {
+            $(".batch-button").removeClass('disabled');
+        }
+        else {
+            $(".batch-button").addClass('disabled');
+        }
     }
 
     function postToAnnotation() {

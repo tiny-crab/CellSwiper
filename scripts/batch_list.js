@@ -47,12 +47,14 @@ function makeMonth(year, month, month_list) {
     for (let b of month_list) {
         month_html += `<li class="batch list-group-item row">
         <span class="col-xs-8">${b.batch_name}<small class="batch-path">${b.original_dir}</small></span>
-        <span class="col-xs-2"><button onclick="startBatch(${b.id})" class="btn btn-sm btn-primary">Start batch</button></span></li>`
+        <span class="col-xs-2"><button id="batch-button-${b.id}" onclick="startBatch(${b.id})" class="disabled btn btn-sm btn-primary batch-button">Start batch</button></span></li>`
     }
     month_html += '</div>';
     return month_html;
 }
 
 function startBatch(id) {
+    if ($("#batch-button-" + id).hasClass("disabled"))
+        return;
     console.log("Starting batch " + id);
 }

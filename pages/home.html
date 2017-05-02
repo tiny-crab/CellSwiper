@@ -20,8 +20,10 @@
     <!-- Local stylesheets -->
     <link rel="stylesheet" href="../styles/theme.css">
     <link rel="stylesheet" href="../styles/home.css">
+    <link rel="stylesheet" href="../styles/batch_list.css">
 
     <!-- Local JavaScript-->
+    <script src="../scripts/batch_list.js"></script>
     <script src="../scripts/home.js"></script>
 
 </head>
@@ -45,6 +47,9 @@
                 </button>
                 <ul class="dropdown-menu" id="feature-dropdown" aria-labelledby="dropdownMenuButton"></ul>
             </div>
+            <div id="batch-wrapper">
+
+            </div>
         </div>
         <div class="col-md-5" id="task-list">
             <p>tasks</p>
@@ -53,10 +58,7 @@
     </div>
     <div class="row">
         <div class="col-md-1 margin"></div>
-        <div class="col-md-5">
-            <div id="new-batch">start new batch</div>
-        </div>
-        <div class="col-md-5">
+        <div class="col-md-5 col-md-offset-5">
             <div id="continue-batch">continue batch</div>
         </div>
         <div class="col-md-1 margin"></div>
