@@ -78,9 +78,11 @@ module.exports = function(db, data_dir) {
                     if (!stats.isDirectory()) {
                         reject([400, "Path specified is not a directory"]);
                     }
+                    else {
+                        resolve();
+                    }
                 }
             });
-            resolve();
         })
         // read directory and compile a list of images
         .then(() => {
@@ -287,7 +289,7 @@ module.exports = function(db, data_dir) {
                 // okay to override previously set result if it fails here
                 return_payload.result = "FAIL";
                 return_payload.err_msg = err[1];
-                res.status(err[0]).send(return_payload);
+                res.status(200).send(return_payload);
             }
             else {
                 // nothing here yet
