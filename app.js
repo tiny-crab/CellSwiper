@@ -10,6 +10,8 @@ let dir = info.parent_dir;
 let images = require('./server/image_response.js')(db);
 let exporter = require('./server/export.js')(db);
 let importer = require('./server/import_dir.js')(db, info.data_dir);
+let batches = require('./server/batch_info')(db);
+
 let exec = require('child_process').exec;
 
 // build the folders.json file
@@ -39,6 +41,10 @@ app.get('/', function(req, res) {
     res.sendFile(dir + 'pages/start_page.html');
 });
 
+app.get('/batch-list', function(req, res) {
+    res.sendFile(dir + 'pages/batch_list.html');
+});
+
 app.get('/home', function(req, res) {
     res.sendFile(dir + 'pages/home.html');
 });
@@ -66,6 +72,8 @@ app.get('/images', images.get_img);
 app.get('/export', exporter.export_csv);
 
 app.get('/export-users', exporter.send_users);
+
+app.get('/all-batch-info', batches.getBatchInfo);
 
 app.get('/test-add', importer.add_batch);
 
