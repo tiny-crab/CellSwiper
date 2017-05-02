@@ -6,5 +6,6 @@
 	"db_pass" : [DB PASSWORD],
 	"server_port" : [SERVER PORT (currently 3000)],
 	"parent_dir" : [/path/to/location/of/files/],
-	"data_dir" : [/path/to/location/of/images/]
+	"data_dir" : [/path/to/location/of/images/],
+	"features" : ["array", "of", "features"]
 }
