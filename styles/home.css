@@ -17,7 +17,6 @@
 
 #image-dir {
     border: 1px solid black;
-    height: 10em;
 }
 
 #task-list {
@@ -56,4 +55,8 @@
     cursor: pointer;
     background-color: #B7760E;
     color: white;
+}
+
+#batch-wrapper {
+    padding-top: 10px;
 }
