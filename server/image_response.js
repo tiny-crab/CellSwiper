@@ -23,7 +23,7 @@ module.exports = function(db) {
                 else { imagePath = path.join(path.join(image.directory, 'ds/'), imageFileName)}
                 fs.access(imagePath, fs.constants.F_OK, (err) => {
                     if (err) {
-                        res.status(500).send(`Could not access image ${imageFileName} in file system`);
+                        res.status(404).send(`Could not access image ${imageFileName} in file system`);
                     }
                     else {
                         res.sendFile(imagePath);
@@ -32,7 +32,7 @@ module.exports = function(db) {
             })
             .catch((err) => {
                 // most likely image doesn't exist in DB
-                res.status(500).send(`Image of id "${id}" not found in database`)
+                res.status(404).send(`Image of id "${id}" not found in database`)
             });
     };
 

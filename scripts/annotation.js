@@ -140,43 +140,38 @@ $(document).ready( ()=> {
                 image_div.show();
             }
             let imgURL = '/images?id=' + image;
-            $.get(imgURL)
-                .done(() => {
+            // $.get(imgURL)
+            //     .done(() => {
                     // knowing the image exists
-                    image_div.attr('src', imgURL);
-                })
-                .fail(() => {
+            image_div
+                .on("error", () => {
                     // TODO: make a modal dialog for this, and move to the next image or return home
-                    alert(`Error retrieving downsampled image with id ${image}`)
+                    alert(`Error retrieving downsampled image with id ${image}`);
+                    window.location.href=`/home?&name=${name}`;
                 })
+                .attr('src', imgURL);
         }
     }
 
     image_div.dblclick(e => {
         e.preventDefault();
         let imgURL = `/images?id=${image}&large=${true}`;
-        $.get(imgURL)
-            .done(() => {
-                // knowing the image exists
-                image_div.hide();
-                viewer = OpenSeadragon({
-                    id: "openseadragon",
-                    prefixUrl: '/scripts/openseadragon_images/',
-                    tileSources: {
-                        type: 'image',
-                        url: imgURL
-                    },
-                    autoHideControls: false,
-                    defaultZoomLevel: 0,
-                    minZoomLevel: 0.5,
-                    maxZoomLevel: 5
-                });
-                seadragon.show();
-            })
-            .fail(() => {
-                // TODO: make a modal dialog for this, and move to the next image or return home
-                alert(`Error retrieving full-size image with id ${image}`)
-            });
+        // don't need to check if image exists, as default is downsampled and it will be caught before
+        // user can double click
+        image_div.hide();
+        viewer = OpenSeadragon({
+            id: "openseadragon",
+            prefixUrl: '/scripts/openseadragon_images/',
+            tileSources: {
+                type: 'image',
+                url: imgURL
+            },
+            autoHideControls: false,
+            defaultZoomLevel: 0,
+            minZoomLevel: 0.5,
+            maxZoomLevel: 5
+        });
+        seadragon.show();
     });
 });
 
