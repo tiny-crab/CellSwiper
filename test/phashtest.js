@@ -9,7 +9,7 @@ const path = require('path');
 // other samples taken from: 
 //      https://github.com/bradleyflood/sample-testing-images
 
-let dir = 'DIRECTORY_TO_TEST'
+let dir = 'DIRECTORY_TO_TEST';
 fs.readdir(dir, (err, files) => {
     if (err) {
         console.log(err)
