@@ -7,7 +7,11 @@ $.urlParam = function (a) {
     }
 };
 
+let beginAnnotation; // expose this function for use in batch_list.js
+
 $(document).ready( ()=> {
+    // load batch ui
+    createBatchUI("batch-wrapper");
     const name = $.urlParam("name");
     $("#name").text(name);
     let featureDropdown = $("#feature-dropdown");
@@ -17,7 +21,22 @@ $(document).ready( ()=> {
     function changeDropdownText(event) {
         let ftr = event.data.ftr;
         dropdownMenuButton.text(ftr);
+        if (ftr !== defaultDropDown) {
+            $(".batch-button").removeClass('disabled').attr('title', '');
+        }
+        else {
+            $(".batch-button").addClass('disabled').attr('title', 'Select a feature to continue');
+        }
     }
+
+    beginAnnotation = (id) => {
+        let ftr = dropdownMenuButton.text();
+        if ( ftr === defaultDropDown) {
+            alert("Feature not selected from dropdown list.");
+        } else {
+            window.location.href = `annotation?batchid=${id}&name=${name}&feature=${ftr}`;
+        }
+    };
 
     function postToAnnotation() {
         let ftr = dropdownMenuButton.text();
@@ -25,7 +44,8 @@ $(document).ready( ()=> {
             alert("Feature not selected from dropdown list.");
         } else {
             // this will need to be changed to be batch specific
-            window.location.href = `annotation?batchid=2&name=${name}&feature=${ftr}`;
+            // window.location.href = `annotation?batchid=2&name=${name}&feature=${ftr}`;
+            console.log("HI")
         }
 
     }

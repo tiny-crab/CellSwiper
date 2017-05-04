@@ -163,10 +163,6 @@ function submitBatch(n) {
     $(".glyphicon", buttons).toggleClass("hidden");
     // eventually this will make an actual post request
     $.get("/test-add", batchReq, function(res) {
-        // res = [{result: "PASS", err_msg: null, img_errs: []},
-        //     {result: "ERROR", err_msg: "Unhashable images detected", img_errs: [{image: "095.jpg", err: "Not hashable"}]},
-        //     {result: "FAIL", err_msg: "Database unreachable", img_errs: []}
-        //     ][/*Math.floor(Math.random() * 100) % 3*/1];
         let resAlert = "<div class='col-xs-10 col-xs-offset-1 alert ";
         switch (res.result) {
             case "PASS":

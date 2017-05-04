@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 module.exports = function(db) {
     let module = {};
@@ -12,19 +13,27 @@ module.exports = function(db) {
     module.get_img = function (req, res) {
         let id = req.query.id;
         let large = req.query.large;
-        //var match_array = new RegExp('\/images\/(.*+?)', 'g').exec(url);
-        let img_dir = dir + 'cell_images/';
-        if (large) {
-            fs.readdir(img_dir, function(err, items) {
-                res.sendFile(img_dir + items[id - 1]);
+        db.one("SELECT * FROM images WHERE id=$1", id)
+            .then((image) => {
+                // image found
+                let imagePath;
+                let imageFileName = image.hash + image.extension;
+                if (large) { imagePath = path.join(image.directory, imageFileName) }
+                // get downsampled image instead
+                else { imagePath = path.join(path.join(image.directory, 'ds/'), imageFileName)}
+                fs.access(imagePath, fs.constants.F_OK, (err) => {
+                    if (err) {
+                        res.status(404).send(`Could not access image ${imageFileName} in file system`);
+                    }
+                    else {
+                        res.sendFile(imagePath);
+                    }
+                })
+            })
+            .catch((err) => {
+                // most likely image doesn't exist in DB
+                res.status(404).send(`Image of id "${id}" not found in database`)
             });
-        }
-        else {
-            // send smaller files
-            fs.readdir(img_dir + "ds/", function (err, items) {
-                res.sendFile(img_dir + "ds/" + items[id - 1]);
-            });
-        }
     };
 
 
@@ -95,6 +104,8 @@ module.exports = function(db) {
                 if (err.length === 2) {
                     res.status(err[0]).send(err[1])
                 }
+                // otherwise fail anyway
+                res.status(404).send("Batch not found")
             })
     };
 
