@@ -116,6 +116,31 @@ $(document).ready( ()=> {
         }
     }
 
+    function openSeaDragon() {
+        image_div.hide();
+        viewer = OpenSeadragon({
+            id: "openseadragon",
+            prefixUrl: '/scripts/openseadragon_images/',
+            tileSources: {
+                type: 'image',
+                url: `/images?id=${image}&large=${true}`,
+            },
+            autoHideControls: false,
+            defaultZoomLevel: 0,
+            minZoomLevel: 0.5,
+            maxZoomLevel: 5
+        });
+        seadragon.show();
+    }
+
+    image_div.dblclick(e => {
+        e.preventDefault();
+        openSeaDragon();
+    });
+
+    image_div.hammer().on('doubletap', openSeaDragon);
+
+
     function getNextImage() {
         // set current image to 1 i.e. annotated
         if (image) {
@@ -152,27 +177,6 @@ $(document).ready( ()=> {
                 .attr('src', imgURL);
         }
     }
-
-    image_div.dblclick(e => {
-        e.preventDefault();
-        let imgURL = `/images?id=${image}&large=${true}`;
-        // don't need to check if image exists, as default is downsampled and it will be caught before
-        // user can double click
-        image_div.hide();
-        viewer = OpenSeadragon({
-            id: "openseadragon",
-            prefixUrl: '/scripts/openseadragon_images/',
-            tileSources: {
-                type: 'image',
-                url: imgURL
-            },
-            autoHideControls: false,
-            defaultZoomLevel: 0,
-            minZoomLevel: 0.5,
-            maxZoomLevel: 5
-        });
-        seadragon.show();
-    });
 });
 
 
