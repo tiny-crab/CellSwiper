@@ -133,11 +133,6 @@ $(document).ready( ()=> {
         seadragon.show();
     }
 
-    image_div.dblclick(e => {
-        e.preventDefault();
-        openSeaDragon();
-    });
-
     image_div.hammer().on('doubletap', openSeaDragon);
 
 
@@ -172,7 +167,7 @@ $(document).ready( ()=> {
                 .on("error", () => {
                     // TODO: make a modal dialog for this, and move to the next image or return home
                     alert(`Error retrieving downsampled image with id ${image}`);
-                    window.location.href=`/home?&name=${name}`;
+                    // window.location.href=`/home?&name=${name}`;
                 })
                 .attr('src', imgURL);
         }
