@@ -6,7 +6,16 @@ $(document).ready(() => {
             name_select.append(
                 $('<option></option>').val(text).html(text)
             );
-        })
+        });
+    });
+
+    $.get('/all-batch-info', data => {
+        let batch_select = $("#batch-select");
+        $.each(data, (i, batch) => {
+            batch_select.append(
+                $(`<option value="${batch.id}">${batch.batch_name}</option>`)
+            );
+        });
     });
 
     document.getElementById('date-select').max = (new Date()).toISOString().substring(0, 10);
@@ -19,6 +28,9 @@ $(document).ready(() => {
         if (document.getElementById('date-check').checked) {
             options.push('before=' + $('#before-select option:selected')[0].value);
             options.push('date=' + document.getElementById('date-select').value);
+        }
+        if (document.getElementById('batch-check').checked) {
+            options.push('batch=' + $("#batch-select option:selected")[0].value);
         }
         window.location.href = '/export?' + options.join('&');
     });
