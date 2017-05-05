@@ -18,6 +18,15 @@ $(document).ready(() => {
         });
     });
 
+    $.get('/feature-list', data => {
+        let feature_select = $("#feature-select");
+        $.each(data, (i, feature) => {
+            feature_select.append(
+                $(`<option value="${feature}">${feature}</option>`)
+            );
+        });  
+    })
+
     document.getElementById('date-select').max = (new Date()).toISOString().substring(0, 10);
     $('#export-form').submit((ev) => {
         ev.preventDefault();
@@ -31,6 +40,9 @@ $(document).ready(() => {
         }
         if (document.getElementById('batch-check').checked) {
             options.push('batch=' + $("#batch-select option:selected")[0].value);
+        }
+        if (document.getElementById('feature-check').checked) {
+            options.push('feature=' + $("#feature-select option:selected")[0].value);
         }
         window.location.href = '/export?' + options.join('&');
     });

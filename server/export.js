@@ -38,10 +38,16 @@ module.exports = function(db) {
             if (req.query.date !== undefined) {
                 options.push("date_added " + (req.query.before === "1" ? "<=" : ">=") + " ($2)");
             }
+            if (req.query.batch !== undefined) {
+                options.push('batchid = ($3)');
+            }
+            if (req.query.feature !== undefined) {
+                options.push('feature = ($4)');
+            }
             if (options.length > 0) {
                 select += " WHERE " + options.join(" AND ");
             }
-            return db.none(`COPY (${select}) TO '/tmp/csv/export.csv' DELIMITER ',' CSV HEADER`, [req.query.name, req.query.date])
+            return db.none(`COPY (${select}) TO '/tmp/csv/export.csv' DELIMITER ',' CSV HEADER`, [req.query.name, req.query.date, req.query.batch, req.query.feature])
         })
         .then(function() {
             // download file to client
