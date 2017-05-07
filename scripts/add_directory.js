@@ -175,7 +175,8 @@ function submitBatch(n) {
                 buttons.each(function(i, b) { b.onclick = undefined;});
                 break;
             case "FAIL":
-                resAlert += `alert-danger'><strong>Failed: </strong>${res.err_msg}</div>`;
+                resAlert += `alert-danger'><strong>Failed: </strong>${res.err_msg.client}</div>`;
+                console.log(res.img_errs.server);
                 $(buttons[0]).text("Retry");
                 buttons.toggleClass("disabled");
                 break;
