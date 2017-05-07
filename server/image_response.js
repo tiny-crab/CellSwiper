@@ -18,14 +18,14 @@ module.exports = function(db, image_dir) {
                 // image found
                 let batchPath = path.join(image_dir, image.batches[0].toString());
                 let imagePath;
-                let imageFileName = image.hash + image.extension;
-                if (large) { imagePath = path.join(batchPath, imageFileName) }
-                // get downsampled image instead
-                else { imagePath = path.join(path.join(batchPath, 'ds/'), imageFileName)}
+                if (large) { imagePath = path.join(batchPath, image.hash + image.extension) }
+                // get downsampled image instead (will always be .png)
+                else { imagePath = path.join(path.join(batchPath, 'ds/'), image.hash + ".png")}
                 fs.access(imagePath, fs.constants.F_OK, (err) => {
                     if (err) {
-                        res.status(404).send({client: `Could not access image ${imageFileName} in file system`,
+                        res.status(404).send({client: `Could not access image ${image.hash} in file system`,
                                                 server: err});
+                        console.log(err)
                     }
                     else {
                         res.sendFile(imagePath);
@@ -35,6 +35,7 @@ module.exports = function(db, image_dir) {
             .catch((err) => {
                 // most likely image doesn't exist in DB
                 res.status(404).send({client: `Image of id "${id}" not found in database`, server: err});
+                console.log(err)
             });
     };
 
