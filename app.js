@@ -7,9 +7,10 @@ let bodyparser = require('body-parser');
 let db = pg({host: info.db_host, port: info.db_port, database: info.db_name, user: info.db_user, password: info.db_pass});
 let port = info.server_port;
 let dir = info.parent_dir;
-let images = require('./server/image_response.js')(db);
+let image_dir = info.data_dir;
+let images = require('./server/image_response.js')(db, image_dir);
 let exporter = require('./server/export.js')(db);
-let importer = require('./server/import_dir.js')(db, info.data_dir);
+let importer = require('./server/import_dir.js')(db, image_dir);
 let batches = require('./server/batch_info')(db);
 
 let exec = require('child_process').exec;
