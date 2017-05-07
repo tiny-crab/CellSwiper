@@ -47,7 +47,8 @@ showModalError = function(err_msg, server_output) {
         $('body').append(modalDivContent);
     }
     $('#err-body').text(err_msg);
-    if (server_output) { $("#err-pre-text").text(server_output)}
+    console.log(server_output)
+    if (server_output) { $("#err-pre-text").text(JSON.stringify(server_output).replace(/,/g, ",\n"))}
     else { $("#err-panel").hide()}
     $('#err-modal').modal('show');
 };
