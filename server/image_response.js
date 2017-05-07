@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-module.exports = function(db) {
+module.exports = function(db, image_dir) {
     let module = {};
 
     // Author: Matthew
@@ -16,11 +16,12 @@ module.exports = function(db) {
         db.one("SELECT * FROM images WHERE id=$1", id)
             .then((image) => {
                 // image found
+                let batchPath = path.join(image_dir, image.batches[0].toString());
                 let imagePath;
                 let imageFileName = image.hash + image.extension;
-                if (large) { imagePath = path.join(image.directory, imageFileName) }
+                if (large) { imagePath = path.join(batchPath, imageFileName) }
                 // get downsampled image instead
-                else { imagePath = path.join(path.join(image.directory, 'ds/'), imageFileName)}
+                else { imagePath = path.join(path.join(batchPath, 'ds/'), imageFileName)}
                 fs.access(imagePath, fs.constants.F_OK, (err) => {
                     if (err) {
                         res.status(404).send(`Could not access image ${imageFileName} in file system`);

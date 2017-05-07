@@ -4,7 +4,7 @@ const path = require('path');
 const sharp = require('sharp');
 const phash = require('phash-image');
 
-module.exports = function(db, data_dir) {
+module.exports = function(db, image_dir) {
     let module = {};
 
     // Author: Evan
@@ -136,13 +136,13 @@ module.exports = function(db, data_dir) {
         // create batch entry in DB
         .then(() => {
                 // should return the promise associated with the DB call
-                db.one("INSERT INTO batches(original_dir, batch_name) VALUES ($1, $2) RETURNING id", [batch_dir, batch_name])
+                return db.one("INSERT INTO batches(original_dir, batch_name) VALUES ($1, $2) RETURNING id", [batch_dir, batch_name])
         })
         // first, create folder for the batch
         .then((query_data) => {
             batchID = query_data.id;
-            if (data_dir) {
-                batch_path = path.join(data_dir, batchID.toString());
+            if (image_dir) {
+                batch_path = path.join(image_dir, batchID.toString());
             }
             else throw [500, "Server data directory not configured properly"];
             return new Promise((resolve, reject) => {
@@ -204,9 +204,9 @@ module.exports = function(db, data_dir) {
                         // if the has isn't 0
                         if (hash) {
                             let extension = path.extname(img);
-                            let entries = [batch_path, hash, [batchID], extension];
-                            return db.none("INSERT INTO images(directory, hash, batches, extension) " +
-                                "VALUES ($1, $2, $3, $4)", entries)
+                            let entries = [hash, [batchID], extension];
+                            return db.none("INSERT INTO images(hash, batches, extension) " +
+                                "VALUES ($1, $2, $3)", entries)
                                 .then(() => {
                                     // copy into batch directory
                                     let img_path = path.join(batch_path, hash + extension);
