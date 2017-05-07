@@ -11,16 +11,17 @@ module.exports = function(db) {
                 if (batches) {
                     res.send(batches);
                 }
-                else { throw [500, "No batches in database"] }
+                else { throw [404, "No batches in database"] }
             })
             .catch(err => {
+                let response;
                 if (err.length === 2) {
-                   res.status(err[0]).send(err[1])
+                    response = {client: err[1]}
                 }
                 else {
-                    console.log(err);
-                    res.status(500).send("Unknown error occurred, check server logs")
+                    response = {client: "Unknown error occurred in retrieving batch info", server: err};
                 }
+                res.status(404).send(response)
             });
     };
 
