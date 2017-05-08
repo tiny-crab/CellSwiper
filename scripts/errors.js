@@ -41,14 +41,33 @@ let showModalError;
 //      - change its text to the error message
 //      - display the modal
 // Outpus: None
-showModalError = function(err_msg, server_output) {
-    // let response = err.responseText;
+showModalError = function(err) {
     if ($('#err-modal').length === 0) {
         $('body').append(modalDivContent);
     }
-    $('#err-body').text(err_msg);
-    console.log(server_output)
-    if (server_output) { $("#err-pre-text").text(JSON.stringify(server_output).replace(/,/g, ",\n"))}
-    else { $("#err-panel").hide()}
-    $('#err-modal').modal('show');
+    try {
+        let response = JSON.parse(err.responseText);
+        let errMsg = response.client;
+        let serverOutput = response.server;
+        if (!errMsg && !serverOutput) {
+            $('#err-body').text("Unexpected error response from server");
+            $("#err-pre-text").text(JSON.stringify(err).replace(/,/g, ",\n"))
+        }
+        else {
+            $('#err-body').text(errMsg);
+            if (serverOutput) {
+                $("#err-pre-text").text(JSON.stringify(serverOutput).replace(/,/g, ",\n"))
+            }
+            else {
+                $("#err-panel").hide()
+            }
+        }
+    }
+    catch (exception) {
+        $('#err-body').text("Unexpected error response from server");
+        $("#err-pre-text").text(JSON.stringify(err).replace(/,/g, ",\n"))
+    }
+    finally {
+        $('#err-modal').modal('show');
+    }
 };
