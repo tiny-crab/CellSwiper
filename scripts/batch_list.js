@@ -24,6 +24,8 @@ function createBatchUI(container_id) {
             batch_list += makeYear(y, batch_dict[y]);
         }
         $("#" + container_id).html(batch_list + "</ul>");
+    }).fail(err => {
+        showModalError(err);
     });
 }
 

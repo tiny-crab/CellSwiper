@@ -82,7 +82,8 @@ $(document).ready( ()=> {
                 $("#" + listCounter).click({ftr: feature}, changeDropdownText);
             }
         }
-    });
+    })
+    .fail(err => { showModalError(err) });
 
     $(`#new-batch`).click(postToAnnotation);
     $(`#continue-batch`).click(postToAnnotation);
