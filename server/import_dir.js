@@ -62,7 +62,12 @@ module.exports = function(db, image_dir) {
         const imgExts = new Set(['.jpg', '.png']);
         let batchID, batch_path;
         let return_payload = {result: "", err_msg: "", img_errs: []};
-
+        if (!/^[\w\\/_-]+$/.test(batch_name)) {
+            return_payload.result = "FAIL";
+            return_payload.err_msg = "Invalid batch name. Can only contain alphanumeric, slashes, and hyphens";
+            res.status(200).send(return_payload);
+            return;
+        }
         // --- Hebrews 8:7-8 ---
         // For if there had been nothing wrong with that first promise, no place would have
         // been sought for another. But god found fault with the people and said:

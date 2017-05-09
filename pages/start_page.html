@@ -26,12 +26,12 @@
 				<h1 id="title">CellSwiper</h1>
 				<form class="submit-form" autocomplete="off">
 					<div class="input-container">
-						<input type="text" id="name" name="name" required>
+						<input type="text" id="name" name="name" pattern="[\w_-]+" title="Must be alphanumeric characters only" required>
 						<span class="bar"></span>
 						<label class="shift">Name:</label>
 					</div>
 					<div class="input-container">
-						<input type="text" id="feature" name="feature" required>
+						<input type="text" id="feature" name="feature" pattern="[\w_-]+" title="Must be alphanumeric characters only" required>
 						<span class="bar"></span>
 						<label class="shift">Feature:</label>
 					</div>

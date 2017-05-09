@@ -23,8 +23,9 @@ $(document).ready(() => {
                     window.location.href = `home?&name=${name}&feature=${feature}`;
                 })
                 .fail(() => {
-                    console.log(`Name is already in use, continuing as "${name}"`);
-                    window.location.href = `home?name=${name}&feature=${feature}`;
+                    alert("Name is invalid");
+                    //console.log(`Name is already in use, continuing as "${name}"`);
+                    //window.location.href = `home?name=${name}&feature=${feature}`;
                 });
         }
     });

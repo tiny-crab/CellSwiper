@@ -7,10 +7,9 @@ let bodyparser = require('body-parser');
 let db = pg({host: info.db_host, port: info.db_port, database: info.db_name, user: info.db_user, password: info.db_pass});
 let port = info.server_port;
 let dir = info.parent_dir;
-let image_dir = info.data_dir;
-let images = require('./server/image_response.js')(db, image_dir);
+let images = require('./server/image_response.js')(db);
 let exporter = require('./server/export.js')(db);
-let importer = require('./server/import_dir.js')(db, image_dir);
+let importer = require('./server/import_dir.js')(db, info.data_dir);
 let batches = require('./server/batch_info')(db);
 
 let exec = require('child_process').exec;
@@ -52,7 +51,11 @@ app.get('/home', function(req, res) {
 
 app.get('/feature-list', function(req, res) {
 	//for the time being (this should be changed to exist in the DB)
-    res.json(info.features)
+    db.any('SELECT DISTINCT feature FROM annotation').then(data => {
+        res.json(data.map(f => f.feature));
+    }).catch(err => {
+        res.json("[]");
+    });
 });
 
 app.get('/annotation', function(req, res) {
@@ -99,6 +102,11 @@ app.get('/add-directory', function(req, res) {
 
 app.post('/insert_name', function(req, res) {
     let name = [req.body.name];
+	if (!/^[\w_-]+$/.test(name)) {
+		// invalid name
+		res.sendStatus(400);
+        return;
+	}
     db.none("INSERT INTO users (username) VALUES ($1)", name)
         .then( () => {
             res.sendStatus(200); // status OK
@@ -109,13 +117,13 @@ app.post('/insert_name', function(req, res) {
 });
 
 app.post('/annotate', function(req, res) {
-	let data = ['imageid', 'user', 'annotation', 'feature'].map(attr => req.body[attr]);
+	let data = ['imageid', 'user', 'annotation', 'feature', 'batchid'].map(attr => req.body[attr]);
 	// if any are not included
 	if (data.some(a => a === undefined)) {
 		res.status(400).send("Error: Invalid data format");
 		return;
 	}
-	db.none("INSERT INTO annotation(imageid, username, annotation, feature) VALUES($1, $2, $3, $4)", data)
+	db.none("INSERT INTO annotation(imageid, username, annotation, feature, batchid) VALUES($1, $2, $3, $4, $5)", data)
 	.then(() => res.send("Annotation added"))
 	.catch(err => {
 		res.status(500).send("Error: Annotation failed");

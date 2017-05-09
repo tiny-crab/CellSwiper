@@ -44,7 +44,7 @@ label.shift {
     transition: 0.2s ease all;
 }
 
-input[type=text]:focus ~ label, input[type=text]:valid ~ label {
+input[type=text]:focus ~ label, input[type=text].used ~ label {
     top: -20px;
     right: 100%;
     font-size: 14px;
