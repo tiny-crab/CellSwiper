@@ -105,13 +105,13 @@ app.post('/annotate', function(req, res) {
 	let data = ['imageid', 'user', 'annotation', 'feature'].map(attr => req.body[attr]);
 	// if any are not included
 	if (data.some(a => a === undefined)) {
-		res.status(404).send({client: "Error: Invalid data format"});
+		res.status(400).send({client: "Error: Invalid data format"});
 		return;
 	}
 	db.none("INSERT INTO annotation(imageid, username, annotation, feature) VALUES($1, $2, $3, $4)", data)
 	.then(() => res.send("Annotation added"))
 	.catch(err => {
-		res.status(404).send({client: "Error: Annotation failed", server: err});
+		res.status(400).send({client: "Error: Annotation failed", server: err});
 		console.log(err);
 	});
 });
