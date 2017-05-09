@@ -14,13 +14,13 @@ $.urlParam = function (a) {
 
 //Our stuff
 $(document).ready( ()=> {
+    const batchID = $.urlParam('batchid');
     const name = $.urlParam('name');
     const feature = $.urlParam('feature');
     let image_div = $("#image");
     let seadragon = $("#openseadragon");
     let viewer;
 
-    let batchID = $.urlParam('batchid');
     let choice;
     let batch_status;
     let image;
@@ -101,7 +101,7 @@ $(document).ready( ()=> {
 
     function add_annotation() {
         if (image) {
-            $.post("annotate", {imageid: image, user: name, annotation: choice, feature: feature})
+            $.post("annotate", {imageid: image, user: name, annotation: choice, feature: feature, batchid: batchID})
                 .done(() => {
                     getNextImage()
                 })

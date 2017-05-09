@@ -52,7 +52,11 @@ app.get('/home', function(req, res) {
 
 app.get('/feature-list', function(req, res) {
 	//for the time being (this should be changed to exist in the DB)
-    res.json(info.features)
+    db.any('SELECT DISTINCT feature FROM annotation').then(data => {
+        res.json(data.map(f => f.feature));
+    }).catch(err => {
+        res.json("[]");
+    });
 });
 
 app.get('/annotation', function(req, res) {
@@ -102,13 +106,13 @@ app.post('/insert-name', function(req, res) {
 });
 
 app.post('/annotate', function(req, res) {
-	let data = ['imageid', 'user', 'annotation', 'feature'].map(attr => req.body[attr]);
+	let data = ['imageid', 'user', 'annotation', 'feature', 'batchid'].map(attr => req.body[attr]);
 	// if any are not included
 	if (data.some(a => a === undefined)) {
 		res.status(400).send({client: "Error: Invalid data format"});
 		return;
 	}
-	db.none("INSERT INTO annotation(imageid, username, annotation, feature) VALUES($1, $2, $3, $4)", data)
+	db.none("INSERT INTO annotation(imageid, username, annotation, feature, batchid) VALUES($1, $2, $3, $4, $5)", data)
 	.then(() => res.send("Annotation added"))
 	.catch(err => {
 		res.status(400).send({client: "Error: Annotation failed", server: err});
