@@ -18,7 +18,6 @@ $(document).ready( ()=> {
     const feature = $.urlParam('feature');
     let image_div = $("#image");
     let seadragon = $("#openseadragon");
-    let image_container = $("#image-container");
     let viewer;
 
     let batchID = $.urlParam('batchid');
@@ -30,14 +29,13 @@ $(document).ready( ()=> {
     $("#feature").text(feature);
 
     // acquire image status (testing)
-    $.get("/test-img", {batchid: batchID, user: name, feature: feature}, (data) => {
+    $.get("/batch-status", {batchid: batchID, user: name, feature: feature}, (data) => {
         batch_status = data;
         // now we can pull the first image
         getNextImage();
     })
     .fail((err) => {
-        alert(`HTTP ERROR ${err.status}: ${err.responseText}`);
-        window.location.href = '/home'
+        showModalError(err);
     });
 
     document.onkeyup = function (event) {
@@ -104,11 +102,11 @@ $(document).ready( ()=> {
     function add_annotation() {
         if (image) {
             $.post("annotate", {imageid: image, user: name, annotation: choice, feature: feature})
-                .done(data => {
+                .done(() => {
                     getNextImage()
                 })
                 .fail(err => {
-                    alert("Something went wrong...\n" + err.responseText);
+                    showModalError(err);
                 })
         }
         else {
@@ -140,14 +138,15 @@ $(document).ready( ()=> {
                 image_div.show();
             }
             let imgURL = '/images?id=' + image;
-            // $.get(imgURL)
-            //     .done(() => {
-                    // knowing the image exists
             image_div
-                .on("error", () => {
+                .on("error", (err) => {
                     // TODO: make a modal dialog for this, and move to the next image or return home
-                    alert(`Error retrieving downsampled image with id ${image}`);
-                    window.location.href=`/home?&name=${name}`;
+                    $.get(imgURL)
+                        .done(() => {
+                            // this should never happen, but if it does we'll just try again
+                            image_div.attr('src', imgURL);
+                        })
+                        .fail(err => { showModalError(err) });
                 })
                 .attr('src', imgURL);
         }
