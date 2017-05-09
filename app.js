@@ -68,7 +68,7 @@ app.get('/complete', function(req, res) {
     res.sendFile(dir + 'pages/export.html');
 });
 
-app.get('/images', images.get_img);
+app.get('/images', images.getImage);
 
 app.get('/export', exporter.export_csv);
 
@@ -78,7 +78,7 @@ app.get('/all-batch-info', batches.getBatchInfo);
 
 app.get('/test-add', importer.add_batch);
 
-app.get('/test-img', images.get_batch_status);
+app.get('/test-img', images.getBatchStatus);
 
 app.get('/sample_script.js', function(req, res) {
 	res.sendFile(dir + 'sample_script.js');

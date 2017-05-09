@@ -10,9 +10,13 @@ module.exports = function(db, image_dir) {
     //      - get the id from the URL query
     //      - find the image that matches that id
     // Outputs: Image file of next image
-    module.get_img = function (req, res) {
+    module.getImage = function (req, res) {
         let id = req.query.id;
         let large = req.query.large;
+        if (!id) {
+            res.status(404).send({client: "No image ID given"});
+            return;
+        }
         db.one("SELECT * FROM images WHERE id=$1", id)
             .then((image) => {
                 // image found
@@ -40,10 +44,14 @@ module.exports = function(db, image_dir) {
     };
 
 
-    module.get_batch_status = function (req, res) {
+    module.getBatchStatus = function (req, res) {
         let batchID = req.query.batchid;
         let user = req.query.user;
         let feature = req.query.feature;
+        if (!batchID || !user || !feature) {
+            res.status(400).send({client: "Invalid query parameters for batch status"});
+            return;
+        }
         let payload = [];
 
         db.one("SELECT * FROM batches WHERE id = $1", batchID)
