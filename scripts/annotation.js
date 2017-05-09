@@ -8,7 +8,7 @@ $.urlParam = function (a) {
     if (b == null) {
         return null;
     } else {
-        return b[1] || 0;
+        return decodeURI(b[1]) || 0;
     }
 };
 
@@ -35,7 +35,7 @@ $(document).ready( ()=> {
         getNextImage();
     })
     .fail((err) => {
-        showModalError(err);
+        showModalServerError(err, true);
     });
 
     document.onkeyup = function (event) {
@@ -106,11 +106,11 @@ $(document).ready( ()=> {
                     getNextImage()
                 })
                 .fail(err => {
-                    showModalError(err);
+                    showModalServerError(err, true);
                 })
         }
         else {
-            window.location.href = 'complete'
+            window.location.href = '/complete'
         }
     }
 
@@ -127,7 +127,7 @@ $(document).ready( ()=> {
         });
         if (image === undefined) {
             // batch done, do something here
-            window.location.href = 'complete'
+            window.location.href = '/complete'
         }
         else {
             image = image.id;
@@ -140,13 +140,13 @@ $(document).ready( ()=> {
             let imgURL = '/images?id=' + image;
             image_div
                 .on("error", (err) => {
-                    // TODO: make a modal dialog for this, and move to the next image or return home
+                    // if the image failed to retrieve, find out why
                     $.get(imgURL)
                         .done(() => {
                             // this should never happen, but if it does we'll just try again
                             image_div.attr('src', imgURL);
                         })
-                        .fail(err => { showModalError(err) });
+                        .fail(err => { showModalServerError(err) });
                 })
                 .attr('src', imgURL);
         }

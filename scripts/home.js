@@ -3,7 +3,7 @@ $.urlParam = function (a) {
     if (b == null) {
         return null;
     } else {
-        return b[1] || 0;
+        return decodeURI(b[1]) || 0;
     }
 };
 
@@ -32,8 +32,12 @@ $(document).ready( ()=> {
     beginAnnotation = (id) => {
         let ftr = dropdownMenuButton.text();
         if ( ftr === defaultDropDown) {
-            alert("Feature not selected from dropdown list.");
-        } else {
+            showModalClientError("Feature not selected from dropdown list.");
+        }
+        else if (!name) {
+            showModalClientError("Name is not specified")
+        }
+         else {
             window.location.href = `annotation?batchid=${id}&name=${name}&feature=${ftr}`;
         }
     };
@@ -83,7 +87,7 @@ $(document).ready( ()=> {
             }
         }
     })
-    .fail(err => { showModalError(err) });
+    .fail(err => { showModalServerError(err) });
 
     $(`#new-batch`).click(postToAnnotation);
     $(`#continue-batch`).click(postToAnnotation);

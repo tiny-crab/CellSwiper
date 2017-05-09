@@ -25,7 +25,7 @@ function createBatchUI(container_id) {
         }
         $("#" + container_id).html(batch_list + "</ul>");
     }).fail(err => {
-        showModalError(err);
+        showModalServerError(err);
     });
 }
 
