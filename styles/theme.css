@@ -28,9 +28,6 @@ input[type=text] {
 
 input[type=text]:focus {
     outline: none;
-    /*next line will hide the border when the text input is clicked*/
-    /*might want to animate this so it doesn't look so sudden*/
-    /*border-bottom: 0px;*/
 }
 
 label.shift {

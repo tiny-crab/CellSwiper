@@ -33,7 +33,7 @@ html, body, .container-table {
 }
 
 .input-container {
-    padding: 1em 0em 1em 0em;
+    padding: 1em 0 1em 0;
     position: relative;
     margin-bottom: 45px;
 }
