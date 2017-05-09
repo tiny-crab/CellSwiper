@@ -48,17 +48,17 @@ module.exports = function(db) {
                 select += " WHERE " + options.join(" AND ");
             }
             return db.none(`COPY (${select}) TO '/tmp/csv/export.csv' DELIMITER ',' CSV HEADER`, [req.query.name, req.query.date, req.query.batch, req.query.feature])
+                .catch(err => { throw ["Error writing csv on server", err] })
         })
         .then(function() {
             // download file to client
             if (!fs.existsSync('/tmp/csv/export.csv')){
-                // fs.writeFile('/tmp/csv/export.csv', 'content')
-                res.status(500).send("Error: no export file created")
+                res.status(404).send({client: "Error: no export file created"})
             }
             else {
                 res.download(`/tmp/csv/export.csv`, 'export.csv', (err) => {
                     if (err) {
-                       res.status(500).send("Error downloading: Please try again\n")
+                       res.status(404).send({client: "Error downloading: Please try again\n", server: err})
                     }
                 });
             }
@@ -66,18 +66,19 @@ module.exports = function(db) {
         .catch(function(err) {
             // runs on reject() or throw, meant to catch errors
             console.log(err);
+            res.status(404).sent({client: "Unknown error occurred in exporting", server: err})
         });
     };
 
     module.send_users = function(req, res) {
-        db.any('select username from users', [true]).then((data) => {
+        db.any('SELECT username FROM users', [true]).then((data) => {
             users = [];
             data.forEach(item => {
                 users.push(item.username);
             });
             res.send(users);
         }).catch(err => {
-            res.sendStatus(500); // no users
+            res.status(404).send({client: "Unknown error occurred in finding user", server: err}); // no users
         });
     };
 

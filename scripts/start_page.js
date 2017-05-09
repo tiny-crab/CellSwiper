@@ -18,7 +18,7 @@ $(document).ready(() => {
             console.log("Form Filled");
             name = $("#name").val();
             feature = $("#feature").val();
-            $.post("insert_name", {name: name})
+            $.post("insert-name", {name: name})
                 .done(() => {
                     window.location.href = `home?&name=${name}&feature=${feature}`;
                 })

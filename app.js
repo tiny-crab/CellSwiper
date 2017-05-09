@@ -60,7 +60,9 @@ app.get('/feature-list', function(req, res) {
 });
 
 app.get('/annotation', function(req, res) {
-	let imgID = req.query.index;
+	res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+	res.setHeader("Pragma", "no-cache");
+	res.setHeader("Expires", "0");
 	res.sendFile(dir + 'pages/annotation.html');
 });
 
@@ -72,7 +74,7 @@ app.get('/complete', function(req, res) {
     res.sendFile(dir + 'pages/export.html');
 });
 
-app.get('/images', images.get_img);
+app.get('/images', images.getImage);
 
 app.get('/export', exporter.export_csv);
 
@@ -82,26 +84,17 @@ app.get('/all-batch-info', batches.getBatchInfo);
 
 app.get('/test-add', importer.add_batch);
 
-app.get('/test-img', images.get_batch_status);
+app.get('/batch-status', images.getBatchStatus);
 
 app.get('/sample_script.js', function(req, res) {
 	res.sendFile(dir + 'sample_script.js');
-});
-
-app.get('/confirm', function(req, res) {
-    res.send("Confirmed request");
-	//res.send(req.url);
-});
-
-app.get('/deny', function(req, res) {
-	res.send("Denied request");
 });
 
 app.get('/add-directory', function(req, res) {
     res.sendFile(dir + 'pages/add_directory.html');
 });
 
-app.post('/insert_name', function(req, res) {
+app.post('/insert-name', function(req, res) {
     let name = [req.body.name];
     db.none("INSERT INTO users (username) VALUES ($1)", name)
         .then( () => {
@@ -116,13 +109,13 @@ app.post('/annotate', function(req, res) {
 	let data = ['imageid', 'user', 'annotation', 'feature', 'batchid'].map(attr => req.body[attr]);
 	// if any are not included
 	if (data.some(a => a === undefined)) {
-		res.status(400).send("Error: Invalid data format");
+		res.status(400).send({client: "Error: Invalid data format"});
 		return;
 	}
 	db.none("INSERT INTO annotation(imageid, username, annotation, feature, batchid) VALUES($1, $2, $3, $4, $5)", data)
 	.then(() => res.send("Annotation added"))
 	.catch(err => {
-		res.status(500).send("Error: Annotation failed");
+		res.status(400).send({client: "Error: Annotation failed", server: err});
 		console.log(err);
 	});
 });
