@@ -51,7 +51,7 @@ $(document).ready( ()=> {
     }
 
     function postToAdmin() {
-        $.post("insert_name", {name: name})
+        $.post("insert-name", {name: name})
             .done(() => {
                 window.location.href = `admin?name=${name}`;
             })
