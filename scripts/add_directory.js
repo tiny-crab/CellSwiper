@@ -34,7 +34,8 @@ $(function() {
         $(input).focus(function(ev) {
             autocomplete.evaluate();
         });
-    });
+    })
+        .fail(err => { showModalServerError(err) });
 
     $("#add-directory-form").submit(function(ev) {
         ev.preventDefault();
@@ -175,19 +176,21 @@ function submitBatch(n) {
                 buttons.each(function(i, b) { b.onclick = undefined;});
                 break;
             case "FAIL":
-                resAlert += `alert-danger'><strong>Failed: </strong>${res.err_msg}</div>`;
+                resAlert += `alert-danger'><strong>Failed: </strong>${res.err_msg.client}</div>`;
+                console.log(res.img_errs.server);
                 $(buttons[0]).text("Retry");
                 buttons.toggleClass("disabled");
                 break;
             default:
-                console.log("Unexpected response");
+                showModalClientError("Unexpected response from server: " + res.result);
                 break;
         }
         $("#alert-wrapper-" + n).html($(resAlert));
         // activate tooltips
         $("#alert-wrapper-" + n + ' [data-toggle="tooltip"]').tooltip();
         $(".glyphicon", buttons).toggleClass("hidden");
-    });
+    })
+        .fail(err => { showModalServerError(err) });
 }
 
 function makeImgErrorHover(img, err) {
@@ -211,82 +214,3 @@ function addSubfolders() {
     let successes = res.filter(b => b).length;
     resultTextMult(successes, res.length - successes);
 }
-
-/*// iterator used to give unique id to each folder in makeFolder
-let f_i = 0
-
-// list of folders that have been selected by the user
-// updated during runtime
-let selectedFolders = [];
-
-function makeFolder(folderObj) {
-    let parent = document.createElement('ul');
-    parent.classList.add('list-group');
-    for (let f in folderObj) {
-        if (f == "files") {
-            for (let fileName of folderObj.files) {
-                let file = document.createElement('li');
-                file.classList = "list-group-item file";
-                file.innerText = fileName;
-                parent.appendChild(file);
-            }
-        }
-        else {
-            let folder = $('<li class="folder list-group-item" id="folder-' + f_i + '">' +
-            '<a class="folder-link collapsed" role="button" href="#folder-' + 
-            f_i + '-content" data-toggle="collapse" aria-expanded="false"><span class="caret"></span>' + 
-            f + '</a><div class="folder-list collapse" id="folder-' + f_i++ + '-content"></div></li>');
-            // Refer to add_directory.js for more information on recursion
-            $('div', folder).append(makeFolder(folderObj[f]));
-            $(parent).append(folder);
-        }
-    }
-    return parent;
-}
-
-$(function() {
-    $.getJSON('scripts/folder.json').done(function(folderObj) {
-        $("#dir-list-wrapper").append(makeFolder(folderObj));
-        $('.folder').click(function(ev) {
-            // dont do anything if a child of the folder was clicked on
-            if (ev.target !== this) {
-                return;
-            }
-            // inner text will usually grab the children text too,
-            // this just grabs the parent text
-            let tarText = ev.target.innerText.split("\n")[0];
-            if ($(ev.target).hasClass('selected')) {
-                // find it in the selected list, remove it
-                for (let f in selectedFolders) {
-                    if (selectedFolders[f][0] == tarText) {
-                        $(".selected-pill:eq(" + f + ")").remove();
-                        selectedFolders.splice(f, 1);
-                        break;
-                    }
-                }
-                $(ev.currentTarget).removeClass('selected');
-            }
-            else {
-                let c = $('<span class="selected-pill"><span pos="' + selectedFolders.length 
-                + '" class="selected-pill-close glyphicon glyphicon-remove"></span>' + 
-                tarText + '</span>');
-                $(".selected-pill-close", c).click(function(ev) {
-                    // callback that deletes the selections when you click on the x
-                    for (let n in selectedFolders) {
-                        if (selectedFolders[n][0] == $(this).parent().text()) {
-                            $("#" + selectedFolders[n][1]).removeClass('selected');
-                            selectedFolders.splice(n, 1);
-                            $("#selected-list .selected-pill:eq(" + n + ")").remove();
-                        }
-                    }
-                });
-                $("#selected-list").append(c);
-                selectedFolders.push([tarText, ev.target.id])
-                $(ev.currentTarget).addClass('selected');
-            }
-            // don't let it propagate to the parent elements
-            ev.stopPropagation();
-        });
-    });
-});
-*/
