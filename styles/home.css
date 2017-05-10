@@ -82,7 +82,7 @@ input[type=text] {
     display: block;
     width: auto;
     color: white;
-    line-height: 2rem;
+    line-height: 4vh;
     border: none;
     border-bottom: 1px solid white;
     background-color: #17243A;
@@ -94,7 +94,7 @@ input[type=text]:focus {
 
 label.shift {
     color: white;
-    font-size: 2rem;
+    font-size: 3vh;
     top: 0;
     position: absolute;
     font-weight: normal;
@@ -105,7 +105,7 @@ label.shift {
 input[type=text]:focus ~ label, input[type=text]:valid ~ label {
     color: #B7760E;
     top: -20px;
-    font-size: 1.7rem;
+    font-size: 2vh;
 }
 
 .submit-form {
@@ -153,14 +153,17 @@ input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
 */
 
 .continue-batch {
-    font-size: 2vh;
+    font-size: 3vw;
     text-align: center;
     font-family: "Open Sans", sans-serif;
     color: #B7760E;
+}
+
+.continue-text {
     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 }
 
-.continue-batch:hover {
+.continue-text:hover {
     cursor: pointer;
     color: white;
 }
@@ -201,5 +204,8 @@ input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
     }
     h2 {
         font-size: 8rem;
+    }
+    .continue-batch {
+        font-size: 2vw;
     }
 }
