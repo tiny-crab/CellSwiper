@@ -170,6 +170,17 @@ input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
 
 /*
 ------------------------------------
+    FEATURE SELECTION
+------------------------------------
+*/
+.dropdown > .btn {
+    padding: .5vw .75vw;
+    font-size: 2vw;
+}
+
+
+/*
+------------------------------------
     BATCH SELECTION
 ------------------------------------
 */
@@ -204,6 +215,10 @@ input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
     }
     h2 {
         font-size: 8rem;
+    }
+    .dropdown > .btn {
+        padding: 1vw 1.5vw;
+        font-size: 1.5vw;
     }
     .continue-batch {
         font-size: 2vw;
