@@ -46,6 +46,10 @@ app.get('/batch-list', function(req, res) {
     res.sendFile(dir + 'pages/batch_list.html');
 });
 
+app.get('/home', function(req, res) {
+    res.sendFile(dir + 'pages/home.html');
+});
+
 app.get('/feature-list', function(req, res) {
 	//for the time being (this should be changed to exist in the DB)
     res.json(info.features)
