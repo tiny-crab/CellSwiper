@@ -64,6 +64,7 @@ html, body{
 
 h2 {
     margin: 0 0 1em 0;
+    font-size: 10rem;
 }
 
 /*
@@ -72,6 +73,10 @@ h2 {
     from: https://scotch.io/tutorials/google-material-design-input-boxes-in-css3
 ------------------------------------
 */
+
+.submit-form {
+    position: relative;
+}
 
 input[type=text] {
     display: block;
@@ -89,20 +94,18 @@ input[type=text]:focus {
 
 label.shift {
     color: white;
-    font-size: 18px;
-    font-weight: normal;
+    font-size: 2rem;
+    top: 0;
     position: absolute;
+    font-weight: normal;
     pointer-events: none;
-    left: 5px;
-    top: 10px;
     transition: 0.2s ease all;
 }
 
 input[type=text]:focus ~ label, input[type=text]:valid ~ label {
-    top: -20px;
-    right: 100%;
-    font-size: 14px;
     color: #B7760E;
+    top: -20px;
+    font-size: 1.7rem;
 }
 
 .submit-form {
@@ -149,23 +152,25 @@ input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
 ------------------------------------
 */
 
-#continue-batch {
-    width: 40%;
+.continue-batch {
     font-size: 2vh;
-    line-height: 2vh;
     text-align: center;
     font-family: "Open Sans", sans-serif;
-    border: 2px #B7760E solid;
-    border-radius: 1em;
     color: #B7760E;
     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 }
 
-#continue-batch:hover {
+.continue-batch:hover {
     cursor: pointer;
-    background-color: #B7760E;
     color: white;
 }
+
+/*
+------------------------------------
+    BATCH SELECTION
+------------------------------------
+*/
+
 
 #batch-wrapper {
     padding-top: 10px;
@@ -178,9 +183,6 @@ input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
 */
 
 @media only screen and (min-width: 768px) {
-    h2 {
-        font-size: 10rem;
-    }
     input[type=text] {
         font-size: 3rem;
     }
@@ -198,6 +200,6 @@ input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
         margin-right: auto;
     }
     h2 {
-        font-size: 4rem;
+        font-size: 8rem;
     }
 }
