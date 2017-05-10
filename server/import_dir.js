@@ -72,11 +72,15 @@ module.exports = function(db, image_dir) {
             // check if valid directory
             fs.stat(batch_dir, (err, stats) => {
                 if (err && err.code === "ENOENT") {
-                    reject([400, "No such directory exists"]);
+                    reject(["No such directory exists"]);
+                }
+                else if (err) {
+                    // Some other error occurred
+                    reject(["Error getting directory stat", err])
                 }
                 else {
                     if (!stats.isDirectory()) {
-                        reject([400, "Path specified is not a directory"]);
+                        reject(["Path specified is not a directory"]);
                     }
                     else {
                         resolve();
@@ -106,7 +110,7 @@ module.exports = function(db, image_dir) {
 
                     walker.on("end", () => {
                         if (img_list.length === 0) {
-                            reject([400, "No images found in this directory or its children"])
+                            reject(["No images found in this directory or its children"])
                         }
                         else resolve();
                     })
@@ -118,7 +122,7 @@ module.exports = function(db, image_dir) {
                     fs.readdir(batch_dir, (err, files) => {
                         if (err) {
                             console.log(`Error getting files from ${batch_dir}`, err);
-                            reject([400, "Error getting files, perhaps a read permissions error?"]);
+                            reject([`Error getting file information in ${batch_dir}`, err]);
                         }
                         for (let f of files) {
                             // loop through all files
@@ -126,7 +130,7 @@ module.exports = function(db, image_dir) {
                                 img_list.push(path.join(batch_dir, path.basename(f)))
                         }
                         if (img_list.length === 0) {
-                            reject([400, "No images found in this directory"]);
+                            reject(["No images found in this directory"]);
                         }
                         else resolve();
                     });
@@ -137,6 +141,9 @@ module.exports = function(db, image_dir) {
         .then(() => {
                 // should return the promise associated with the DB call
                 return db.one("INSERT INTO batches(original_dir, batch_name) VALUES ($1, $2) RETURNING id", [batch_dir, batch_name])
+                    .catch(err => {
+                        throw ["Error inserting new batch information into database", err]
+                    })
         })
         // first, create folder for the batch
         .then((query_data) => {
@@ -144,20 +151,19 @@ module.exports = function(db, image_dir) {
             if (image_dir) {
                 batch_path = path.join(image_dir, batchID.toString());
             }
-            else throw [500, "Server data directory not configured properly"];
+            else throw ["Server data directory not configured properly"];
             return new Promise((resolve, reject) => {
                 fs.mkdirSync(batch_path);
                 resolve()
             }).catch(() => {
                 // remove reference so later error catching doesn't try to remove nonexistent folder
                 batch_path = undefined;
-                throw [500, "Couldn't create new batch folder in file system"]
+                throw ["Couldn't create new batch folder in file system"]
             });
         })
         // add image to database
         .then(() => {
             let promise_list = [];
-            console.log("Starting hashing");
             for (let img of img_list) {
                 promise_list.push(
                     phash(img, true)
@@ -180,14 +186,14 @@ module.exports = function(db, image_dir) {
                                 }
                                 else if (data.length > 1) {
                                     // this shouldn't happen, but just in case
-                                    throw [500, "Multiple image entries with same hash detected in database, please " +
+                                    throw ["Multiple image entries with same hash detected in database, please " +
                                     "contact an administrator for remediation.\nHash in question:" + hash]
                                 }
                                 else {
                                     // add the batchID to the image that already exists with that hash
                                     return db.none("UPDATE images SET batches = array_append(batches, $1) WHERE " +
                                         "id = $2", [batchID, data[0].id])
-                                        .catch(err => {throw [600, "Couldn't update batches in existing image entry"]})
+                                        .catch(err => {throw ["Couldn't update batches in existing image entry", err]})
                                 }
                             })
                             .then(record => {
@@ -197,7 +203,7 @@ module.exports = function(db, image_dir) {
                                 }
                                 else return 0
                             })
-                            .catch(err => {throw err})
+                            .catch(err => {throw ["Unexpected error in hashing", err];})
                     })
                     // this should technically be possible since I'm returning a promise here
                     .then(hash => {
@@ -212,14 +218,14 @@ module.exports = function(db, image_dir) {
                                     let img_path = path.join(batch_path, hash + extension);
                                     return new Promise((resolve, reject) => {
                                         fs.createReadStream(img).pipe(fs.createWriteStream(img_path)).on('error', () => {
-                                            reject([500, "Couldn't copy image file into batch path"]);
+                                            reject(["Couldn't copy image file into batch path"]);
                                         });
                                         resolve();
                                     });
                                 })
                                 .catch(err => {
                                     if (err.length !== 2) {
-                                        throw [600, "Couldn't add new image to database"]
+                                        throw ["Couldn't add new image to database"]
                                     }
                                     else throw err
                                 });
@@ -246,6 +252,9 @@ module.exports = function(db, image_dir) {
                     module.downsize_dir(batch_path);
                 }
             } catch (err) {
+                // this error will not be sent to the client because a failed downsample
+                //   will just cause the original images to be loaded; it should,
+                //   however, be logged
                 console.log(err);
             }
             res.status(200).send(return_payload);
@@ -256,6 +265,7 @@ module.exports = function(db, image_dir) {
 
             // Transaction cleanup
             //   if batchID is initialized we need to proceed with removal
+            //   errors here do not need to be sent to the client
             if (batchID) {
                 // wrap transaction cleanup in transaction so all operated on at once
                 db.tx(t => {
@@ -285,15 +295,18 @@ module.exports = function(db, image_dir) {
                 .catch(err => { console.log("Transaction cleanup error: " + err);});
             }
 
+            return_payload.result = "FAIL";
             if (err.length === 2) {
                 // okay to override previously set result if it fails here
-                return_payload.result = "FAIL";
-                return_payload.err_msg = err[1];
-                res.status(200).send(return_payload);
+                return_payload.err_msg = {client: err[0], server: err[1]};
+            }
+            else if (err.length === 1) {
+                return_payload.err_msg = {client: err[0]};
             }
             else {
-                // nothing here yet
+                return_payload.err_msg = {client: "An unknown error occurred in adding directories", server: err};
             }
+            res.status(200).send(return_payload);
         });
     };
 

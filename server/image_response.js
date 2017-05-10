@@ -10,21 +10,26 @@ module.exports = function(db, image_dir) {
     //      - get the id from the URL query
     //      - find the image that matches that id
     // Outputs: Image file of next image
-    module.get_img = function (req, res) {
+    module.getImage = function (req, res) {
         let id = req.query.id;
         let large = req.query.large;
+        if (!id) {
+            res.status(404).send({client: "No image ID given"});
+            return;
+        }
         db.one("SELECT * FROM images WHERE id=$1", id)
             .then((image) => {
                 // image found
                 let batchPath = path.join(image_dir, image.batches[0].toString());
                 let imagePath;
-                let imageFileName = image.hash + image.extension;
-                if (large) { imagePath = path.join(batchPath, imageFileName) }
-                // get downsampled image instead
-                else { imagePath = path.join(path.join(batchPath, 'ds/'), imageFileName)}
+                if (large) { imagePath = path.join(batchPath, image.hash + image.extension) }
+                // get downsampled image instead (will always be .png)
+                else { imagePath = path.join(path.join(batchPath, 'ds/'), image.hash + ".png")}
                 fs.access(imagePath, fs.constants.F_OK, (err) => {
                     if (err) {
-                        res.status(404).send(`Could not access image ${imageFileName} in file system`);
+                        res.status(404).send({client: `Could not access image ${image.hash} in file system`,
+                                                server: err});
+                        console.log(err)
                     }
                     else {
                         res.sendFile(imagePath);
@@ -33,21 +38,26 @@ module.exports = function(db, image_dir) {
             })
             .catch((err) => {
                 // most likely image doesn't exist in DB
-                res.status(404).send(`Image of id "${id}" not found in database`)
+                res.status(404).send({client: `Image of id "${id}" not found in database`, server: err});
+                console.log(err)
             });
     };
 
 
-    module.get_batch_status = function (req, res) {
+    module.getBatchStatus = function (req, res) {
         let batchID = req.query.batchid;
         let user = req.query.user;
         let feature = req.query.feature;
+        if (!batchID || !user || !feature) {
+            res.status(400).send({client: "Invalid query parameters for batch status"});
+            return;
+        }
         let payload = [];
 
         db.one("SELECT * FROM batches WHERE id = $1", batchID)
             .then(data => {
                 if (!data) {
-                    reject([400, "Batch ID not found"])
+                    reject(["Batch ID not found"])
                 }
                 // query db about annotations
                 return db.any("SELECT id FROM images WHERE $1 = ANY(images.batches)", batchID)
@@ -67,24 +77,24 @@ module.exports = function(db, image_dir) {
                     "AND feature = $2 " +
                     "AND annotation.imageid IN ($3:csv)",
                     [user, feature, ids])
-                    .catch(error => {
-                        console.log(error)
+                    .catch(err => {
+                        throw [`Error retrieving annotations for images with IDs ${ids}`, err];
                     })
             })
             .then(annotations => {
                 // count annotations in list to see where to pick up
                 let id_count = {};
-                for (item of payload) {
+                for (let item of payload) {
                     id_count[item.id] = 0
                 }
-                for (item of annotations) {
+                for (let item of annotations) {
                     id_count[item.imageid]++
                 }
                 let id_max = id_count[Object.keys(id_count).reduce(function(a, b){ return id_count[a] > id_count[b] ? a : b })];
                 let id_min = id_count[Object.keys(id_count).reduce(function(a, b){ return id_count[a] < id_count[b] ? a : b })];
                 if (!(id_max === id_min) && !(id_max - id_min === 1)){
                     // in the unlikely case...
-                    throw [500, "Critical DB error, entries are not properly sequential for user, batch, and feature"]
+                    throw ["Critical DB error, entries are not properly sequential for user, batch, and feature"]
                 }
                 // start the annotation over
                 if (id_max === id_min) {
@@ -94,7 +104,7 @@ module.exports = function(db, image_dir) {
                 }
                 else {
                     // annotation only part-way through set, find which ones to finish
-                    for (item of payload) {
+                    for (let item of payload) {
                         item.status = (id_count[item.id] === id_max ? 1 : 0)
                     }
                 }
@@ -102,11 +112,18 @@ module.exports = function(db, image_dir) {
             })
             .catch(err => {
                 console.log(err);
+                let response;
                 if (err.length === 2) {
-                    res.status(err[0]).send(err[1])
+                    response = {client: err[0], server: err[1]}
+                }
+                else if (err.length === 1) {
+                    response = {client: err}
+                }
+                else {
+                    response = {client: "An unknown error occurred while fetching batch status", server: err}
                 }
                 // otherwise fail anyway
-                res.status(404).send("Batch not found")
+                res.status(404).send(response);
             })
     };
 

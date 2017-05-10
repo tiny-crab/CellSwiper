@@ -8,20 +8,19 @@ $.urlParam = function (a) {
     if (b == null) {
         return null;
     } else {
-        return b[1] || 0;
+        return decodeURI(b[1]) || 0;
     }
 };
 
 //Our stuff
 $(document).ready( ()=> {
+    const batchID = $.urlParam('batchid');
     const name = $.urlParam('name');
     const feature = $.urlParam('feature');
     let image_div = $("#image");
     let seadragon = $("#openseadragon");
-    let image_container = $("#image-container");
     let viewer;
 
-    let batchID = $.urlParam('batchid');
     let choice;
     let batch_status;
     let image;
@@ -30,14 +29,13 @@ $(document).ready( ()=> {
     $("#feature").text(feature);
 
     // acquire image status (testing)
-    $.get("/test-img", {batchid: batchID, user: name, feature: feature}, (data) => {
+    $.get("/batch-status", {batchid: batchID, user: name, feature: feature}, (data) => {
         batch_status = data;
         // now we can pull the first image
         getNextImage();
     })
     .fail((err) => {
-        alert(`HTTP ERROR ${err.status}: ${err.responseText}`);
-        window.location.href = '/home'
+        showModalServerError(err, true);
     });
 
     document.onkeyup = function (event) {
@@ -103,18 +101,38 @@ $(document).ready( ()=> {
 
     function add_annotation() {
         if (image) {
-            $.post("annotate", {imageid: image, user: name, annotation: choice, feature: feature})
-                .done(data => {
+            $.post("annotate", {imageid: image, user: name, annotation: choice, feature: feature, batchid: batchID})
+                .done(() => {
                     getNextImage()
                 })
                 .fail(err => {
-                    alert("Something went wrong...\n" + err.responseText);
+                    showModalServerError(err, true);
                 })
         }
         else {
-            window.location.href = 'complete'
+            window.location.href = '/complete'
         }
     }
+
+    function openSeaDragon() {
+        image_div.hide();
+        viewer = OpenSeadragon({
+            id: "openseadragon",
+            prefixUrl: '/scripts/openseadragon_images/',
+            tileSources: {
+                type: 'image',
+                url: `/images?id=${image}&large=${true}`,
+            },
+            autoHideControls: false,
+            defaultZoomLevel: 0,
+            minZoomLevel: 0.5,
+            maxZoomLevel: 5
+        });
+        seadragon.show();
+    }
+
+    image_div.hammer().on('doubletap', openSeaDragon);
+
 
     function getNextImage() {
         // set current image to 1 i.e. annotated
@@ -129,7 +147,7 @@ $(document).ready( ()=> {
         });
         if (image === undefined) {
             // batch done, do something here
-            window.location.href = 'complete'
+            window.location.href = '/complete'
         }
         else {
             image = image.id;
@@ -140,39 +158,19 @@ $(document).ready( ()=> {
                 image_div.show();
             }
             let imgURL = '/images?id=' + image;
-            // $.get(imgURL)
-            //     .done(() => {
-                    // knowing the image exists
             image_div
-                .on("error", () => {
-                    // TODO: make a modal dialog for this, and move to the next image or return home
-                    alert(`Error retrieving downsampled image with id ${image}`);
-                    window.location.href=`/home?&name=${name}`;
+                .on("error", (err) => {
+                    // if the image failed to retrieve, find out why
+                    $.get(imgURL)
+                        .done(() => {
+                            // this should never happen, but if it does we'll just try again
+                            image_div.attr('src', imgURL);
+                        })
+                        .fail(err => { showModalServerError(err) });
                 })
                 .attr('src', imgURL);
         }
     }
-
-    image_div.dblclick(e => {
-        e.preventDefault();
-        let imgURL = `/images?id=${image}&large=${true}`;
-        // don't need to check if image exists, as default is downsampled and it will be caught before
-        // user can double click
-        image_div.hide();
-        viewer = OpenSeadragon({
-            id: "openseadragon",
-            prefixUrl: '/scripts/openseadragon_images/',
-            tileSources: {
-                type: 'image',
-                url: imgURL
-            },
-            autoHideControls: false,
-            defaultZoomLevel: 0,
-            minZoomLevel: 0.5,
-            maxZoomLevel: 5
-        });
-        seadragon.show();
-    });
 });
 
 
