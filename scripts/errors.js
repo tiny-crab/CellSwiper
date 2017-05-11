@@ -55,7 +55,6 @@ showModalServerError = function(err, redirect) {
         $('body').append(modalDivServerContent);
     }
     if (redirect) {
-
         let homeAnchor = '/home';
         let name = $.urlParam('name');
         if (name) { homeAnchor += `?name=${name}`}
@@ -118,9 +117,18 @@ let showModalClientError;
 //      - display the modal
 // Inputs: error message string
 // Outpus: None
-showModalClientError = function(errMsg) {
+showModalClientError = function(errMsg, redirect) {
     if ($('#warn-modal').length === 0) {
         $('body').append(modalDivClientContent);
+    }
+    if (redirect) {
+        console.log("Here");
+        let homeAnchor = '/home';
+        let name = $.urlParam('name');
+        if (name) { homeAnchor += `?name=${name}`}
+        $('#warn-modal').on('hidden.bs.modal', function() {
+            window.location.href = homeAnchor;
+        })
     }
     if (!errMsg) {
         $('#warn-body').text("Unexpected error on page");
