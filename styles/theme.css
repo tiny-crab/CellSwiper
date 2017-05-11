@@ -8,6 +8,22 @@ h1, h2, h3, h4 {
     color: #B7760E;
 }
 
+.modal-content {
+    border: none;
+}
+
+.alert-warning {
+    color: white;
+    background-color: #B7760E;
+}
+
+.modal-footer > .btn-warning {
+    border: none;
+    background-color: #B7760E;
+}
+
 p, a {
     font-family: "Open Sans", sans-serif;
 }
+
+
