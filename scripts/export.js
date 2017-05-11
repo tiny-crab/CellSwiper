@@ -1,7 +1,7 @@
 $(document).ready(() => {
     // set max date for date select to be today
     $.get('/export-users', data => {
-        let name_select = $("#name-select");
+        let name_select = $("#user-select");
         $.each(data, (val, text) => {
             name_select.append(
                 $('<option></option>').val(text).html(text)
@@ -31,8 +31,8 @@ $(document).ready(() => {
     $('#export-form').submit((ev) => {
         ev.preventDefault();
         let options = [];
-        if (document.getElementById('name-check').checked) {
-            options.push('name=' + $('#name-select option:selected')[0].value)
+        if (document.getElementById('user-check').checked) {
+            options.push('name=' + $('#user-select option:selected')[0].value)
         }
         if (document.getElementById('date-check').checked) {
             options.push('before=' + $('#before-select option:selected')[0].value);
@@ -47,3 +47,16 @@ $(document).ready(() => {
         window.location.href = '/export?' + options.join('&');
     });
 });
+
+
+function changePanel(name) {
+    let panel = $(`#${name}-panel`);
+    panel.toggleClass("panel-default panel-primary");
+    let inputs = $("select, input[type!='checkbox']", panel);
+    if (inputs.attr('disabled') === undefined) {
+        inputs.attr('disabled', true);
+    }
+    else {
+        inputs.removeAttr('disabled');
+    }
+}

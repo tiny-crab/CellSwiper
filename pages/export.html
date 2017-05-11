@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <title>CellSwiper</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Jquery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <!-- Bootstrap -->
@@ -11,38 +13,73 @@
         <script src="../scripts/export.js"></script>
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans|Sansita" rel="stylesheet">
+        <link rel="stylesheet" href="../styles/export.css">
     </head>
     <body>
-        <div class="row">
-            <h1 class="col-xs-12 text-center">Export Page</h1>
+        <div class="container">
+            <div class="row">
+                <h1 class="col-xs-12 col-md-8 col-md-offset-2 text-center">Export Page</h1>
+            </div>
+            <form id="export-form">
+                <div id="date-panel" class="panel panel-default col-xs-12 col-md-5">
+                    <div class="panel-heading">
+                        <label for="date-check" data-pg-collapsed>
+                            <input id="date-check" class="control-label" type="checkbox" onchange="changePanel('date')">By Date
+                        </label>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-xs-6 col-sm-4">
+                            <select id="before-select" class="form-control" disabled>
+                                <option value="1">Before</option>
+                                <option value="0">After</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-6 col-sm-8">
+                            <input id="date-select" type="date" class="form-control" placeholder="Date" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div id="user-panel" class="panel panel-default col-xs-12 col-md-offset-2 col-md-5">
+                    <div class="panel-heading">
+                        <label for="user-check" data-pg-collapsed>
+                            <input id="user-check" class="control-label" type="checkbox" onchange="changePanel('user')">By User
+                        </label>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-md-8 col-md-offset-2">
+                            <select id="user-select" class="form-control" disabled>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="feature-panel" class="panel panel-default col-xs-12 col-md-5">
+                    <div class="panel-heading">
+                        <label for="feature-check" data-pg-collapsed>
+                            <input id="feature-check" class="control-label" type="checkbox" onchange="changePanel('feature')">By Feature
+                        </label>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-md-8 col-md-offset-2">
+                            <select id="feature-select" class="form-control" disabled>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="batch-panel" class="panel panel-default col-xs-12 col-md-offset-2 col-md-5">
+                    <div class="panel-heading">
+                        <label for="batch-check" data-pg-collapsed>
+                            <input id="batch-check" class="control-label" type="checkbox" onchange="changePanel('batch')">By Batch
+                        </label>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-md-8 col-md-offset-2">
+                            <select id="batch-select" class="form-control" disabled>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <input id="export-button" class="btn col-xs-8 col-xs-offset-2 col-md-4 col-md-offset-4 btn-large btn-primary" type="submit" value="Export">
+            </form>
         </div>
-        <form id="export-form">
-            <div class="form-group">
-                <label for="name-check">By Name</label>
-                <input id="name-check" type="checkbox" value="">
-                <select id="name-select" name="name-select">
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="date-check">By Date</label>
-                <input id="date-check" type="checkbox" value="">
-                <select id="before-select" name="before-select">
-                    <option value="1">Before</option>
-                    <option value="0">After</option>
-                </select>
-                <input id="date-select" type="date" name="date-select">
-            </div>
-            <div class="form-group">
-                <label for="batch-check">By Batch</label>
-                <input type="checkbox" id="batch-check" value="">
-                <select id="batch-select" name="batch-select"></select>
-            </div>
-            <div class="form-group">
-                <label for="feature-check">By Feature</label>
-                <input type="checkbox" id="feature-check" value="">
-                <select id="feature-select" name="batch-select"></select>
-            </div>
-            <input id="export-button" type="submit" class="col-xs-offset-5 btn btn-large btn-primary" value="Export as CSV">
-        </form>
     </body>
 </html>
