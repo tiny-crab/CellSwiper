@@ -116,18 +116,23 @@ $(document).ready( ()=> {
 
     function openSeaDragon() {
         image_div.hide();
+        let tileSources = {
+            type: 'image',
+            url: `/images?id=${image}&large=${true}`,
+        };
         viewer = OpenSeadragon({
             id: "openseadragon",
             prefixUrl: '/scripts/openseadragon_images/',
-            tileSources: {
-                type: 'image',
-                url: `/images?id=${image}&large=${true}`,
-            },
             autoHideControls: false,
             defaultZoomLevel: 0,
             minZoomLevel: 0.5,
             maxZoomLevel: 5
         });
+        viewer.addHandler('open-failed', (err) => {
+            console.log(err);
+            showModalClientError("Couldn't open full-sized image", true);
+        });
+        viewer.open(tileSources);
         seadragon.show();
     }
 
