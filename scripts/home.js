@@ -89,7 +89,7 @@ $(document).ready( ()=> {
     })
     .fail(err => { showModalServerError(err) });
 
-    $(`#new-batch`).click(postToAnnotation);
+    $(`#new-batch`).click(() => {window.location.href = '/add-directory';});
     $(`#continue-batch`).click(postToAnnotation);
     $(`#account-info`).click(postToAdmin);
 });
