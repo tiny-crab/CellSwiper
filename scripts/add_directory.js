@@ -155,9 +155,9 @@ function createBatchUi(folder, num) {
 
 function submitBatch(n) {
     let batchReq = {
-        batch_dir: $("#name-input-" + n).val(),
+        batch_name: $("#name-input-" + n).val(),
         recursive: $("#recursive-check-" + n)[0].checked,
-        batch_name: $("#batch-dir-" + n).text()
+        batch_dir: $("#batch-dir-" + n).text()
     };
     let buttons = $(`[data-batch=${n}] button`);
     buttons.toggleClass("disabled");

@@ -96,6 +96,11 @@ app.get('/add-directory', function(req, res) {
 
 app.post('/insert-name', function(req, res) {
     let name = [req.body.name];
+	if (!/^[\w_-]+$/.test(name)) {
+		// invalid name
+		res.sendStatus(400);
+        return;
+	}
     db.none("INSERT INTO users (username) VALUES ($1)", name)
         .then( () => {
             res.sendStatus(200); // status OK
