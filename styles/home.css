@@ -4,7 +4,7 @@
 ------------------------------------
 */
 
-html, body{
+html, body {
     height: 100%;
     width: 100%;
     background-color: #17243A;
@@ -32,6 +32,12 @@ html, body{
     align-items: center;
 }
 
+.vcenter {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
 /*
 ------------------------------------
     LINE SEPARATOR ON BIG SCREENS
@@ -50,21 +56,14 @@ html, body{
     margin-bottom: auto;
 }
 
-.vcenter {
-    height: 100%;
-    display: flex;
-    align-items: center;
-}
-
 /*
 ------------------------------------
     CELLSWIPER TITLE
 ------------------------------------
 */
 
-h2 {
-    margin: 0 0 1em 0;
-    font-size: 10rem;
+h1 {
+    margin-bottom: 4vw;
 }
 
 /*
@@ -76,6 +75,7 @@ h2 {
 
 .submit-form {
     position: relative;
+    margin-bottom: 3vh;
 }
 
 input[type=text] {
@@ -106,10 +106,6 @@ input[type=text]:focus ~ label, input[type=text]:valid ~ label {
     color: #B7760E;
     top: -20px;
     font-size: 2vh;
-}
-
-.submit-form {
-    margin-bottom: 1em;
 }
 
 /*
@@ -152,30 +148,44 @@ input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
 ------------------------------------
 */
 
-.continue-batch {
-    font-size: 3vw;
-    text-align: center;
-    font-family: "Open Sans", sans-serif;
-    color: #B7760E;
-}
+/*.continue-batch {*/
+    /*font-size: 3vw;*/
+    /*text-align: center;*/
+    /*font-family: "Open Sans", sans-serif;*/
+    /*color: #B7760E;*/
+/*}*/
 
-.continue-text {
-    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-}
+/*.continue-text {*/
+    /*transition: all 0.3s cubic-bezier(.25,.8,.25,1);*/
+/*}*/
 
-.continue-text:hover {
-    cursor: pointer;
-    color: white;
-}
+/*.continue-text:hover {*/
+    /*cursor: pointer;*/
+    /*color: white;*/
+/*}*/
 
 /*
 ------------------------------------
     FEATURE SELECTION
 ------------------------------------
 */
+
+.dropdown {
+    margin-bottom: 2vh;
+}
+
+.dropdown > ul {
+    max-height: 40vh;
+    overflow-y: scroll;
+}
+
 .dropdown > .btn {
-    padding: .5vw .75vw;
-    font-size: 2vw;
+    padding: 2vw 3vw;
+    font-size: 4vw;
+}
+
+.dropdown-menu > li {
+    font-size: 4vw;
 }
 
 
@@ -184,7 +194,6 @@ input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
     BATCH SELECTION
 ------------------------------------
 */
-
 
 #batch-wrapper {
     padding-top: 10px;
@@ -197,8 +206,25 @@ input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
 */
 
 @media only screen and (min-width: 768px) {
+    /* Window sizing */
+    /*.content {*/
+        /*height: 100%;*/
+    /*}*/
+    /* Title */
+    h2 {
+        margin-bottom: 3vw;
+    }
+    /* Name Field */
     input[type=text] {
         font-size: 3rem;
+    }
+    /* Feature Dropdown */
+    .dropdown > .btn {
+        padding: 1vw 1.5vw;
+        font-size: 1.5vw;
+    }
+    .dropdown-menu > li {
+        font-size: 2vw;
     }
 }
 
@@ -209,18 +235,25 @@ input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
 */
 
 @media only screen and (min-width: 992px) {
+    /* Window sizing */
     .container {
         margin-left: auto;
         margin-right: auto;
     }
-    h2 {
+    /* Title */
+    h1 {
+        margin-bottom: 3vh;
         font-size: 8rem;
     }
-    .dropdown > .btn {
-        padding: 1vw 1.5vw;
-        font-size: 1.5vw;
+    /* Feature Dropdown */
+    .dropdown-menu > li {
+        font-size: 1.5rem;
     }
-    .continue-batch {
-        font-size: 2vw;
+    .dropdown > ul {
+        max-height: 30vh;
     }
+
+    /*.continue-batch {*/
+        /*font-size: 2vw;*/
+    /*}*/
 }
