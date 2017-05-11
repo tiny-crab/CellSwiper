@@ -33,7 +33,6 @@ html, body {
 }
 
 .vcenter {
-    height: 100%;
     display: flex;
     align-items: center;
 }
@@ -207,9 +206,9 @@ input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
 
 @media only screen and (min-width: 768px) {
     /* Window sizing */
-    /*.content {*/
-        /*height: 100%;*/
-    /*}*/
+    .content {
+        height: 100%;
+    }
     /* Title */
     h2 {
         margin-bottom: 3vw;
