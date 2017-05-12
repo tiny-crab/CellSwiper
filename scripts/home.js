@@ -12,8 +12,6 @@ let beginAnnotation; // expose this function for use in batch_list.js
 $(document).ready( ()=> {
     // load batch ui
     createBatchUI("batch-wrapper");
-    const name = $.urlParam("name");
-    $("#name").text(name);
     let featureDropdown = $("#feature-dropdown");
     let dropdownMenuButton = $("#dropdownMenuButton");
     let defaultDropDown = dropdownMenuButton.text();
@@ -31,6 +29,7 @@ $(document).ready( ()=> {
 
     beginAnnotation = (id) => {
         let ftr = dropdownMenuButton.text();
+        let name = $("#name").val();
         if ( ftr === defaultDropDown) {
             showModalClientError("Feature not selected from dropdown list.");
         }
