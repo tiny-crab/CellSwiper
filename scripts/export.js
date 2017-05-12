@@ -44,7 +44,14 @@ $(document).ready(() => {
         if (document.getElementById('feature-check').checked) {
             options.push('feature=' + $("#feature-select option:selected")[0].value);
         }
-        window.location.href = '/export?' + options.join('&');
+        let exportRef = '/export?' + options.join('&');
+        $.get(exportRef, downloadFile => {
+            let link = document.createElement('a');
+            link.href = exportRef;
+            link.download = "";
+            link.click();
+        })
+            .fail(err => { showModalServerError(err)});
     });
 });
 

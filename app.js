@@ -52,8 +52,8 @@ app.get('/home', function(req, res) {
 
 app.get('/feature-list', function(req, res) {
 	//for the time being (this should be changed to exist in the DB)
-    db.any('SELECT DISTINCT feature FROM annotation').then(data => {
-        res.json(data.map(f => f.feature));
+    db.any('SELECT DISTINCT name FROM feature').then(data => {
+        res.json(data.map(f => f.name));
     }).catch(err => {
         res.json("[]");
     });

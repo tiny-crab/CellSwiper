@@ -56,7 +56,8 @@ module.exports = function(db) {
                 res.status(404).send({client: "Error: no export file created"})
             }
             else {
-                res.download(`/tmp/csv/export.csv`, 'export.csv', (err) => {
+                res.download(`/tmp/csv/export.csv`,
+                    'annotation_export_' + new Date().toDateString().replace(/\s+/g, '_') + '.csv', (err) => {
                     if (err) {
                        res.status(404).send({client: "Error downloading: Please try again\n", server: err})
                     }
