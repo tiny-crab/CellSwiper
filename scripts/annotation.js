@@ -134,6 +134,7 @@ $(document).ready( ()=> {
         });
         viewer.open(tileSources);
         seadragon.show();
+        viewer.setFullScreen(true);
     }
 
     image_div.hammer().on('doubletap', openSeaDragon);
