@@ -138,7 +138,11 @@ $(document).ready( ()=> {
     }
 
     image_div.hammer().on('doubletap', openSeaDragon);
-    image_div.data("hammer").get('doubletap').set({threshold: 20, interval: 500});
+    image_div.data("hammer").get('doubletap').set({threshold: 20, posThreshold: 100, interval: 500});
+
+    // This block is activated when the client is on a mobile device.
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    }
 
 
     function getNextImage() {
