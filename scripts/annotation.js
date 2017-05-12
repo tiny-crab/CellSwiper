@@ -138,6 +138,7 @@ $(document).ready( ()=> {
     }
 
     image_div.hammer().on('doubletap', openSeaDragon);
+    image_div.data("hammer").get('doubletap').set({threshold: 20, interval: 500});
 
 
     function getNextImage() {
