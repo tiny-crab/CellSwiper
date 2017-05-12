@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 module.exports = function(db) {
     let module = {};
@@ -47,27 +48,24 @@ module.exports = function(db) {
             if (options.length > 0) {
                 select += " WHERE " + options.join(" AND ");
             }
-            return db.none(`COPY (${select}) TO '/tmp/csv/export.csv' DELIMITER ',' CSV HEADER`, [req.query.name, req.query.date, req.query.batch, req.query.feature])
+            fileName = `annotation_export_${new Date().toDateString().replace(/\s+/g, '_')}_${Math.random().toString(36).substring(10)}.csv`;
+            return db.none(`COPY (${select}) TO '/tmp/csv/${fileName}' DELIMITER ',' CSV HEADER`, [req.query.name, req.query.date, req.query.batch, req.query.feature])
+                .then(() => Promise.resolve(fileName))
                 .catch(err => { throw ["Error writing csv on server", err] })
         })
-        .then(function() {
+        .then(function(file) {
             // download file to client
-            if (!fs.existsSync('/tmp/csv/export.csv')){
+            if (!fs.existsSync(path.join("/tmp", "csv", file))){
                 res.status(404).send({client: "Error: no export file created"})
             }
             else {
-                res.download(`/tmp/csv/export.csv`,
-                    'annotation_export_' + new Date().toDateString().replace(/\s+/g, '_') + '.csv', (err) => {
-                    if (err) {
-                       res.status(404).send({client: "Error downloading: Please try again\n", server: err})
-                    }
-                });
+                res.status(200).send({export: file});
             }
         })
         .catch(function(err) {
             // runs on reject() or throw, meant to catch errors
             console.log(err);
-            res.status(404).sent({client: "Unknown error occurred in exporting", server: err})
+            res.status(404).send({client: "Unknown error occurred in exporting", server: err})
         });
     };
 
