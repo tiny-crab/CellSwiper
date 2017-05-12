@@ -21,9 +21,9 @@ $(document).ready( () => {
         dropdownMenuButton.text(ftr);
         if (ftr !== defaultDropDown) {
             $(".batch-button").removeClass('disabled').attr('title', '');
-            $("#batch-wrapper").animate({
-                opacity: 1
-            }, 1000);
+            $("#batch-wrapper").css("visibility", "visible").animate({
+                opacity: 1,
+            }, 500);
         }
         else {
             $(".batch-button").addClass('disabled').attr('title', 'Select a feature to continue');
