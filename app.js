@@ -96,9 +96,9 @@ app.get('/add-directory', function(req, res) {
 
 app.post('/insert-name', function(req, res) {
     let name = [req.body.name];
-	if (!/^[\w_-]+$/.test(name)) {
+	if (!/^[\w]+([ _-]*[\w]+)+$/.test(name)) {
 		// invalid name
-		res.sendStatus(400);
+		res.status(400).send({client: "Error: Invalid name"});
         return;
 	}
     db.none("INSERT INTO users (username) VALUES ($1)", name)
