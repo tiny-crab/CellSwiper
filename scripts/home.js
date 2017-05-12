@@ -40,7 +40,11 @@ $(document).ready( () => {
             showModalClientError("Name is not specified")
         }
          else {
-            window.location.href = `annotation?batchid=${id}&name=${name}&feature=${ftr}`;
+            $.post("insert-name", {name: name})
+                .done(() => {
+                    window.location.href = `annotation?batchid=${id}&name=${name}&feature=${ftr}`;
+                })
+                .fail((err) => { showModalServerError(err) });
         }
     };
 
