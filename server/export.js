@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 module.exports = function(db) {
     let module = {};
@@ -48,13 +49,13 @@ module.exports = function(db) {
                 select += " WHERE " + options.join(" AND ");
             }
             fileName = `annotation_export_${new Date().toDateString().replace(/\s+/g, '_')}_${Math.random().toString(36).substring(10)}.csv`;
-            return db.none(`COPY (${select}) TO '${fileName}' DELIMITER ',' CSV HEADER`, [req.query.name, req.query.date, req.query.batch, req.query.feature])
+            return db.none(`COPY (${select}) TO '/tmp/csv/${fileName}' DELIMITER ',' CSV HEADER`, [req.query.name, req.query.date, req.query.batch, req.query.feature])
                 .then(() => Promise.resolve(fileName))
                 .catch(err => { throw ["Error writing csv on server", err] })
         })
         .then(function(file) {
             // download file to client
-            if (!fs.existsSync(file)){
+            if (!fs.existsSync(path.join("/tmp", "csv", file))){
                 res.status(404).send({client: "Error: no export file created"})
             }
             else {
@@ -64,7 +65,7 @@ module.exports = function(db) {
         .catch(function(err) {
             // runs on reject() or throw, meant to catch errors
             console.log(err);
-            res.status(404).sent({client: "Unknown error occurred in exporting", server: err})
+            res.status(404).send({client: "Unknown error occurred in exporting", server: err})
         });
     };
 

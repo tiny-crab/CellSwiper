@@ -45,10 +45,11 @@ $(document).ready(() => {
             options.push('feature=' + $("#feature-select option:selected")[0].value);
         }
         let exportRef = '/export?' + options.join('&');
-        $.get(exportRef, downloadFile => {
+        $.get(exportRef, file => {
             let link = document.createElement('a');
-            link.href = exportRef;
-            link.download = "";
+            link.href = 'exports/' + file.export;
+            // remove random gen part from file name
+            link.download = file.export.replace(/_[A-Za-z0-9]+(?=.csv)/, "");
             link.click();
         })
             .fail(err => { showModalServerError(err)});
