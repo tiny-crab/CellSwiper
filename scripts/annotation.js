@@ -135,7 +135,7 @@ $(document).ready( ()=> {
         // This block is activated when the client is on a mobile device.
         if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
             viewer.fullPageButton.removeAllHandlers();
-            viewer.fullPageButton.addHandler("click", closeSeaDragon)
+            viewer.fullPageButton.addHandler("click", closeSeaDragon);
         }
         viewer.open(tileSources);
         seadragon.show();
@@ -143,10 +143,14 @@ $(document).ready( ()=> {
     }
 
     function closeSeaDragon() {
-        viewer.destroy();
-        viewer = null;
-        seadragon.hide();
-        image_div.show();
+        viewer.setFullScreen(false);
+        // timeout to prevent the div from being removed before fullscreen is reset
+        setTimeout(() => {
+            viewer.destroy();
+            viewer = null;
+            seadragon.hide();
+            image_div.show();
+        }, 250)
     }
 
     image_div.hammer().on('doubletap', openSeaDragon);
