@@ -9,11 +9,9 @@ $.urlParam = function (a) {
 
 let beginAnnotation; // expose this function for use in batch_list.js
 
-$(document).ready( ()=> {
+$(document).ready( () => {
     // load batch ui
     createBatchUI("batch-wrapper");
-    const name = $.urlParam("name");
-    $("#name").text(name);
     let featureDropdown = $("#feature-dropdown");
     let dropdownMenuButton = $("#dropdownMenuButton");
     let defaultDropDown = dropdownMenuButton.text();
@@ -23,6 +21,9 @@ $(document).ready( ()=> {
         dropdownMenuButton.text(ftr);
         if (ftr !== defaultDropDown) {
             $(".batch-button").removeClass('disabled').attr('title', '');
+            $("#batch-wrapper").animate({
+                opacity: 1
+            }, 1000);
         }
         else {
             $(".batch-button").addClass('disabled').attr('title', 'Select a feature to continue');
@@ -31,6 +32,7 @@ $(document).ready( ()=> {
 
     beginAnnotation = (id) => {
         let ftr = dropdownMenuButton.text();
+        let name = $("#name").val();
         if ( ftr === defaultDropDown) {
             showModalClientError("Feature not selected from dropdown list.");
         }
@@ -38,7 +40,11 @@ $(document).ready( ()=> {
             showModalClientError("Name is not specified")
         }
          else {
-            window.location.href = `annotation?batchid=${id}&name=${name}&feature=${ftr}`;
+            $.post("insert-name", {name: name})
+                .done(() => {
+                    window.location.href = `annotation?batchid=${id}&name=${name}&feature=${ftr}`;
+                })
+                .fail((err) => { showModalServerError(err) });
         }
     };
 

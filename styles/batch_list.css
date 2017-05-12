@@ -14,14 +14,18 @@
     transition: -moz-transform 0.3s, -o-transform 0.3s, -webkit-transform 0.3s, -ms-transform 0.3s, transform 0.3s;
 }
 
-.year:hover {
-    background-color: #f5f5f5;
+.year {
     cursor: pointer;
 }
 
+.year:hover {
+    background-color: #f5f5f5;
+}
+
 .month {
-    margin-left: 20px;
+    margin-left: 5%;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .month:hover {
@@ -29,22 +33,22 @@
 }
 
 .year-list {
-    max-height: 200px;
+    max-height: 30%;
     overflow-y: auto;
 }
 
 .month-list {
-    max-height: 200px;
+    max-height: 10%;
     overflow-y: auto;
 }
 
 .batch {
-    margin-left: 40px;
+    margin-left: 10%;
     margin-right: 0;
     overflow: hidden;
 }
 
 .batch-path {
     color: lightgrey;
-    padding-left: 5px;
+    padding-left: 1%;
 }

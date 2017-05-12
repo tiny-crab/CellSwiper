@@ -132,12 +132,29 @@ $(document).ready( ()=> {
             console.log(err);
             showModalClientError("Couldn't open full-sized image", true);
         });
+        // This block is activated when the client is on a mobile device.
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            viewer.fullPageButton.removeAllHandlers();
+            viewer.fullPageButton.addHandler("click", closeSeaDragon);
+        }
         viewer.open(tileSources);
         seadragon.show();
+        viewer.setFullScreen(true);
+    }
+
+    function closeSeaDragon() {
+        viewer.setFullScreen(false);
+        // timeout to prevent the div from being removed before fullscreen is reset
+        setTimeout(() => {
+            viewer.destroy();
+            viewer = null;
+            seadragon.hide();
+            image_div.show();
+        }, 250)
     }
 
     image_div.hammer().on('doubletap', openSeaDragon);
-
+    image_div.data("hammer").get('doubletap').set({threshold: 20, posThreshold: 100, interval: 500});
 
     function getNextImage() {
         // set current image to 1 i.e. annotated
@@ -157,10 +174,7 @@ $(document).ready( ()=> {
         else {
             image = image.id;
             if (viewer) {
-                viewer.destroy();
-                viewer = null;
-                seadragon.hide();
-                image_div.show();
+                closeSeaDragon()
             }
             let imgURL = '/images?id=' + image;
             image_div

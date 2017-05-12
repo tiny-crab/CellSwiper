@@ -3,6 +3,7 @@
 <head>
     <title>CellSwiper</title>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -29,40 +30,37 @@
 
 </head>
 <body>
-    <div class="row nav">
-        <div class="col-xs-6 col-sm-6 col-md-offset-1 col-md-2">
-            <h3 id="logo">CellSwiper</h3>
-        </div>
-        <div class="col-xs-6 col-sm-6 col-md-offset-6 col-md-2" id="account-info">
-            <h3 id="name"></h3>
+    <div class="container">
+        <div class="content vcenter">
+            <div class="hidden-xs hidden-sm col-md-3 sidebar">
+                <div class="line"></div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-9 interface">
+                <h1>CellSwiper</h1>
+                <form class="submit-form" autocomplete="off">
+                    <div class="input-container">
+                        <input type="text" id="name" name="name" required>
+                        <span class="bar"></span>
+                        <label class="shift">Name:</label>
+                    </div>
+                </form>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton">
+                        Select a Feature
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" id="feature-dropdown" aria-labelledby="dropdownMenuButton"></ul>
+                </div>
+                <div id="batch-wrapper" style="opacity: 0;"></div>
+                <!--<div class="continue-batch">-->
+                    <!--<span class="continue-text">-->
+                        <!--continue last batch-->
+                        <!--<span class="glyphicon glyphicon-chevron-right"></span>-->
+                    <!--</span>-->
+                <!--</div>-->
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-1 margin"></div>
-        <div class="col-md-5" id="image-dir">
-            <p>image directories</p>
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton">
-                    Select a Feature
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" id="feature-dropdown" aria-labelledby="dropdownMenuButton"></ul>
-            </div>
-            <div id="batch-wrapper">
 
-            </div>
-        </div>
-        <div class="col-md-5" id="task-list">
-            <p>tasks</p>
-        </div>
-        <div class="col-md-1 margin"></div>
-    </div>
-    <div class="row">
-        <div class="col-md-1 margin"></div>
-        <div class="col-md-5 col-md-offset-5">
-            <div id="continue-batch">continue batch</div>
-        </div>
-        <div class="col-md-1 margin"></div>
-    </div>
 </body>
 </html>

@@ -41,7 +41,7 @@ app.get('/dbtest', function(req,res) {
 });
 
 app.get('/', function(req, res) {
-    res.sendFile(dir + 'pages/start_page.html');
+    res.sendFile(dir + 'pages/home.html');
 });
 
 app.get('/batch-list', function(req, res) {
@@ -98,9 +98,9 @@ app.get('/add-directory', function(req, res) {
 
 app.post('/insert-name', function(req, res) {
     let name = [req.body.name];
-	if (!/^[\w_-]+$/.test(name)) {
+	if (!/^[\w]+([ _-]*[\w]+)+$/.test(name)) {
 		// invalid name
-		res.sendStatus(400);
+		res.status(400).send({client: "Error: Invalid name"});
         return;
 	}
     db.none("INSERT INTO users (username) VALUES ($1)", name)

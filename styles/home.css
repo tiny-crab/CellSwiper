@@ -1,62 +1,258 @@
-.nav {
+/*
+------------------------------------
+    FULL PAGE
+------------------------------------
+*/
+
+html, body {
+    height: 100%;
+    width: 100%;
     background-color: #17243A;
+}
+
+/*
+------------------------------------
+    WRAPS THE CONTENT
+------------------------------------
+*/
+
+.container {
+    margin: 0;
+    padding: 10vw;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.content {
+    height: 60%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.vcenter {
+    display: flex;
+    align-items: center;
+}
+
+/*
+------------------------------------
+    LINE SEPARATOR ON BIG SCREENS
+------------------------------------
+*/
+
+.sidebar {
+    height: 60%;
+}
+
+.line {
+    border-right: 2px solid #B7760E;
+    height: 100%;
+    width: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+/*
+------------------------------------
+    CELLSWIPER TITLE
+------------------------------------
+*/
+
+h1 {
+    margin-bottom: 4vw;
+}
+
+/*
+------------------------------------
+    TEXT FIELD STYLING
+    from: https://scotch.io/tutorials/google-material-design-input-boxes-in-css3
+------------------------------------
+*/
+
+.submit-form {
+    position: relative;
+    margin-bottom: 3vh;
+}
+
+input[type=text] {
+    display: block;
+    width: auto;
     color: white;
-    height: 5em;
+    line-height: 4vh;
+    border: none;
+    border-bottom: 1px solid white;
+    background-color: #17243A;
 }
 
-#logo {
-    padding-left: 2em;
+input[type=text]:focus {
+    outline: none;
+}
+
+label.shift {
     color: white;
+    font-size: 3vh;
+    top: 0;
+    position: absolute;
+    font-weight: normal;
+    pointer-events: none;
+    transition: 0.2s ease all;
 }
 
-#name {
-    color: white;
-    text-align:right;
-    padding-right: 2em;
-}
-
-#image-dir {
-    border: 1px solid black;
-}
-
-#task-list {
-    border: 1px solid black;
-    height: 10em;
-}
-
-#new-batch, #continue-batch {
-    margin: auto;
-    width: 60%;
-    font-size: 2rem;
-    text-align: center;
-    font-family: "Open Sans", sans-serif;
-    border-radius: 1em;
-    line-height: 3rem;
-    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-}
-
-#new-batch {
-    color: #5483D3;
-    border: 2px #5483D3 solid;
-}
-
-#continue-batch {
-    border: 2px #B7760E solid;
+input[type=text]:focus ~ label, input[type=text]:valid ~ label {
     color: #B7760E;
+    top: -20px;
+    font-size: 2vh;
 }
 
-#new-batch:hover {
-    cursor: pointer;
-    background-color: #5483D3;
-    color: white;
+/*
+------------------------------------
+    ANIMATED BAR
+------------------------------------
+*/
+
+.bar {
+    position: relative;
+    display: block;
+    width: 300px;
 }
 
-#continue-batch:hover {
-    cursor: pointer;
-    background-color: #B7760E;
-    color: white;
+.bar:before, .bar:after {
+    content: '';
+    height: 2px;
+    width: 0;
+    bottom: 1px;
+    position: absolute;
+    background: #B7760E;
+    transition: 0.2s ease all;
 }
+
+.bar:before {
+    left: 50%;
+}
+
+.bar:after {
+    right: 50%;
+}
+
+input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
+    width: 50%;
+}
+
+/*
+------------------------------------
+    BUTTON
+------------------------------------
+*/
+
+/*.continue-batch {*/
+    /*font-size: 3vw;*/
+    /*text-align: center;*/
+    /*font-family: "Open Sans", sans-serif;*/
+    /*color: #B7760E;*/
+/*}*/
+
+/*.continue-text {*/
+    /*transition: all 0.3s cubic-bezier(.25,.8,.25,1);*/
+/*}*/
+
+/*.continue-text:hover {*/
+    /*cursor: pointer;*/
+    /*color: white;*/
+/*}*/
+
+/*
+------------------------------------
+    FEATURE SELECTION
+------------------------------------
+*/
+
+.dropdown {
+    margin-bottom: 2vh;
+}
+
+.dropdown > ul {
+    max-height: 40vh;
+    overflow-y: scroll;
+}
+
+.dropdown > .btn {
+    padding: 2vw 3vw;
+    font-size: 4vw;
+}
+
+.dropdown-menu > li {
+    font-size: 4vw;
+}
+
+
+/*
+------------------------------------
+    BATCH SELECTION
+------------------------------------
+*/
 
 #batch-wrapper {
     padding-top: 10px;
+}
+
+/*
+------------------------------------
+    MEDIA QUERIES - Tablets
+------------------------------------
+*/
+
+@media only screen and (min-width: 768px) {
+    /* Window sizing */
+    .content {
+        height: 100%;
+    }
+    /* Title */
+    h2 {
+        margin-bottom: 3vw;
+    }
+    /* Name Field */
+    input[type=text] {
+        font-size: 3rem;
+    }
+    /* Feature Dropdown */
+    .dropdown > .btn {
+        padding: 1vw 1.5vw;
+        font-size: 1.5vw;
+    }
+    .dropdown-menu > li {
+        font-size: 2vw;
+    }
+}
+
+/*
+------------------------------------
+    MEDIA QUERIES - Desktops
+------------------------------------
+*/
+
+@media only screen and (min-width: 992px) {
+    /* Window sizing */
+    .container {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    /* Title */
+    h1 {
+        margin-bottom: 3vh;
+        font-size: 8rem;
+    }
+    /* Feature Dropdown */
+    .dropdown-menu > li {
+        font-size: 1.5rem;
+    }
+    .dropdown > ul {
+        max-height: 30vh;
+    }
+
+    /*.continue-batch {*/
+        /*font-size: 2vw;*/
+    /*}*/
 }
