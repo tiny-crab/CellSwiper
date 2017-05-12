@@ -9,7 +9,7 @@ $.urlParam = function (a) {
 
 let beginAnnotation; // expose this function for use in batch_list.js
 
-$(document).ready( ()=> {
+$(document).ready( () => {
     // load batch ui
     createBatchUI("batch-wrapper");
     const name = $.urlParam("name");
@@ -23,6 +23,9 @@ $(document).ready( ()=> {
         dropdownMenuButton.text(ftr);
         if (ftr !== defaultDropDown) {
             $(".batch-button").removeClass('disabled').attr('title', '');
+            $("#batch-wrapper").animate({
+                opacity: 1
+            }, 1000);
         }
         else {
             $(".batch-button").addClass('disabled').attr('title', 'Select a feature to continue');
