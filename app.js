@@ -39,7 +39,7 @@ app.get('/dbtest', function(req,res) {
 });
 
 app.get('/', function(req, res) {
-    res.sendFile(dir + 'pages/start_page.html');
+    res.sendFile(dir + 'pages/home.html');
 });
 
 app.get('/batch-list', function(req, res) {
