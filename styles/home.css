@@ -187,6 +187,11 @@ input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
     font-size: 4vw;
 }
 
+#dropdownMenuButton::after {
+    margin-left: 5px;
+    font-size: 60%;
+    content: "\25BC";
+}
 
 /*
 ------------------------------------
