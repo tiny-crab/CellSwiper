@@ -1,5 +1,4 @@
 $(document).ready(() => {
-    // set max date for date select to be today
     $.get('/export-users', data => {
         let name_select = $("#user-select");
         $.each(data, (val, text) => {
@@ -26,15 +25,16 @@ $(document).ready(() => {
             );
         });  
     })
+    // set max date for date select to be today
+    document.getElementById('date-select').max = document.getElementById('date-select').value = (new Date()).toISOString().substring(0, 10);
 
-    document.getElementById('date-select').max = (new Date()).toISOString().substring(0, 10);
     $('#export-form').submit((ev) => {
         ev.preventDefault();
         let options = [];
         if (document.getElementById('user-check').checked) {
             options.push('name=' + $('#user-select option:selected')[0].value)
         }
-        if (document.getElementById('date-check').checked) {
+        if (document.getElementById('date-check').checked && document.getElementById('date-select').value !== "") {
             options.push('before=' + $('#before-select option:selected')[0].value);
             options.push('date=' + document.getElementById('date-select').value);
         }
