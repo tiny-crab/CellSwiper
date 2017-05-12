@@ -47,20 +47,18 @@ module.exports = function(db) {
             if (options.length > 0) {
                 select += " WHERE " + options.join(" AND ");
             }
-            return db.none(`COPY (${select}) TO '/tmp/csv/export.csv' DELIMITER ',' CSV HEADER`, [req.query.name, req.query.date, req.query.batch, req.query.feature])
+            fileName = "/tmp/csv/export.csv";
+            return db.none(`COPY (${select}) TO '${fileName}' DELIMITER ',' CSV HEADER`, [req.query.name, req.query.date, req.query.batch, req.query.feature])
+                .then(() => Promise.resolve(fileName))
                 .catch(err => { throw ["Error writing csv on server", err] })
         })
-        .then(function() {
+        .then(function(file) {
             // download file to client
             if (!fs.existsSync('/tmp/csv/export.csv')){
                 res.status(404).send({client: "Error: no export file created"})
             }
             else {
-                res.download(`/tmp/csv/export.csv`, 'export.csv', (err) => {
-                    if (err) {
-                       res.status(404).send({client: "Error downloading: Please try again\n", server: err})
-                    }
-                });
+                res.status(200).send({export: file});
             }
         })
         .catch(function(err) {
