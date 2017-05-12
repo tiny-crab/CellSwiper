@@ -24,7 +24,8 @@ $(document).ready(() => {
                 $(`<option value="${feature}">${feature}</option>`)
             );
         });  
-    })
+    });
+
     // set max date for date select to be today
     document.getElementById('date-select').max = document.getElementById('date-select').value = (new Date()).toISOString().substring(0, 10);
 

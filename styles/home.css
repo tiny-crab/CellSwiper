@@ -143,28 +143,6 @@ input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
 
 /*
 ------------------------------------
-    BUTTON
-------------------------------------
-*/
-
-/*.continue-batch {*/
-    /*font-size: 3vw;*/
-    /*text-align: center;*/
-    /*font-family: "Open Sans", sans-serif;*/
-    /*color: #B7760E;*/
-/*}*/
-
-/*.continue-text {*/
-    /*transition: all 0.3s cubic-bezier(.25,.8,.25,1);*/
-/*}*/
-
-/*.continue-text:hover {*/
-    /*cursor: pointer;*/
-    /*color: white;*/
-/*}*/
-
-/*
-------------------------------------
     FEATURE SELECTION
 ------------------------------------
 */
