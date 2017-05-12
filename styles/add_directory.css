@@ -36,8 +36,13 @@
     margin-bottom: 20px;
 }
 
-@media only screen and (max-width: 768px) {
-    
+#header {
+    display: flex;
+    align-items: center;
+}
+
+body {
+    background-color: #17243A;
 }
 /*
 .collapsed .caret{
