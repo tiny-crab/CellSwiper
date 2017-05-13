@@ -31,6 +31,19 @@
 .alert-wrapper {
     margin-top: 20px;
 }
+
+#add-directory-wrapper {
+    margin-bottom: 20px;
+}
+
+#header {
+    display: flex;
+    align-items: center;
+}
+
+body {
+    background-color: #17243A;
+}
 /*
 .collapsed .caret{
     -webkit-transform: rotate(-90deg);

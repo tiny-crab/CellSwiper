@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Add Annotation</title>
+        <title>Add Batches</title>
         <!-- Bootstrap -->
-
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
             integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -14,14 +15,19 @@
         <script src="../scripts/awesomplete/awesomplete.js"></script>
         <script src="../scripts/add_directory.js"></script>
         <script src="../scripts/errors.js"></script>
+        <link rel="stylesheet" href="../styles/theme.css">
         <link rel="stylesheet" href="../scripts/awesomplete/awesomplete.css">
         <link rel="stylesheet" href="../styles/add_directory.css">
-        <meta charset="UTF-8">
     </head>
 <body>
     <div class="container">
-        <div id="title" class="text-center row col-xs-12">
-            <h1>Add Annotation</h1>
+        <div id="header" class="row">
+            <span class="col-xs-4">
+                <a href="/" class="btn btn-primary"><span class="glyphicon glyphicon-home"></span></a>
+            </span>
+            <span class="text-right col-xs-8">
+                <h1>Add Batches</h1>
+            </span>
         </div>
         <div id="add-directory-wrapper" class="row">
             <form id="add-directory-form" class="form-inline">
@@ -32,8 +38,6 @@
             </form>
             
         </div>
-        
-    
     </div>
 </body>
 </html>

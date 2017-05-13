@@ -117,40 +117,36 @@ function resultTextMult(suc, err) {
 }
 
 function createBatchUi(folder, num) {
-    return `<div data-batch="${num}" style="display: none;" class="batch panel panel-primary">
+    return `<span class="col-xs-12 col-md-6" style="display: none;">
+            <div data-batch="${num}" class="batch panel panel-primary">
             <div class="panel-heading">
                 <h3 id="batch-dir-${num}" class="panel-title">${folder}</h3>
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <span class="col-xs-5">
+                    <span class="col-xs-12 col-md-5">
                         <div class="row">
                             <span class="col-sm-4 col-xs-12">
                                 <label for="name-input-${num}">Batch Name</label>
                             </span>
                             <span class="col-sm-8 col-xs-12">
-                                <input id="name-input-${num}" type="text" placeholder="Batch name..." value="${folder}">
+                                <input id="name-input-${num}" class="form-control" type="text" placeholder="Batch name..." value="${folder}">
                             </span>
+                            <div class="checkbox col-sm-8 col-xs-12">
+                                <label for="recursive-check-${num}"><input id="recursive-check-${num}" type="checkbox">Add recursively</label>
+                            </div>
                         </div>
                     </span>
-                    <span class="col-xs-4">
-                        <input id="recursive-check-${num}" type="checkbox">
-                        <label for="recursive-check-${num}">Add recursively</label>
+                    <span class="col-xs-6 col-md-3 col-md-offset-1">
+                        <button id="batch-submit-${num}" class="btn btn-success" onclick="submitBatch(${num})"><span class="hidden rotating glyphicon glyphicon-repeat"></span>Create</button>
                     </span>
-                    <span class="col-xs-3">
-                        <div class="row">
-                            <span class="col-sm-6 col-xs-12">
-                                <button id="batch-submit-${num}" class="btn btn-success" onclick="submitBatch(${num})"><span class="hidden rotating glyphicon glyphicon-repeat"></span>Create</button>
-                            </span>
-                            <span class="col-sm-6 col-xs-12">
-                                <button id="batch-cancel-${num}" class="btn btn-danger" onclick="deleteBatch(${num})">Cancel</button>
-                            </span>
-                        </div>
+                    <span class="col-xs-6 col-md-3">
+                        <button id="batch-cancel-${num}" class="btn btn-danger" onclick="deleteBatch(${num})">Cancel</button>
                     </span>
                 </div>
                 <div class="alert-wrapper" id="alert-wrapper-${num}" class="row"></div>
             </div>
-        </div>`;
+        </div></span>`;
 }
 
 function submitBatch(n) {
