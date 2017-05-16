@@ -78,7 +78,7 @@ function resultText(dir, suc) {
         clearTimeout(fadeTimeout);
         resText.css("display: none;");
     }
-    resText.removeClass("text-success text-warning");
+    resText.removeClass("text-success text-warning text-info");
     resText.addClass(textClass);
     resText.text(text);
     resText.fadeIn("fast");
@@ -111,7 +111,8 @@ function resultTextMult(suc, err) {
         clearTimeout(fadeTimeout);
         resText.css("display: none;");
     }
-    resText[0].className = textClass;
+    resText.removeClass("text-warning text-success text-info");
+    resText.addClass(textClass);
     resText.text(text);
     resText.fadeIn("fast");
     fadeTimeout = setTimeout(function() {
