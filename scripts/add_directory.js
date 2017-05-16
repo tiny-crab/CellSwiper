@@ -10,7 +10,7 @@ let fadeTimeout;
 
 $(function() {    
     // matches strings for top level directories
-    let parentDirReg = /^\w+\/$/;
+    let parentDirReg = /^\/\w+\/$/;
     $.getJSON("scripts/folders.json").done(function(dirObject) {
         let input = document.getElementById('folder-input');
         autocomplete = new Awesomplete(input, {
@@ -23,6 +23,9 @@ $(function() {
                 // if input is empty, list top level dirs
                 if (input.length == 0) {
                     return parentDirReg.test(text.label);
+                }
+                else if (input.endsWith("/")) {
+                    return (new RegExp("^" + input + "\\w+\/$")).test(text.label);
                 }
                 else {
                     // default filter function
@@ -48,7 +51,7 @@ function addBatch(dir) {
     if (dir.length > 0 && !batchDirs.has(dir)) {
         batchDirs.add(dir);
         let newBatch = $(createBatchUi(dir, i++));
-        $("#add-directory-wrapper").append(newBatch);
+        $(".container").append(newBatch);
         newBatch.fadeIn();
         return true;
     }
@@ -75,7 +78,7 @@ function resultText(dir, suc) {
         clearTimeout(fadeTimeout);
         resText.css("display: none;");
     }
-    resText[0].className = textClass;
+    resText.addClass(textClass);
     resText.text(text);
     resText.fadeIn("fast");
     fadeTimeout = setTimeout(function() {
@@ -117,8 +120,8 @@ function resultTextMult(suc, err) {
 }
 
 function createBatchUi(folder, num) {
-    return `<span class="col-xs-12 col-md-6" style="display: none;">
-            <div data-batch="${num}" class="batch panel panel-primary">
+    return `<span data-batch="${num}" class="col-xs-12 col-md-6" style="display: none;">
+            <div class="batch panel panel-primary">
             <div class="panel-heading">
                 <h3 id="batch-dir-${num}" class="panel-title">${folder}</h3>
             </div>
