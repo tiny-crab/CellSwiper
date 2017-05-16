@@ -78,6 +78,7 @@ function resultText(dir, suc) {
         clearTimeout(fadeTimeout);
         resText.css("display: none;");
     }
+    resText.removeClass("text-success text-warning");
     resText.addClass(textClass);
     resText.text(text);
     resText.fadeIn("fast");
