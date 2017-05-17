@@ -24,6 +24,8 @@ exec(`./watch.sh ${info.data_dir} .`);
 app.use('/pages', express.static('pages'));
 app.use('/styles', express.static('styles'));
 app.use('/scripts', express.static('scripts'));
+// directory where export files are kept		
+app.use('/exports', express.static('/tmp/csv'));
 
 // for getting post parameters in req.body
 app.use(bodyparser.urlencoded({extended: false}));
