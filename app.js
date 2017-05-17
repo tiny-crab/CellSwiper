@@ -54,7 +54,7 @@ app.get('/home', function(req, res) {
 
 app.get('/feature-list', function(req, res) {
 	//for the time being (this should be changed to exist in the DB)
-    db.any('SELECT DISTINCT name FROM feature').then(data => {
+    db.any('SELECT name FROM feature ORDER BY name ASC').then(data => {
         res.json(data.map(f => f.name));
     }).catch(err => {
         res.json("[]");

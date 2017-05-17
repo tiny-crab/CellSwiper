@@ -70,7 +70,7 @@ module.exports = function(db) {
     };
 
     module.send_users = function(req, res) {
-        db.any('SELECT username FROM users', [true]).then((data) => {
+        db.any('SELECT username FROM users ORDER BY username ASC', [true]).then((data) => {
             users = [];
             data.forEach(item => {
                 users.push(item.username);
