@@ -48,18 +48,6 @@ $(document).ready( () => {
         }
     };
 
-    function postToAnnotation() {
-        let ftr = dropdownMenuButton.text();
-        if ( ftr === defaultDropDown) {
-            alert("Feature not selected from dropdown list.");
-        } else {
-            // this will need to be changed to be batch specific
-            // window.location.href = `annotation?batchid=2&name=${name}&feature=${ftr}`;
-            console.log("HI")
-        }
-
-    }
-
     function postToAdmin() {
         $.post("insert-name", {name: name})
             .done(() => {
@@ -95,7 +83,5 @@ $(document).ready( () => {
     })
     .fail(err => { showModalServerError(err) });
 
-    $(`#new-batch`).click(postToAnnotation);
-    $(`#continue-batch`).click(postToAnnotation);
     $(`#account-info`).click(postToAdmin);
 });
