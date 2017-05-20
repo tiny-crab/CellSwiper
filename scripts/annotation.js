@@ -124,6 +124,7 @@ $(document).ready( ()=> {
             id: "openseadragon",
             prefixUrl: '/scripts/openseadragon_images/',
             autoHideControls: false,
+            showZoomControl: false,
             defaultZoomLevel: 0,
             minZoomLevel: 0.5,
             maxZoomLevel: 5
