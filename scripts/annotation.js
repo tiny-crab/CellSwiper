@@ -149,7 +149,9 @@ $(document).ready( ()=> {
             fullScreenButton = $("[title|='Toggle full page']");
             if (eventData.fullScreen) {
                 // changing to fullscreen
-                fullScreenButton.css("left", "90vw");
+                fullScreenButton.css("left", ()=> {
+                    return $('body').width() - 120;
+                })
             }
             else {
                 fullScreenButton.css("left", "0vw");
