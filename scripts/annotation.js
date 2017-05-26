@@ -124,6 +124,7 @@ $(document).ready( ()=> {
             id: "openseadragon",
             prefixUrl: '/scripts/openseadragon_images/',
             autoHideControls: false,
+            showZoomControl: false,
             defaultZoomLevel: 0,
             minZoomLevel: 0.5,
             maxZoomLevel: 5
@@ -137,8 +138,27 @@ $(document).ready( ()=> {
             viewer.fullPageButton.removeAllHandlers();
             viewer.fullPageButton.addHandler("click", closeSeaDragon);
         }
+        else {
+            viewer.fullPageButton.addHandler("click", ()=> {
+                setTimeout(()=>{viewer.viewport.goHome(true)}, 100);
+            });
+        }
         viewer.open(tileSources);
         seadragon.show();
+        viewer.addHandler("full-screen", (eventData)=> {
+            fullScreenButton = $("[title|='Toggle full page']");
+            if (eventData.fullScreen) {
+                // changing to fullscreen
+                fullScreenButton.css("left", ()=> {
+                    return $('body').width() - 120;
+                })
+            }
+            else {
+                fullScreenButton.css("left", "0vw");
+            }
+
+        });
+        // $("[title|='Toggle full page']").css("left", "90vw");
         viewer.setFullScreen(true);
     }
 
