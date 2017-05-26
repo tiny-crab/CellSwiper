@@ -62,9 +62,9 @@ module.exports = function(db, image_dir) {
         const imgExts = new Set(['.jpg', '.png']);
         let batchID, batch_path;
         let return_payload = {result: "", err_msg: "", img_errs: []};
-        if (!/^[\w\\/_-]+$/.test(batch_name)) {
+        if (!/^[\w\s\\/_-]+$/.test(batch_name)) {
             return_payload.result = "FAIL";
-            return_payload.err_msg = "Invalid batch name. Can only contain alphanumeric, slashes, and hyphens";
+            return_payload.err_msg = {client: "Invalid batch name, special characters not allowed"};
             res.status(200).send(return_payload);
             return;
         }
