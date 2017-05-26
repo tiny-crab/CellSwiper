@@ -32,7 +32,7 @@ $(document).ready( () => {
 
     beginAnnotation = (id) => {
         let ftr = dropdownMenuButton.text();
-        let name = $("#name").val();
+        let name = $("#name").val().trim();
         if ( ftr === defaultDropDown) {
             showModalClientError("Feature not selected from dropdown list.");
         }
@@ -41,7 +41,7 @@ $(document).ready( () => {
         }
          else {
             $.post("insert-name", {name: name})
-                .done(() => {
+                .done((name) => {
                     window.location.href = `annotation?batchid=${id}&name=${name}&feature=${ftr}`;
                 })
                 .fail((err) => { showModalServerError(err) });

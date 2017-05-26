@@ -156,7 +156,7 @@ function createBatchUi(folder, num) {
 
 function submitBatch(n) {
     let batchReq = {
-        batch_name: $("#name-input-" + n).val(),
+        batch_name: $("#name-input-" + n).val().trim(),
         recursive: $("#recursive-check-" + n)[0].checked,
         batch_dir: $("#batch-dir-" + n).text()
     };
@@ -178,7 +178,7 @@ function submitBatch(n) {
                 break;
             case "FAIL":
                 resAlert += `alert-danger'><strong>Failed: </strong>${res.err_msg.client}</div>`;
-                console.log(res.img_errs.server);
+                console.log(res.err_msg.server);
                 $(buttons[0]).text("Retry");
                 buttons.toggleClass("disabled");
                 break;
