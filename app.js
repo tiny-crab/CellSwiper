@@ -24,7 +24,7 @@ exec(`./watch.sh ${info.data_dir} .`);
 app.use('/pages', express.static('pages'));
 app.use('/styles', express.static('styles'));
 app.use('/scripts', express.static('scripts'));
-// directory where export files are kept
+// directory where export files are kept		
 app.use('/exports', express.static('/tmp/csv'));
 
 // for getting post parameters in req.body
@@ -57,7 +57,7 @@ app.get('/feature-list', function(req, res) {
     db.any('SELECT name FROM feature ORDER BY name ASC').then(data => {
         res.json(data.map(f => f.name));
     }).catch(err => {
-        res.json("[]");
+        res.status(404).send({client: "No features found"});
     });
 });
 
