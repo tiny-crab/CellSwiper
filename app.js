@@ -93,7 +93,7 @@ app.get('/sample_script.js', function(req, res) {
 });
 
 app.get('/add-directory', function(req, res) {
-    res.sendFile(dir + 'pages/add_directory.html');
+    res.sendFile(dir + 'pages/add_batch.html');
 });
 
 app.post('/insert-name', function(req, res) {
