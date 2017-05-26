@@ -31,12 +31,17 @@
         </div>
         <div id="add-directory-wrapper" class="row">
             <form id="add-directory-form" class="form-inline">
-                <input id="folder-input" type="text" placeholder="Search for directories...">
-                <input class="btn btn-primary" type="submit" value="Add">
-                <input type="button" class="btn btn-default" value="Add subfolders as batches" onclick="addSubfolders()">
-                <span id="batch-response" style="display: none;"></span>
+                <div class="col-sm-3 col-xs-10 col-xs-offset-2 col-sm-offset-0">
+                    <input id="folder-input" class="form-control btn-block" type="text" placeholder="Search for directories...">
+                </div>
+                <div class="col-sm-1 col-xs-3 col-xs-offset-1 col-sm-offset-0">
+                    <input class="btn btn-primary btn-block" type="submit" value="Add">
+                </div>
+                <div class="col-sm-3 col-xs-8">
+                    <input type="button" class="btn btn-default btn-block" value="Add subfolders as batches" onclick="addSubfolders()">
+                </div>
             </form>
-            
+            <p id="batch-response" class="text-center col-xs-12 col-sm-3" style="display: none;"></p>
         </div>
     </div>
 </body>
