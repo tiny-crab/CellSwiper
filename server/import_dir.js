@@ -147,7 +147,13 @@ module.exports = function(db, image_dir) {
                 // should return the promise associated with the DB call
                 return db.one("INSERT INTO batches(original_dir, batch_name) VALUES ($1, $2) RETURNING id", [batch_dir, batch_name])
                     .catch(err => {
-                        throw ["Error inserting new batch information into database", err]
+                        if (err.constraint === "batch_name_unique") {
+                            // Batch name isn't unique
+                            throw ["Batch name already exists in the database", err]
+                        }
+                        else {
+                            throw ["Error inserting new batch information into database", err]
+                        }
                     })
         })
         // first, create folder for the batch
