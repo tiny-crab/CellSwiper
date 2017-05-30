@@ -16,7 +16,7 @@ let batches = require('./server/batch_info')(db);
 let exec = require('child_process').exec;
 
 // build the folders.json file
-// eventually this shoiuld be run once every couple of minutes
+// eventually this should be run once every couple of minutes
 exec(`./watch.sh ${info.data_dir} .`);
 
 
@@ -24,14 +24,11 @@ exec(`./watch.sh ${info.data_dir} .`);
 app.use('/pages', express.static('pages'));
 app.use('/styles', express.static('styles'));
 app.use('/scripts', express.static('scripts'));
-// directory where export files are kept
-app.use('/exports', express.static('/tmp/csv'));
 
 // for getting post parameters in req.body
 app.use(bodyparser.urlencoded({extended: false}));
 app.use(bodyparser.json());
 
-//app.get('//:id', function(req,res) {
 app.get('/dbtest', function(req,res) {
 	db.any('select * from annotation', [true]).then((data) => {
 		res.send(data);
@@ -61,6 +58,15 @@ app.get('/feature-list', function(req, res) {
     });
 });
 
+app.get('/feature-set', function(req, res) {
+	if (req.query.id == 0) {
+		res.json([{type: "binary", header: "Quality", field: "good", l_label: "Bad", r_label: "Good"}, {type: "text", header: "Comments", field: "comments", label: "Comments"}]);
+	}
+	else {
+		res.json([]);
+	}
+});
+
 app.get('/annotation', function(req, res) {
 	res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 	res.setHeader("Pragma", "no-cache");
@@ -70,6 +76,10 @@ app.get('/annotation', function(req, res) {
 
 app.get('/admin', function(req, res) {
     res.sendFile(dir + 'pages/admin.html');
+});
+
+app.get('/annotation-test', function(req, res) {
+    res.sendFile(dir + 'pages/annotation-test.html');
 });
 
 app.get('/complete', function(req, res) {
