@@ -17,7 +17,7 @@ module.exports = function(db, image_dir) {
             res.status(404).send({client: "No image ID given"});
             return;
         }
-        db.one("SELECT * FROM images WHERE id=$1", id)
+        db.one("SELECT * FROM image WHERE id=$1", id)
             .then((image) => {
                 // image found
                 let batchPath = path.join(image_dir, image.batches[0].toString());
@@ -75,13 +75,13 @@ module.exports = function(db, image_dir) {
         }
         let payload = [];
 
-        db.one("SELECT * FROM batches WHERE id = $1", batchID)
+        db.one("SELECT * FROM batch WHERE id = $1", batchID)
             .then(data => {
                 if (!data) {
                     reject(["Batch ID not found"])
                 }
                 // query db about annotations
-                return db.any("SELECT id FROM images WHERE $1 = ANY(images.batches)", batchID)
+                return db.any("SELECT id FROM image WHERE $1 = ANY(images.batches)", batchID)
             })
             .then(images => {
                 // add images to payload

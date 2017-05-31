@@ -145,7 +145,7 @@ module.exports = function(db, image_dir) {
         // create batch entry in DB
         .then(() => {
                 // should return the promise associated with the DB call
-                return db.one("INSERT INTO batches(original_dir, batch_name) VALUES ($1, $2) RETURNING id", [batch_dir, batch_name])
+                return db.one("INSERT INTO batch(original_dir, batch_name) VALUES ($1, $2) RETURNING id", [batch_dir, batch_name])
                     .catch(err => {
                         throw ["Error inserting new batch information into database", err]
                     })
@@ -183,7 +183,7 @@ module.exports = function(db, image_dir) {
                             return_payload.err_msg = "Some images could not be processed correctly";
                             return 0;
                         }
-                        return db.any("SELECT id FROM images WHERE hash = $1", [hash])
+                        return db.any("SELECT id FROM image WHERE hash = $1", [hash])
                             .then(data => {
                                 if (data.length === 0) {
                                     // hash not present in the DB, so we need to add it
@@ -196,7 +196,7 @@ module.exports = function(db, image_dir) {
                                 }
                                 else {
                                     // add the batchID to the image that already exists with that hash
-                                    return db.none("UPDATE images SET batches = array_append(batches, $1) WHERE " +
+                                    return db.none("UPDATE image SET batches = array_append(batches, $1) WHERE " +
                                         "id = $2", [batchID, data[0].id])
                                         .catch(err => {throw ["Couldn't update batches in existing image entry", err]})
                                 }
@@ -216,7 +216,7 @@ module.exports = function(db, image_dir) {
                         if (hash) {
                             let extension = path.extname(img);
                             let entries = [hash, [batchID], extension];
-                            return db.none("INSERT INTO images(hash, batches, extension) " +
+                            return db.none("INSERT INTO image(hash, batches, extension) " +
                                 "VALUES ($1, $2, $3)", entries)
                                 .then(() => {
                                     // copy into batch directory
@@ -288,12 +288,13 @@ module.exports = function(db, image_dir) {
                         }
                     }
 
+                    // TODO: reverse this process
                     // start in reverse, remove batchID from all image entries
-                    return t.none("UPDATE images SET batches = array_remove(batches, $1)", batchID)
+                    return t.none("UPDATE image SET batches = array_remove(batches, $1)", batchID)
                         // remove all images with no batchIDs
-                        .then(() => { return t.none("DELETE FROM images WHERE batches = '{}'")})
+                        .then(() => { return t.none("DELETE FROM image WHERE batches = '{}'")})
                         // remove batch entry from batches table
-                        .then(() => { return t.none("DELETE FROM batches WHERE id = $1", batchID)})
+                        .then(() => { return t.none("DELETE FROM batch WHERE id = $1", batchID)})
                         .catch(err => { console.log(err)});
 
                 })

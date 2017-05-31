@@ -103,7 +103,7 @@ app.post('/insert-name', function(req, res) {
 		res.status(400).send({client: "Error: Invalid name"});
         return;
 	}
-    db.none("INSERT INTO users (username) VALUES ($1)", name)
+    db.none("INSERT INTO user (username) VALUES ($1)", name)
         .then( () => {
             res.sendStatus(200); // status OK
         })
