@@ -183,6 +183,16 @@ input[type=text]:focus ~ .bar:before, input[type=text]:focus ~ .bar:after {
 
 /*
 ------------------------------------
+    BUTTON SECTION
+------------------------------------
+*/
+
+#button-wrapper > a {
+    margin-bottom: 2vh;
+}
+
+/*
+------------------------------------
     MEDIA QUERIES - Tablets
 ------------------------------------
 */

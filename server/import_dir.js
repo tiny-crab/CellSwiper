@@ -62,9 +62,9 @@ module.exports = function(db, image_dir) {
         const imgExts = new Set(['.jpg', '.png']);
         let batchID, batch_path;
         let return_payload = {result: "", err_msg: "", img_errs: []};
-        if (!/^[\w\\/_-]+$/.test(batch_name)) {
+        if (!/^[\w\s\\/_-]+$/.test(batch_name)) {
             return_payload.result = "FAIL";
-            return_payload.err_msg = "Invalid batch name. Can only contain alphanumeric, slashes, and hyphens";
+            return_payload.err_msg = {client: "Invalid batch name, special characters not allowed"};
             res.status(200).send(return_payload);
             return;
         }
@@ -147,7 +147,13 @@ module.exports = function(db, image_dir) {
                 // should return the promise associated with the DB call
                 return db.one("INSERT INTO batches(original_dir, batch_name) VALUES ($1, $2) RETURNING id", [batch_dir, batch_name])
                     .catch(err => {
-                        throw ["Error inserting new batch information into database", err]
+                        if (err.constraint === "batch_name_unique") {
+                            // Batch name isn't unique
+                            throw ["Batch name already exists in the database", err]
+                        }
+                        else {
+                            throw ["Error inserting new batch information into database", err]
+                        }
                     })
         })
         // first, create folder for the batch
