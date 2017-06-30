@@ -29,10 +29,14 @@ module.exports = function(db, image_dir) {
                     if (!imgExts.has(path.extname(f)))
                         continue;
                     let fName = path.join(ds_path, path.basename(f)).replace(/.\w+$/, ".png");
-                    sharp(path.join(dir, f)).resize(downsampleSize).png().toFile(fName, (err) => {
-                        if (err) {
-                            console.log(`Error writing file ${fName}`, err);
-                        }
+                    sharp(path.join(dir, f))
+                        .resize(downsampleSize, downsampleSize)
+                        .embed()
+                        .png()
+                        .toFile(fName, (err) => {
+                            if (err) {
+                                console.log(`Error writing file ${fName}`, err);
+                            }
                     });
                 }
             });
