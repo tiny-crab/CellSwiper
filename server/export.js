@@ -31,7 +31,7 @@ module.exports = function(db) {
         }) // run the command to output the table to a file
         // replace 'annotation' with a select query to get certain rows instead of the whole thing
         .then(() => {
-            let select = "SELECT * FROM annotation";
+            let select = "SELECT annotation.*, concat(images.hash, images.extension) AS image_name FROM annotation INNER JOIN images ON (images.id = annotation.imageid)";
             let options = [];
             if (req.query.name !== undefined) {
                 options.push("username = ($1)");
