@@ -30,7 +30,7 @@ $(document).ready( () => {
         }
     }
 
-    beginAnnotation = (id) => {
+    beginAnnotation = (id, random) => {
         let ftr = dropdownMenuButton.text();
         let name = $("#name").val().trim();
         if ( ftr === defaultDropDown) {
@@ -42,7 +42,7 @@ $(document).ready( () => {
          else {
             $.post("insert-name", {name: name})
                 .done((name) => {
-                    window.location.href = `annotation?batchid=${id}&name=${name}&feature=${ftr}`;
+                    window.location.href = `annotation?batchid=${id}&name=${name}&feature=${ftr}&random=${random}`;
                 })
                 .fail((err) => { showModalServerError(err) });
         }
