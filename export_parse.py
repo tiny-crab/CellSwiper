@@ -43,7 +43,7 @@ def export_parse(input_file, source_path, out_path, failed):
             continue
     
     print("Copy complete")
-    print(str(len(filtered) - failures) + " successes, " + str(failures) + " failures")
+    print("{} successes, {} failures".format(len(filtered) - failures, failures))
     
 
 if __name__ == "__main__":
