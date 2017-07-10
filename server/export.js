@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const json2csv = require('json2csv');
 
 module.exports = function(db) {
     let module = {};
@@ -31,7 +32,7 @@ module.exports = function(db) {
         }) // run the command to output the table to a file
         // replace 'annotation' with a select query to get certain rows instead of the whole thing
         .then(() => {
-            let select = "SELECT annotation.*, concat(images.hash, images.extension) AS image_name FROM annotation INNER JOIN images ON (images.id = annotation.imageid)";
+            let select = "SELECT * FROM annotation";
             let options = [];
             if (req.query.name !== undefined) {
                 options.push("username = ($1)");
@@ -40,27 +41,36 @@ module.exports = function(db) {
                 options.push("date_added " + (req.query.before === "1" ? "<=" : ">=") + " ($2)");
             }
             if (req.query.batch !== undefined) {
-                options.push('batchid = ($3)');
+                options.push('batch_id = ($3)');
             }
             if (req.query.feature !== undefined) {
-                options.push('feature = ($4)');
+                options.push('feature_id = ($4)');
             }
             if (options.length > 0) {
                 select += " WHERE " + options.join(" AND ");
             }
-            fileName = `annotation_export_${new Date().toDateString().replace(/\s+/g, '_')}_${Math.random().toString(36).substring(10)}.csv`;
-            return db.none(`COPY (${select}) TO '/tmp/csv/${fileName}' DELIMITER ',' CSV HEADER`, [req.query.name, req.query.date, req.query.batch, req.query.feature])
-                .then(() => Promise.resolve(fileName))
-                .catch(err => { throw ["Error writing csv on server", err] })
+            return db.any(select, [req.query.name, req.query.date, req.query.batch, req.query.feature])
+                .catch(err => { throw ["Error getting export data", err] })
         })
-        .then(function(file) {
-            // download file to client
-            if (!fs.existsSync(path.join("/tmp", "csv", file))){
-                res.status(404).send({client: "Error: no export file created"})
-            }
-            else {
-                res.status(200).send({export: file});
-            }
+        .then(function(data) {
+            let expanded_data = data.map(row => {
+                // parse json and add it to the object as rows
+                let new_row = Object.assign(row, row.data);
+                delete new_row.data;
+                return new_row;
+            });
+            let fileName = `annotation_export_${new Date().toDateString().replace(/\s+/g, '_')}.csv`;
+            let fileName_random = fileName.replace('.', `_${Math.random().toString(36).substring(10)}.`);
+            let fullPath = path.join("/tmp", "csv", fileName_random)
+            console.log(expanded_data);
+            fs.writeFile(fullPath, json2csv({data: expanded_data}), err => {
+                if (err) {
+                    res.status(404).send({client: "Error: no export file created"});
+                }
+                else {
+                    res.status(200).download(fullPath, fileName);
+                }
+            });
         })
         .catch(function(err) {
             // runs on reject() or throw, meant to catch errors
@@ -70,7 +80,7 @@ module.exports = function(db) {
     };
 
     module.send_users = function(req, res) {
-        db.any('SELECT username FROM users ORDER BY username ASC', [true]).then((data) => {
+        db.any('SELECT username FROM users', [true]).then((data) => {
             users = [];
             data.forEach(item => {
                 users.push(item.username);
