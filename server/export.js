@@ -32,7 +32,7 @@ module.exports = function(db) {
         }) // run the command to output the table to a file
         // replace 'annotation' with a select query to get certain rows instead of the whole thing
         .then(() => {
-            let select = "SELECT * FROM annotation";
+            let select = "SELECT annotation.*, concat(images.hash, images.extension) AS image_name FROM annotation INNER JOIN images ON (images.id = annotation.imageid)";
             let options = [];
             if (req.query.name !== undefined) {
                 options.push("username = ($1)");
@@ -41,10 +41,10 @@ module.exports = function(db) {
                 options.push("date_added " + (req.query.before === "1" ? "<=" : ">=") + " ($2)");
             }
             if (req.query.batch !== undefined) {
-                options.push('batch_id = ($3)');
+                options.push('batchid = ($3)');
             }
             if (req.query.feature !== undefined) {
-                options.push('feature_id = ($4)');
+                options.push('feature = ($4)');
             }
             if (options.length > 0) {
                 select += " WHERE " + options.join(" AND ");
@@ -54,16 +54,22 @@ module.exports = function(db) {
         })
         .then(function(data) {
             let expanded_data = data.map(row => {
-                // parse json and add it to the object as rows
                 let new_row = Object.assign(row, row.data);
                 delete new_row.data;
                 return new_row;
             });
             let fileName = `annotation_export_${new Date().toDateString().replace(/\s+/g, '_')}.csv`;
             let fileName_random = fileName.replace('.', `_${Math.random().toString(36).substring(10)}.`);
-            let fullPath = path.join("/tmp", "csv", fileName_random)
-            console.log(expanded_data);
-            fs.writeFile(fullPath, json2csv({data: expanded_data}), err => {
+            let fullPath = path.join("/tmp", "csv", fileName_random);
+            let csv;
+            // json2csv throws an error if data is an empty list, so just write an empty csv file if that happens
+            try {
+                csv = json2csv({data: expanded_data});
+            }
+            catch (e) {
+                csv = "";
+            }
+            fs.writeFile(fullPath, csv, err => {
                 if (err) {
                     res.status(404).send({client: "Error: no export file created"});
                 }
@@ -71,6 +77,7 @@ module.exports = function(db) {
                     res.status(200).download(fullPath, fileName);
                 }
             });
+
         })
         .catch(function(err) {
             // runs on reject() or throw, meant to catch errors
@@ -80,7 +87,7 @@ module.exports = function(db) {
     };
 
     module.send_users = function(req, res) {
-        db.any('SELECT username FROM users', [true]).then((data) => {
+        db.any('SELECT username FROM users ORDER BY username ASC', [true]).then((data) => {
             users = [];
             data.forEach(item => {
                 users.push(item.username);
