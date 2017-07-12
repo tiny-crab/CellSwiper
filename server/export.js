@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const json2csv = require('json2csv');
 
 module.exports = function(db) {
     let module = {};
@@ -48,19 +49,35 @@ module.exports = function(db) {
             if (options.length > 0) {
                 select += " WHERE " + options.join(" AND ");
             }
-            fileName = `annotation_export_${new Date().toDateString().replace(/\s+/g, '_')}_${Math.random().toString(36).substring(10)}.csv`;
-            return db.none(`COPY (${select}) TO '/tmp/csv/${fileName}' DELIMITER ',' CSV HEADER`, [req.query.name, req.query.date, req.query.batch, req.query.feature])
-                .then(() => Promise.resolve(fileName))
-                .catch(err => { throw ["Error writing csv on server", err] })
+            return db.any(select, [req.query.name, req.query.date, req.query.batch, req.query.feature])
+                .catch(err => { throw ["Error getting export data", err] })
         })
-        .then(function(file) {
-            // download file to client
-            if (!fs.existsSync(path.join("/tmp", "csv", file))){
-                res.status(404).send({client: "Error: no export file created"})
+        .then(function(data) {
+            let expanded_data = data.map(row => {
+                let new_row = Object.assign(row, row.data);
+                delete new_row.data;
+                return new_row;
+            });
+            let fileName = `annotation_export_${new Date().toDateString().replace(/\s+/g, '_')}.csv`;
+            let fileName_random = fileName.replace('.', `_${Math.random().toString(36).substring(10)}.`);
+            let fullPath = path.join("/tmp", "csv", fileName_random);
+            let csv;
+            // json2csv throws an error if data is an empty list, so just write an empty csv file if that happens
+            try {
+                csv = json2csv({data: expanded_data});
             }
-            else {
-                res.status(200).send({export: file});
+            catch (e) {
+                csv = "";
             }
+            fs.writeFile(fullPath, csv, err => {
+                if (err) {
+                    res.status(404).send({client: "Error: no export file created"});
+                }
+                else {
+                    res.status(200).download(fullPath, fileName);
+                }
+            });
+
         })
         .catch(function(err) {
             // runs on reject() or throw, meant to catch errors

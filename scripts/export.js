@@ -29,8 +29,7 @@ $(document).ready(() => {
     // set max date for date select to be today
     document.getElementById('date-select').max = document.getElementById('date-select').value = (new Date()).toISOString().substring(0, 10);
 
-    $('#export-form').submit((ev) => {
-        ev.preventDefault();
+    $('#export-form').click((ev) => {
         let options = [];
         if (document.getElementById('user-check').checked) {
             options.push('name=' + $('#user-select option:selected')[0].value)
@@ -46,14 +45,7 @@ $(document).ready(() => {
             options.push('feature=' + $("#feature-select option:selected")[0].value);
         }
         let exportRef = '/export?' + options.join('&');
-        $.get(exportRef, file => {
-            let link = document.createElement('a');
-            link.href = 'exports/' + file.export;
-            // remove random gen part from file name
-            link.download = file.export.replace(/_[A-Za-z0-9]+(?=.csv)/, "");
-            link.click();
-        })
-            .fail(err => { showModalServerError(err)});
+        $(ev.target).attr('href', exportRef);
     });
 });
 
