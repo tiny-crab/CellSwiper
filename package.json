@@ -12,6 +12,7 @@
     "express": "^4.14.1",
     "fs-promise": "^2.0.2",
     "jimp": "^0.2.27",
+    "json2csv": "^3.7.3",
     "openseadragon": "^2.2.1",
     "openseadragon-annotations": "^1.0.2",
     "pg": "^6.1.2",

@@ -48,7 +48,8 @@ function makeMonth(year, month, month_list) {
     <div id="${year}-${month}-list" class="collapse month-list">`;
     for (let b of month_list) {
         month_html += `<li class="batch list-group-item row">
-        <span class="col-xs-8">${b.batch_name}<small class="batch-path">${b.original_dir}</small></span>
+        <span class="col-xs-7">${b.batch_name}<small class="batch-path">${b.original_dir}</small></span>
+        <span class="col-xs-3 checkbox randomize"><label><input type="checkbox" value="" id="batch-random-${b.id}">Randomize</label></span>
         <span class="col-xs-2"><button id="batch-button-${b.id}" title="Select a feature to continue" onclick="startBatch(${b.id})" class="disabled btn btn-sm btn-primary batch-button">Start batch</button></span></li>`
     }
     month_html += '</div>';
@@ -58,5 +59,5 @@ function makeMonth(year, month, month_list) {
 function startBatch(id) {
     if ($("#batch-button-" + id).hasClass("disabled"))
         return;
-    beginAnnotation(id);
+    beginAnnotation(id, $("#batch-random-" + id).is(":checked"));
 }

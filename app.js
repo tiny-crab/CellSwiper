@@ -93,7 +93,7 @@ app.get('/sample_script.js', function(req, res) {
 });
 
 app.get('/add-directory', function(req, res) {
-    res.sendFile(dir + 'pages/add_directory.html');
+    res.sendFile(dir + 'pages/add_batch.html');
 });
 
 app.post('/insert-name', function(req, res) {
@@ -103,12 +103,13 @@ app.post('/insert-name', function(req, res) {
 		res.status(400).send({client: "Error: Invalid name"});
         return;
 	}
+	name = name[0].replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     db.none("INSERT INTO user (username) VALUES ($1)", name)
         .then( () => {
-            res.sendStatus(200); // status OK
+            res.status(200).send(name); // status OK
         })
         .catch( err => {
-            res.sendStatus(200); // username probably already used
+            res.status(200).send(name); // username probably already used
         });
 });
 

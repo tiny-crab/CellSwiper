@@ -17,6 +17,7 @@ $(document).ready( ()=> {
     const batchID = $.urlParam('batchid');
     const name = $.urlParam('name');
     const feature = $.urlParam('feature');
+    const random = $.urlParam('random');
     let image_div = $("#image");
     let seadragon = $("#openseadragon");
     let viewer;
@@ -184,9 +185,19 @@ $(document).ready( ()=> {
             }).status = 1;
         }
         // get next unannotated image
-        image = batch_status.find((item) => {
-            return item.status === 0;
-        });
+        if (!random) {
+            image = batch_status.find((item) => {
+                return item.status === 0;
+            });
+        }
+        else {
+            // get only unannotated images
+            let unannotated = batch_status.filter((item) => {
+                return item.status === 0;
+            });
+            // randomly chose one
+            image = unannotated[Math.floor(Math.random() * unannotated.length)]
+        }
         if (image === undefined) {
             // batch done, do something here
             window.location.href = '/complete'
