@@ -7,3 +7,4 @@ launch.json
 .vscode/
 test/*/*
 scripts/folders.json
+env/
