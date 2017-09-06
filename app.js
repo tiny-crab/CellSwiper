@@ -17,7 +17,7 @@ let exec = require('child_process').exec;
 
 // build the folders.json file
 // eventually this shoiuld be run once every couple of minutes
-exec(`./watch.sh ${info.data_dir} .`);
+exec(`./watch.sh ${info.autocomplete_dir} .`);
 
 
 // serv static pages

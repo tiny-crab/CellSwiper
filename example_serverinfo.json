@@ -1,11 +1,11 @@
 {
 	"db_host" : "138.68.15.82",
-	"db_port" : [DB PORT NUMBER],
-	"db_name" : [DB NAME],
-	"db_user" : [DB USER],
-	"db_pass" : [DB PASSWORD],
-	"server_port" : [SERVER PORT (currently 3000)],
-	"parent_dir" : [/path/to/location/of/files/],
-	"data_dir" : [/path/to/location/of/images/],
-	"features" : ["array", "of", "features"]
+	"db_port" : <DB PORT NUMBER>,
+	"db_name" : <DB NAME>,
+	"db_user" : <DB USER>,
+	"db_pass" : <DB PASSWORD>,
+	"server_port" : <SERVER PORT (currently 3000)>,
+	"parent_dir" : </path/to/location/of/server/files/>,
+	"data_dir" : </path/to/location/of/images/>,
+	"autocomplete_dir" : </path/to/autocomplete/location/>
 }
