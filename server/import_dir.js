@@ -23,19 +23,20 @@ module.exports = function(db, image_dir) {
                     return;
                 }
                 // supported image extensions
-                const imgExts = new Set(['.jpg', '.png']);
+                const imgExts = new Set(['.jpg', '.png', '.tiff']);
                 for (let f of files) {
                     // loop through all files
                     if (!imgExts.has(path.extname(f)))
                         continue;
                     let fName = path.join(ds_path, path.basename(f)).replace(/.\w+$/, ".png");
+                    console.log(`Converting ${f} to ${fName}`);
                     sharp(path.join(dir, f))
                         .resize(downsampleSize, downsampleSize)
                         .embed()
                         .png()
                         .toFile(fName, (err) => {
                             if (err) {
-                                console.log(`Error writing file ${fName}`, err);
+                                console.log(`Error writing file ${fName}\n`, err);
                             }
                     });
                 }
@@ -63,7 +64,7 @@ module.exports = function(db, image_dir) {
         const batch_dir = req.query.batch_dir;
         const recursive = req.query.recursive;
         const batch_name = req.query.batch_name;
-        const imgExts = new Set(['.jpg', '.png']);
+        const imgExts = new Set(['.jpg', '.png', '.tiff', '.tif']);
         let batchID, batch_path;
         let return_payload = {result: "", err_msg: "", img_errs: []};
         if (!/^[\w\s\\/_-]+$/.test(batch_name)) {

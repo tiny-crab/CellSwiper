@@ -10,7 +10,7 @@ module.exports = function(db, image_dir) {
     //      - get the id from the URL query
     //      - find the image that matches that id
     // Outputs: Image file of next image
-    module.getImage = function (req, res) {
+    module.getImage = function (req, res, next) {
         let id = req.query.id;
         let large = req.query.large;
         if (!id) {
@@ -18,48 +18,63 @@ module.exports = function(db, image_dir) {
             return;
         }
         db.one("SELECT * FROM image WHERE id=$1", id)
-            .then((image) => {
-                // image found
-                let batchPath = path.join(image_dir, image.batches[0].toString());
-                let imagePath;
-                // helper functions
-                let checker = (imgPath, errorFunction) => {
-                    fs.access(imgPath, fs.constants.F_OK, (err) => {
-                        if (err) {
-                            errorFunction(err);
-                        }
-                        else {
-                            res.sendFile(imgPath);
-                        }
-                    });
-                };
-                let noImage = (err) => {
-                    res.status(404).send({client: `Could not access image ${image.hash} in file system`,
-                        server: err});
-                    console.log(err)
-                };
-                let noDownsample = (err) => {
-                    console.log(err);
-                    console.log("  Attempting to access fullsize image");
-                    // change image path
-                    imagePath = path.join(batchPath, image.hash + image.extension);
-                    checker(imagePath, noImage);
-                };
-
-                // return the file
-                if (large) {
-                    imagePath = path.join(batchPath, image.hash + image.extension);
-                    checker(imagePath, noImage);
-                }
-                // get downsampled image instead (will always be .png)
-                else {
-                    imagePath = path.join(path.join(batchPath, 'ds/'), image.hash + ".png");
-                    checker(imagePath, noDownsample);
-                }
-            })
             .catch((err) => {
                 // most likely image doesn't exist in DB
                 res.status(404).send({client: `Image of id "${id}" not found in database`, server: err});
+                console.log(err)
+            })
+            .then((image) => {
+                return new Promise((reject, resolve) => {
+                    // image found
+                    let batchPath = path.join(image_dir, image.batches[0].toString());
+                    let imagePath;
+                    // helper functions
+                    let checker = (imgPath, errorFunction) => {
+                        fs.access(imgPath, fs.constants.F_OK, (err) => {
+                            if (err) {
+                                errorFunction(err);
+                            }
+                            else {
+                                res.sendFile(imgPath, {}, (err) => {
+                                    if (err) {
+                                        console.log(err);
+                                        next(err);
+                                        // res.status(500).send("Error here");
+                                        reject(err);
+                                    }
+                                });
+                            }
+                        });
+                    };
+                    let noImage = (err) => {
+                        res.status(404).send({client: `Could not access image ${image.hash} in file system`,
+                            server: err});
+                        console.log(err);
+                        resolve();
+                    };
+                    let noDownsample = (err) => {
+                        console.log(err);
+                        console.log("  Attempting to access fullsize image");
+                        // change image path
+                        imagePath = path.join(batchPath, image.hash + image.extension);
+                        checker(imagePath, noImage);
+                    };
+
+                    // return the file
+                    if (large) {
+                        imagePath = path.join(batchPath, image.hash + image.extension);
+                        checker(imagePath, noImage);
+                    }
+                    // get downsampled image instead (will always be .png)
+                    else {
+                        imagePath = path.join(path.join(batchPath, 'ds/'), image.hash + ".png");
+                        checker(imagePath, noDownsample);
+                    }
+                })
+            })
+            .catch((err) => {
+                // Some other image access error
+                res.status(500).send({client: `Image cannot be accessed`, server: err});
                 console.log(err)
             });
     };
