@@ -81,7 +81,7 @@ module.exports = function(db, image_dir) {
                     reject(["Batch ID not found"])
                 }
                 // query db about annotations
-                return db.any("SELECT id FROM image WHERE $1 = ANY(images.batches)", batchID)
+                return db.any("SELECT id FROM image WHERE $1 = ANY(image.batches)", batchID)
             })
             .then(images => {
                 // add images to payload

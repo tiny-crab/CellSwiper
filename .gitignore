@@ -8,3 +8,4 @@ launch.json
 test/*/*
 scripts/folders.json
 env/
+data/

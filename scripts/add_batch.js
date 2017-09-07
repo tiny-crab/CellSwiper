@@ -173,7 +173,7 @@ function submitBatch(n) {
                 break;
             case "ERROR":
                 resAlert += `alert-warning'><strong>Success:</strong> Batch created, some images skipped.
-                 Errors hashing ${res.img_errs.map(img_err => makeImgErrorHover(img_err.image, img_err.err)).join("")}.</div>`;
+                 Errors hashing ${res.img_errs.map(img_err => makeImgErrorHover(img_err.image, img_err.err)).join("<br/>")}.</div>`;
                 buttons.each(function(i, b) { b.onclick = undefined;});
                 break;
             case "FAIL":
