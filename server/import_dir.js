@@ -10,7 +10,7 @@ module.exports = function(db, image_dir) {
     // Author: Evan
     module.downsize_dir = function (dir) {
         let ds_path = path.join(dir, 'ds');
-        let downsampleSize = 300;
+        let downsampleSize = 1000;
 
         fs.mkdir(ds_path, (err) => {
             if (err) {
@@ -29,7 +29,7 @@ module.exports = function(db, image_dir) {
                     if (!imgExts.has(path.extname(f)))
                         continue;
                     let fName = path.join(ds_path, path.basename(f)).replace(/.\w+$/, ".png");
-                    console.log(`Converting ${f} to ${fName}`);
+                    console.log(`Downsampling ${f} to ${fName}`);
                     sharp(path.join(dir, f))
                         .resize(downsampleSize, downsampleSize)
                         .embed()
@@ -229,15 +229,30 @@ module.exports = function(db, image_dir) {
                             let entries = [hash, [batchID], extension];
                             return db.none("INSERT INTO image(hash, batches, extension) " +
                                 "VALUES ($1, $2, $3)", entries)
+                                // copy into batch directory
                                 .then(() => {
-                                    // copy into batch directory
-                                    let img_path = path.join(batch_path, hash + extension);
-                                    return new Promise((resolve, reject) => {
-                                        fs.createReadStream(img).pipe(fs.createWriteStream(img_path)).on('error', () => {
-                                            reject(["Couldn't copy image file into batch path"]);
+                                    // If it's a tiff, we need to convert it
+                                    if (['.tiff', '.tif'].includes(extension)) {
+                                        let img_path = path.join(batch_path, hash + '.png');
+                                        return new Promise((resolve, reject) => {
+                                            sharp(img).png().toFile(img_path, (err) => {
+                                                if (err) {
+                                                    console.log(err);
+                                                    reject(["Unable to convert tiff into png"])
+                                                }
+                                            });
+                                            resolve();
+                                        })
+                                    }
+                                    else {
+                                        let img_path = path.join(batch_path, hash + extension);
+                                        return new Promise((resolve, reject) => {
+                                            fs.createReadStream(img).pipe(fs.createWriteStream(img_path)).on('error', () => {
+                                                reject(["Couldn't copy image file into batch path"]);
+                                            });
+                                            resolve();
                                         });
-                                        resolve();
-                                    });
+                                    }
                                 })
                                 .catch(err => {
                                     if (err.length !== 2) {
